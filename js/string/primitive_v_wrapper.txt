@@ -1,0 +1,3 @@
+Strings are not objects, though, so why do they have properties? Whenever you try to refer to a property of a string s, JavaScript converts the string value to an object as if by calling new String(s). [...] Once the property has been resolved, the newly created object is discarded. (Implementations are not required to actually create and discard this transient object: they must behave as if they do, however.)
+문자열은 객체가 아니다. 그렇다면 프로퍼티들은 뭔가? 문자열 s의 프로퍼티를 참조하려고 할 때마다 JavaScript는 생성자를 호출--new String(s)--해서 문자열 값을 객체로 변환한다. [...] 프로퍼티 접근이 해결되면, 새로 생성된 객체는 폐기된다. (일시적인 객체를 실제로 만들었다가 폐기하는 식으로 구현되어야 하는 것은 아니지만, 그런 식으로 동작한다.)
+ -- JavaScript: The Definitive Guide, 3.6

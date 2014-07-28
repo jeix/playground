@@ -1,0 +1,38 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="string.js">
+</script><script type="text/javascript">
+function encode_text(t) {
+	t = t.replace(/</g, "&lt;");
+	t = t.replace(/>/g, "&gt;");
+	t = t.replace(/&/g, "&amp;");
+	t = t.replace(/\r/g, "");
+	t = t.replace(/\n/g, "&lt;br&gt;");
+	t = t.replace(/'/g, "&apos;");
+	t = t.replace(/"/g, "&quot;");
+	return t;
+}
+</script><body><script type="text/javascript">
+
+var s = "기타 문의입니다.\r\n";
+s += "\r\n";
+s += "어쩌구 저쩌구 이러쿵 저러쿵 하는 경우에는 가당키나 한가요?\r\n";
+s += "\r\n";
+s += "'인용부호', \"인용부호\", <인용부호>의 사용은 가능한가요?\r\n";
+s += "\r\n";
+s += "&는 어떤가요?";
+
+xprintln(s.length);
+xprintln(s.length_in_bytes());
+xprintln("["+s.substr(0, 14)+"]");
+xprintln("["+s.substr_in_bytes(0, 14)+"]");
+xprintln("["+"고구마".lpad(8)+"]");
+xprintln("["+"고구마".rpad(8)+"]");
+xprintln("["+"고구마".center(8)+"]");
+xprintln("["+"*".repeat(6)+"]");
+
+xprintln("[고구마-고구마순(줄기)]".length_in_bytes());
+
+</script></body>

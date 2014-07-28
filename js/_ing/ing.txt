@@ -1,0 +1,110 @@
+
+
+
+
+====
+
+https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object
+https://developer.mozilla.org/en/HTML/HTML5
+
+http://www.html5rocks.com/resources.html
+.	http://caniuse.com/
+
+* [ ] WYSIWYG editable elements (contenteditable attribute) - Working Draft
+* [ ] PNG alpha transparency - Candidate Recommendation
+* [ ] CSS position:fixed - Candidate Recommendation
+* [ ] CSS 2.1 selectors - Candidate Recommendation
+* [ ] Font linking (@font-face) - Working Draft
+* [ ] CSS table display - Candidate Recommendation
+* [ ] CSS generated content ( :before and :after ) - Candidate Recommendation
+* [ ] Data URLs - IETF standard
+* [ ] querySelector/querySelectorAll (Selectors API) - Candidate Recommendation
+* [ ] Cross-document messaging - Working Draft
+* [ ] getElementsByClassName - Working Draft
+* [ ] New, stylable HTML5 elements - Working Draft
+* [ ] CSS3 Colors - Candidate Recommendation
+* [ ] SVG (basic support) - Recommendation
+* [ ] Canvas (basic support) - Working Draft
+* [ ] Client-side storing of name/value pairs (Web Storage) - Working Draft
+* [ ] XHTML served as application/xhtml+xml - Recommendation
+* [ ] CSS3 selectors - Proposed Recommendation
+* [ ] Audio element - Working Draft
+* [ ] CSS3 Media Queries - Candidate Recommendation
+* [ ] Video element - Working Draft
+* [ ] CSS3 Box-shadow - Working Draft
+* [ ] CSS3 Text-shadow - Working Draft
+* [ ] CSS3 Box-sizing - Candidate Recommendation
+* [ ] CSS3 Rounded corners (border-radius) - Candidate Recommendation
+* [ ] Accessibility for AJAX and other web features (WAI-ARIA) - Working Draft
+* [ ] CSS3 Multiple backgrounds - Candidate Recommendation
+* [ ] CSS3 Transforms - Working Draft
+* [ ] Text API for Canvas - Working Draft
+* [ ] CSS3 Background-image options - Working Draft
+* [ ] SVG in CSS backgrounds - Candidate Recommendation
+* [ ] Offline web applications - Working Draft
+* [ ] Drag and Drop - Working Draft
+* [ ] Independent JavaScript threading (Web Workers) - Working Draft
+* [ ] CSS3 Transitions - Working Draft
+* [ ] SVG effects for HTML elements - Working Draft
+* [ ] SVG SMIL animation - Recommendation
+* [ ] Cross-Origin Resource Sharing - Working Draft
+* [ ] SVG fonts - Recommendation
+* [ ] Flexible Box Layout Module - Working Draft
+* [ ] Geolocation - Working Draft
+* [ ] CSS3 Border images - Candidate Recommendation
+* [ ] Client-side SQL Database Storage (Web SQL Database) - Working Draft
+* [ ] HTML5 form features (Web Forms 2.0) - Working Draft
+* [ ] SVG filters - Recommendation
+* [ ] MathML - Recommendation
+* [ ] CSS3 Multiple column layout - Candidate Recommendation
+* [ ] Ruby annotation elements - Working Draft
+* [ ] Web Sockets - Working Draft
+* [ ] Server-sent DOM events - Working Draft
+* [ ] CSS3 Animation - Working Draft
+* [ ] Client-side file opening and handling (File API) - Working Draft
+* [ ] Inline SVG in HTML5 - Working Draft
+* [ ] 3D Canvas graphics / WebGL - Working Draft
+* [ ] Client-side Database Storage (Indexed Database API, previously WebSimpleDB API) - Working Draft
+* [ ] CSS3 3D Transforms - Working Draft
+* [ ] Length calculations in CSS (calc()) - Working Draft
+
+====
+
+Articles
+
+HTML5Rocks Tutorials
+@ http://www.html5rocks.com/tutorials/
+
+* [ ] HTML5 Video
+http://www.html5rocks.com/tutorials/video/basics/
+* [v] "Offline": What does it mean and why should I care?
+http://www.html5rocks.com/tutorials/offline/whats-offline/
+* [ ] Quick guide to webfonts via @font-face
+http://www.html5rocks.com/tutorials/webfonts/quick/
+* [ ] Auditing Your Web App For Speed
+http://www.html5rocks.com/tutorials/developertools/auditpanel/
+* [ ] The Basics of Web Workers
+http://www.html5rocks.com/tutorials/workers/basics/
+* [ ] Introduction to Chrome Developer Tools, Part One
+http://www.html5rocks.com/tutorials/developertools/part1/
+* [ ] Best Practices for a Faster Web App with HTML5
+http://www.html5rocks.com/tutorials/speed/quick/
+* [ ] A Beginner's Guide to Using the Application Cache
+http://www.html5rocks.com/tutorials/appcache/beginner/
+* [ ] Practical Guide to Take Your TODO List Offline
+http://www.html5rocks.com/tutorials/offline/takingappoffline/
+* [ ] Reading local files in JavaScript
+http://www.html5rocks.com/tutorials/file/dndfiles/
+* [ ] A Simple Trip Meter using the Geolocation API
+http://www.html5rocks.com/tutorials/geolocation/trip_meter/
+* [ ] Using the Notifications API
+http://www.html5rocks.com/tutorials/notifications/quick/
+* [v] A Simple TODO list using HTML5 WebDatabases
+http://www.html5rocks.com/tutorials/webdatabase/todo/
+* [v] Quick Guide to Implementing the HTML5 Audio Tag
+http://www.html5rocks.com/tutorials/audio/quick/
+
+====
+
+* [ ] [#건축가 안도 타다오#], 안도 타다오 (2008)
+

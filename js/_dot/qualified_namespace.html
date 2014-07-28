@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Avoid Name Collision</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+
+table { empty-cells: show; }
+table, td { border: 1px solid gray; }
+td {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+	vertical-align: top;
+}
+tr.blue td { border-color: #9999ff; }
+td.center { text-align: center;}
+
+table { margin: 2px; }
+td { min-width: 2em; }
+
+hr {
+	height: 1px;
+	border-width: 0;
+	color: gray;
+	background-color: gray;
+	clear: both;
+}
+hr.half {
+	width: 50%;
+	margin-left: 0;
+	text-align: left;
+}
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript" src="../string/string.js">
+</script><body><script type="text/javascript">
+
+</script></head><body>
+
+<hr />
+
+<script type="text/x-idle-tmpl" id="global-scoped">
+function Foo() {
+	this.bars = [];
+}
+Foo.prototype.add = function (bar) {
+	this.bars.push(bar);
+};
+Foo.prototype.act = function () {
+	var size = this.bars.length;
+	for (var i = 0; i < size; i++) {
+		this.bars[i].act();
+	}
+};
+function Bar(name, foo) {
+	this.name = name;
+	foo.add(this);
+}
+Bar.prototype.act = function () {
+	console.log(this.name);
+};
+</script>
+
+<script type="text/javascript">
+
+exec_def($('global-scoped').innerHTML.trim());
+
+exec('var foo = new Foo();');
+exec('var bar1 = new Bar("bar11", foo);');
+exec('var bar2 = new Bar("bar12", foo);');
+exec('var bar3 = new Bar("bar13", foo);');
+exec('foo.act();');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/x-idle-tmpl" id="ns-scoped">
+var mx = {};
+mx.Foo = function () {
+	this.bars = [];
+};
+mx.Foo.prototype.add = function (bar) {
+	this.bars.push(bar);
+};
+mx.Foo.prototype.act = function () {
+	var size = this.bars.length;
+	for (var i = 0; i < size; i++) {
+		this.bars[i].act();
+	}
+};
+mx.Bar = function(name, foo) {
+	this.name = name;
+	foo.add(this);
+};
+mx.Bar.prototype.act = function () {
+	console.log(this.name);
+};
+</script>
+
+<script type="text/javascript">
+
+exec_def($('ns-scoped').innerHTML.trim());
+
+exec('mx.foo = new mx.Foo();');
+exec('mx.bar1 = new mx.Bar("bar21", mx.foo);');
+exec('mx.bar2 = new mx.Bar("bar22", mx.foo);');
+exec('mx.bar3 = new mx.Bar("bar23", mx.foo);');
+exec('mx.foo.act();', 'console');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/x-idle-tmpl" id="self-defined-ns-scoped">
+var nx = (function() {
+	function Foo() {
+		this.bars = [];
+	}
+	Foo.prototype.add = function (bar) {
+		this.bars.push(bar);
+	};
+	Foo.prototype.act = function () {
+		var size = this.bars.length;
+		for (var i = 0; i < size; i++) {
+			this.bars[i].act();
+		}
+	};
+	function Bar(name, foo) {
+		this.name = name;
+		foo.add(this);
+	}
+	Bar.prototype.act = function () {
+		console.log(this.name);
+	};
+	
+	var foo = new Foo();
+	var bar1 = new Bar("bar31", foo);
+	var bar2 = new Bar("bar32", foo);
+	var bar3 = new Bar("bar33", foo);
+	foo.act();
+	
+	var x = {};
+	x.Foo = Foo;
+	x.Bar = Bar;
+	return x;
+})();
+</script>
+
+<script type="text/javascript">
+
+exec_def($('self-defined-ns-scoped').innerHTML.trim());
+
+exec('nx.foo = new nx.Foo();');
+exec('nx.bar1 = new nx.Bar("bar41", nx.foo);');
+exec('nx.bar2 = new nx.Bar("bar42", nx.foo);');
+exec('nx.bar3 = new nx.Bar("bar43", nx.foo);');
+exec('nx.foo.act();');
+
+</script>
+
+<hr />
+
+</body>
+</html>

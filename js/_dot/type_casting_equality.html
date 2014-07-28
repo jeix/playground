@@ -1,0 +1,725 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Type, Casting, Equality</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+
+table { empty-cells: show; }
+table, td { border: 1px solid gray; }
+td {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+	vertical-align: top;
+}
+tr.blue td { border-color: #9999ff; }
+td.center { text-align: center;}
+
+table { margin: 2px; }
+td { min-width: 2em; }
+
+hr {
+	height: 1px;
+	border-width: 0;
+	color: gray;
+	background-color: gray;
+	clear: both;
+}
+hr.half {
+	width: 50%;
+	margin-left: 0;
+	text-align: left;
+}
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><body><script type="text/javascript">
+
+</script></head><body>
+
+<hr />
+
+<h3>type, instance -- primitive v. wrapper object</h3>
+
+<table style="float:left">
+<tr><td><i>x</i></td> <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>Object</i></tr>
+<tr><td>undefined</td><td>undefined</td>      <td></td>                            </tr>
+<tr><td>null</td>     <td>object</td>         <td></td>                            </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof undefined');
+exec_o_ret('typeof null');
+xprintln();
+exec_p_o_ret('undefined instanceof Object');
+exec_p_o_ret('null instanceof Object');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>      <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>true</td>          <td>boolean</td>        <td></td>                       </tr>
+<tr><td>Boolean(1)</td>    <td>boolean</td>        <td></td>                       </tr>
+<tr><td>new Boolean(1)</td><td>object</td>         <td>Boolean</td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof true');
+exec_o_ret('typeof Boolean(1)');
+exec_o_ret('typeof new Boolean(1)');
+xprintln();
+exec_p_o_ret('true instanceof Boolean');
+exec_p_o_ret('Boolean(1) instanceof Boolean');
+exec_p_o_ret('new Boolean(1) instanceof Boolean');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>       <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>1</td>              <td>number</td>         <td></td>                       </tr>
+<tr><td>Number("1")</td>    <td>number</td>         <td></td>                       </tr>
+<tr><td>new Number("1")</td><td>object</td>         <td>Number</td>                 </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof 1');
+exec_o_ret('typeof Number("1")');
+exec_o_ret('typeof new Number("1")');
+xprintln();
+exec_p_o_ret('1 instanceof Number');
+exec_p_o_ret('Number("1") instanceof Number');
+exec_p_o_ret('new Number("1") instanceof Number');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>     <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>"string"</td>     <td>string</td>         <td></td>                       </tr>
+<tr><td>String(1)</td>    <td>string</td>         <td></td>                       </tr>
+<tr><td>new String(1)</td><td>object</td>         <td>String</td>                 </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof "string"');
+exec_o_ret('typeof String(1)');
+exec_o_ret('typeof new String(1)');
+xprintln();
+exec_p_o_ret('"string" instanceof String');
+exec_p_o_ret('String(1) instanceof String');
+exec_p_o_ret('new String(1) instanceof String');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>    <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>Object(1)</td>   <td>object</td>         <td>Object</td>                 </tr>
+<tr><td>new Object()</td><td>object</td>         <td>Object</td>                 </tr>
+<tr><td>{}</td>          <td>object</td>         <td>Object</td>                 </tr>
+<tr><td>&nbsp;</td>      <td></td>               <td></td>                       </tr>
+<tr><td>&nbsp;</td>      <td></td>               <td></td>                       </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof Object(1)');
+exec_o_ret('typeof new Object()');
+exec_o_ret('typeof {}');
+xprintln();
+exec_p_o_ret('Object(1) instanceof Object');
+exec_p_o_ret('new Object() instanceof Object');
+//exec_if('{} instanceof Object'); // syntax error
+//exec_def('var o = {};');
+//exec_if('o instanceof Object');
+exec_p_o_ret('{} instanceof Object');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>        <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>Array(1,2,3)</td>    <td>object</td>         <td>Array</td>                  </tr>
+<tr><td>new Array(1,2,3)</td><td>object</td>         <td>Array</td>                  </tr>
+<tr><td>[1,2,3]</td>         <td>object</td>         <td>Array</td>                  </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof Array(1,2,3)');
+exec_o_ret('typeof new Array(1,2,3)');
+exec_o_ret('typeof [1,2,3]');
+xprintln();
+exec_p_o_ret('Array(1,2,3) instanceof Array');
+exec_p_o_ret('new Array(1,2,3) instanceof Array');
+exec_p_o_ret('[1,2,3] instanceof Array');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>  <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>Date()</td>    <td>string</td>         <td></td>                       </tr>
+<tr><td>new Date()</td><td>object</td>         <td>Date</td>                   </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof Date()');
+exec_o_ret('typeof new Date()');
+xprintln();
+exec_p_o_ret('Date() instanceof Date');
+exec_p_o_ret('new Date() instanceof Date');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>         <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>RegExp("abc")</td>    <td>object</td>         <td>RegExp</td>                 </tr>
+<tr><td>new RegExp("abc")</td><td>object</td>         <td>RegExp</td>                 </tr>
+<tr><td>/abc/</td>            <td>object</td>         <td>RegExp</td>                 </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof RegExp("abc")');
+exec_o_ret('typeof new RegExp("abc")');
+exec_o_ret('typeof /abc/');
+xprintln();
+exec_p_o_ret('RegExp("abc") instanceof RegExp');
+exec_p_o_ret('new RegExp("abc") instanceof RegExp');
+exec_p_o_ret('/abc/ instanceof RegExp');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>                          <td>typeof <i>x</i></td><td><i>x</i> instanceof <i>y</i></tr>
+<tr><td>function() { }</td>                    <td>function</td>       <td>Function</td>               </tr>
+<tr><td>new Function("x","y","return x*y")</td><td>function</td>       <td>Function</td>               </tr>
+<tr><td>&nbsp;</td>                            <td></td>               <td></td>                       </tr>
+<tr><td>&nbsp;</td>                            <td></td>               <td></td>                       </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('typeof function() { }');
+exec_o_ret('typeof new Function("x","y","return x*y")');
+xprintln();
+//exec_if('function() { } instanceof Function'); // syntax error
+//exec_def('var f = function() { };');
+//exec_if('f instanceof Function');
+exec_p_o_ret('function() { } instanceof Function');
+exec_p_o_ret('new Function("x","y","return x*y") instanceof Function');
+//*/
+</script>
+
+<hr />
+
+<h3>boolean</h3>
+
+<table style="float:left">
+<tr><td><i>x</i></td> <td>if(<i>x</i>)</td></tr>
+<tr><td>undefined</td><td>false</td>       </tr>
+<tr><td>null</td>     <td>false</td>       </tr>
+<tr><td>NaN</td>      <td>false</td>       </tr>
+<tr><td>0</td>        <td>false</td>       </tr>
+<tr><td>1</td>        <td>true</td>        </tr>
+<tr><td>""</td>       <td>false</td>       </tr>
+<tr><td>"0"</td>      <td>true</td>        </tr>
+<tr><td>"1"</td>      <td>true</td>        </tr>
+<tr><td>"false"</td>  <td>true</td>        </tr>
+<tr><td>&nbsp;</td>   <td></td>            </tr>
+<tr><td>&nbsp;</td>   <td></td>            </tr>
+<tr><td>&nbsp;</td>   <td></td>            </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_if('undefined');
+exec_if('null');
+exec_if('NaN');
+exec_if('0');
+exec_if('1');
+exec_if('""');
+exec_if('"0"');
+exec_if('"1"');
+exec_if('"false"');
+xprintln();
+exec_p_o_ret('Boolean(undefined) == true');
+exec_p_o_ret('Boolean(null) == true');
+exec_p_o_ret('Boolean(NaN) == true');
+exec_p_o_ret('Boolean(0) == true');
+exec_p_o_ret('Boolean(1) == true');
+exec_p_o_ret('Boolean("") == true');
+exec_p_o_ret('Boolean("0") == true');
+exec_p_o_ret('Boolean("1") == true');
+exec_p_o_ret('Boolean("false") == true');
+//*/
+</script>
+
+<hr />
+
+<h3>type casting</h3>
+
+<table style="float:left">	
+<tr><td><i>x</i></td>  <td>Boolean(<i>x</i>)</td><td>parseInt(<i>x</i>)</td><td>Number(<i>x</i>)</td><td>String(<i>x</i>)</td></tr>
+<tr><td>undefined</td> <td>false</td>            <td>NaN</td>               <td>NaN</td>             <td>undefined</td>       </tr>
+<tr><td>null</td>      <td>false</td>            <td>NaN</td>               <td>0</td>               <td>null</td>            </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('Boolean(undefined)');
+exec_o_ret('Boolean(null)');
+xprintln();
+exec_o_ret('parseInt(undefined)');
+exec_o_ret('parseInt(null)');
+xprintln();
+exec_o_ret('Number(undefined)');
+exec_o_ret('Number(null)');
+xprintln();
+exec_o_ret('String(undefined)');
+exec_o_ret('String(null)');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">	
+<tr><td><i>x</i></td>  <td>Boolean(<i>x</i>)</td><td>parseInt(<i>x</i>)</td><td>Number(<i>x</i>)</td><td>String(<i>x</i>)</td></tr>
+<tr><td>true</td>      <td>true</td>             <td>NaN</td>               <td>1</td>               <td>true</td>            </tr>
+<tr><td>false</td>     <td>false</td>            <td>NaN</td>               <td>0</td>               <td>false</td>           </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('Boolean(true)');
+exec_o_ret('Boolean(false)');
+xprintln();
+exec_o_ret('parseInt(true)');
+exec_o_ret('parseInt(false)');
+xprintln();
+exec_o_ret('Number(true)');
+exec_o_ret('Number(false)');
+xprintln();
+exec_o_ret('String(true)');
+exec_o_ret('String(false)');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">	
+<tr><td><i>x</i></td>  <td>Boolean(<i>x</i>)</td><td>parseInt(<i>x</i>)</td><td>Number(<i>x</i>)</td><td>String(<i>x</i>)</td></tr>
+<tr><td>NaN</td>       <td>NaN</td>              <td>NaN</td>               <td>NaN</td>             <td>NaN</td>             </tr>
+<tr><td>0</td>         <td>false</td>            <td>0</td>                 <td>0</td>               <td>0</td>               </tr>
+<tr><td>1</td>         <td>true</td>             <td>1</td>                 <td>1</td>               <td>1</td>               </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('Boolean(NaN)');
+exec_o_ret('Boolean(0)');
+exec_o_ret('Boolean(1)');
+xprintln();
+exec_o_ret('parseInt(NaN)');
+exec_o_ret('parseInt(0)');
+exec_o_ret('parseInt(1)');
+xprintln();
+exec_o_ret('Number(NaN)');
+exec_o_ret('Number(0)');
+exec_o_ret('Number(1)');
+xprintln();
+exec_o_ret('String(NaN)');
+exec_o_ret('String(0)');
+exec_o_ret('String(1)');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">	
+<tr><td><i>x</i></td>  <td>Boolean(<i>x</i>)</td><td>parseInt(<i>x</i>)</td><td>Number(<i>x</i>)</td><td>String(<i>x</i>)</td></tr>
+<tr><td>""</td>        <td>false</td>            <td>NaN</td>               <td>0</td>               <td></td>                </tr>
+<tr><td>"0"</td>       <td>true</td>             <td>0</td>                 <td>0</td>               <td>0</td>               </tr>
+<tr><td>"1"</td>       <td>true</td>             <td>1</td>                 <td>1</td>               <td>1</td>               </tr>
+<tr><td>"a"</td>       <td>true</td>             <td>NaN</td>               <td>NaN</td>             <td>a</td>               </tr>
+<tr><td>"false"</td>   <td>true</td>             <td>NaN</td>               <td>NaN</td>             <td>false</td>           </tr>
+<tr><td>" \t\r\n "</td><td>true</td>             <td>NaN</td>               <td>0</td>               <td>" \t\r\n "</td>      </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                 <td></td>                  <td></td>                <td></td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('Boolean("")');
+exec_o_ret('Boolean("0")');
+exec_o_ret('Boolean("1")');
+exec_o_ret('Boolean("a")');
+exec_o_ret('Boolean("false")');
+exec_o_ret('Boolean(" \\t\\r\\n ")');
+xprintln();
+exec_o_ret('parseInt("")');
+exec_o_ret('parseInt("0")');
+exec_o_ret('parseInt("1")');
+exec_o_ret('parseInt("a")');
+exec_o_ret('parseInt("false")');
+exec_o_ret('parseInt(" \\t\\r\\n ")');
+xprintln();
+exec_o_ret('Number("")');
+exec_o_ret('Number("0")');
+exec_o_ret('Number("1")');
+exec_o_ret('Number("a")');
+exec_o_ret('Number("false")');
+exec_o_ret('Number(" \\t\\r\\n ")');
+xprintln();
+exec_o_ret('String("")');
+exec_o_ret('String("0")');
+exec_o_ret('String("1")');
+exec_o_ret('String("a")');
+exec_o_ret('String("false")');
+exec_o_ret('String(" \\t\\r\\n ")');
+//*/
+</script>
+
+<hr class="half" />
+
+<table style="float:left">
+<tr><td><i>x</i></td>  <td>parseInt(<i>x</i>)</td><td>Number(<i>x</i>)</td></tr>
+<tr><td>"3.14"</td>    <td>3</td>                 <td>3.14</td>            </tr>
+<tr><td>" 10 "</td>    <td>10</td>                <td>10</td>              </tr>
+<tr><td>"11 12"</td>   <td>11</td>                <td>NaN</td>             </tr>
+<tr><td>"08"</td>      <td>0</td>                 <td>8</td>               </tr>
+<tr><td>"010"</td>     <td>8</td>                 <td>10</td>              </tr>
+<tr><td>"0x10"</td>    <td>16</td>                <td>16</td>              </tr>
+<tr><td>"16t"</td>     <td>16</td>                <td>NaN</td>             </tr>
+<tr><td>"t16"</td>     <td>NaN</td>               <td>NaN</td>             </tr>
+<tr><td>&nbsp;</td>    <td></td>                  <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                  <td></td>                </tr>
+<tr><td>&nbsp;</td>    <td></td>                  <td></td>                </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_o_ret('parseInt("3.14")');
+exec_o_ret('parseInt(" 10 ")');
+exec_o_ret('parseInt("11 12")');
+exec_o_ret('parseInt("08")');
+exec_o_ret('parseInt("010")');
+exec_o_ret('parseInt("0x10")');
+exec_o_ret('parseInt("16t")');
+exec_o_ret('parseInt("t16")');
+xprintln();
+exec_o_ret('Number("3.14")');
+exec_o_ret('Number(" 10 ")');
+exec_o_ret('Number("11 12")');
+exec_o_ret('Number("08")');
+exec_o_ret('Number("010")');
+exec_o_ret('Number("0x10")');
+exec_o_ret('Number("16t")');
+exec_o_ret('Number("t16")');
+//*/
+</script>
+
+<hr />
+
+<h3>identity</h3>
+
+<table style="float:left">
+<tr><td></td>         <td>undefined</td><td>null</td></tr>
+<tr><td>undefined</td><td>  </td>       <td>!==</td> </tr>
+<tr><td>null</td>     <td>!==</td>      <td>  </td>  </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_p_o_ret('undefined === undefined');
+exec_p_o_ret('undefined === null');
+exec_p_o_ret('null === null');
+//*/
+</script>
+
+<hr />
+
+<h3>equality</h3>
+
+<table>
+<tr><td></td>          <td>undefined</td><td>null</td><td>true</td><td>false</td><td>0</td> <td>1</td> <td>9</td> <td>""</td><td>"0"</td><td>"1"</td><td>"9"</td><td>"false"</td><td>" \t\r\n "</td></tr>
+<tr><td>undefined</td> <td>  </td>       <td>==</td>  <td>!=</td>  <td>!=</td>   <td>!=</td><td>!=</td><td>!=</td><td>!=</td><td>!=</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>null</td>      <td>==</td>       <td>  </td>  <td>!=</td>  <td>!=</td>   <td>!=</td><td>!=</td><td>!=</td><td>!=</td><td>!=</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>true</td>      <td>!=</td>       <td>!=</td>  <td>  </td>  <td>!=</td>   <td>!=</td><td>==</td><td>!=</td><td>!=</td><td>!=</td> <td>==</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>false</td>     <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>  </td>   <td>==</td><td>!=</td><td>!=</td><td>==</td><td>==</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>==</td></tr>
+<tr><td>0</td>         <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>==</td>   <td>  </td><td>!=</td><td>!=</td><td>==</td><td>==</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>==</td></tr>
+<tr><td>1</td>         <td>!=</td>       <td>!=</td>  <td>==</td>  <td>!=</td>   <td>!=</td><td>  </td><td>!=</td><td>!=</td><td>!=</td> <td>==</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>9</td>         <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>!=</td>   <td>!=</td><td>!=</td><td>  </td><td>!=</td><td>!=</td> <td>!=</td> <td>==</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>""</td>        <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>==</td>   <td>==</td><td>!=</td><td>!=</td><td>  </td><td>!=</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>"0"</td>       <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>==</td>   <td>==</td><td>!=</td><td>!=</td><td>!=</td><td>  </td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>"1"</td>       <td>!=</td>       <td>!=</td>  <td>==</td>  <td>!=</td>   <td>!=</td><td>==</td><td>!=</td><td>!=</td><td>!=</td> <td>  </td> <td>!=</td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>"9"</td>       <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>!=</td>   <td>!=</td><td>!=</td><td>==</td><td>!=</td><td>!=</td> <td>!=</td> <td>  </td> <td>!=</td>     <td>!=</td></tr>
+<tr><td>"false"</td>   <td>!=</td>       <td>!=</td>  <td>!=</td>  <td>!=</td>   <td>!=</td><td>!=</td><td>!=</td><td>!=</td><td>!=</td> <td>!=</td> <td>!=</td> <td>  </td>     <td>!=</td></tr>
+<tr><td>" \t\r\n "</td><td>!=</td>       <td>!=</td>  <td>!=</td>  <td>==</td>   <td>==</td><td>!=</td><td>!=</td><td>!=</td><td>!=</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>  </td></tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_p_o_ret('undefined == null');
+exec_p_o_ret('undefined == true');
+exec_p_o_ret('undefined == false');
+exec_p_o_ret('undefined == 0');
+exec_p_o_ret('undefined == 1');
+exec_p_o_ret('undefined == 9');
+exec_p_o_ret('undefined == ""');
+exec_p_o_ret('undefined == "0"');
+exec_p_o_ret('undefined == "1"');
+exec_p_o_ret('undefined == "9"');
+exec_p_o_ret('undefined == "false"');
+exec_p_o_ret('undefined == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('null == true');
+exec_p_o_ret('null == false');
+exec_p_o_ret('null == 0');
+exec_p_o_ret('null == 1');
+exec_p_o_ret('null == 9');
+exec_p_o_ret('null == ""');
+exec_p_o_ret('null == "0"');
+exec_p_o_ret('null == "1"');
+exec_p_o_ret('null == "9"');
+exec_p_o_ret('null == "false"');
+exec_p_o_ret('null == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('true == false');
+exec_p_o_ret('true == 0', '1 !== 0');
+exec_p_o_ret('true == 1', '1 === 1');
+exec_p_o_ret('true == 9', '1 !== 9');
+exec_p_o_ret('true == ""', '1 !== Number("")');
+exec_p_o_ret('true == "0"', '1 !== Number("0")');
+exec_p_o_ret('true == "1"', '1 === Number("1")');
+exec_p_o_ret('true == "9"', '1 !== Number("9")');
+exec_p_o_ret('true == "false"', '1 !== Number("false")');
+exec_p_o_ret('true == " \\t\\r\\n "', '1 !== Number(" \\t\\r\\n ")');
+xprintln();
+exec_p_o_ret('false == 0', '0 === 0');
+exec_p_o_ret('false == 1', '0 !== 1');
+exec_p_o_ret('false == 9', '0 !== 9');
+exec_p_o_ret('false == ""', '0 === Number("")');
+exec_p_o_ret('false == "0"', '0 === Number("0")');
+exec_p_o_ret('false == "1"', '0 !== Number("1")');
+exec_p_o_ret('false == "9"', '0 !== Number("9")');
+exec_p_o_ret('false == "false"', '0 !== Number("false")');
+exec_p_o_ret('false == " \\t\\r\\n "', '0 !== Number(" \\t\\r\\n ")');
+xprintln();
+exec_p_o_ret('0 == 1');
+exec_p_o_ret('0 == 9');
+exec_p_o_ret('0 == ""', '0 === Number("")');
+exec_p_o_ret('0 == "0"', '0 === Number("0")');
+exec_p_o_ret('0 == "1"', '0 !== Number("1")');
+exec_p_o_ret('0 == "9"', '0 !== Number("9")');
+exec_p_o_ret('0 == "false"', '0 !== Number("false")');
+exec_p_o_ret('0 == " \\t\\r\\n "', '0 === Number(" \\t\\r\\n ")');
+xprintln();
+exec_p_o_ret('1 == 9');
+exec_p_o_ret('1 == ""', '1 !== Number("")');
+exec_p_o_ret('1 == "0"', '1 !== Number("0")');
+exec_p_o_ret('1 == "1"', '1 === Number("1")');
+exec_p_o_ret('1 == "9"', '1 !== Number("9")');
+exec_p_o_ret('1 == "false"', '1 !== Number("false")');
+exec_p_o_ret('1 == " \\t\\r\\n "', '1 !== Number(" \\t\\r\\n ")');
+xprintln();
+exec_p_o_ret('9 == ""', '9 != Number("")');
+exec_p_o_ret('9 == "0"', '9 != Number("0")');
+exec_p_o_ret('9 == "1"', '9 != Number("1")');
+exec_p_o_ret('9 == "9"', '9 == Number("9")');
+exec_p_o_ret('9 == "false"', '9 != Number("false")');
+exec_p_o_ret('9 == " \\t\\r\\n "', '9 != Number(" \\t\\r\\n ")');
+xprintln();
+exec_p_o_ret('"" == "0"');
+exec_p_o_ret('"" == "1"');
+exec_p_o_ret('"" == "9"');
+exec_p_o_ret('"" == "false"');
+exec_p_o_ret('"" == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('"0" == "1"');
+exec_p_o_ret('"0" == "9"');
+exec_p_o_ret('"0" == "false"');
+exec_p_o_ret('"0" == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('"1" == "9"');
+exec_p_o_ret('"1" == "false"');
+exec_p_o_ret('"1" == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('"9" == "false"');
+exec_p_o_ret('"9" == " \\t\\r\\n "');
+xprintln();
+exec_p_o_ret('"false" == " \\t\\r\\n "');
+//*/
+</script>
+
+<hr class="half" />
+
+<table>
+<tr><td></td>   <td>undefined</td><td>null</td><td>true</td><td>false</td><td>NaN</td><td>0</td> <td>1</td> <td>9</td> <td>""</td><td>"0"</td><td>"1"</td><td>"9"</td><td>"false"</td><td>" \t\r\n "</td></tr>
+<tr><td>NaN</td><td>!=</td>       <td>!=</td>  <td>!=</td>   <td>!=</td>  <td>!=</td> <td>!=</td><td>!=</td><td>!=</td><td>!=</td><td>!=</td> <td>!=</td> <td>!=</td> <td>!=</td>     <td>!=</td>        </tr>
+</table>
+
+<script type="text/javascript">
+//*
+exec_p_o_ret('NaN == undefined');
+exec_p_o_ret('NaN == null');
+exec_p_o_ret('NaN == true');
+exec_p_o_ret('NaN == false');
+exec_p_o_ret('NaN == NaN');
+exec_p_o_ret('NaN == 0');
+exec_p_o_ret('NaN == 1');
+exec_p_o_ret('NaN == 9');
+exec_p_o_ret('NaN == ""');
+exec_p_o_ret('NaN == "0"');
+exec_p_o_ret('NaN == "1"');
+exec_p_o_ret('NaN == "9"');
+exec_p_o_ret('NaN == "false"');
+exec_p_o_ret('NaN == " \\t\\r\\n "');
+//*/
+</script>
+
+<hr />
+
+<h3>primitive v. wrapper object</h3>
+
+<script type="text/javascript">
+//*
+exec_def('var str = "hello";');
+exec_o_ret('str.custom = 1;', 'as it were, new String(str).custom = 1;');
+exec_o_ret('str.custom;', 'as it were, new String(str).custom;');
+//*/
+</script>
+
+<hr class="half" />
+
+<h3>equality, identity revisited</h3>
+
+<script type="text/javascript">
+//*
+exec_p_o_ret('"string" == "string"');
+exec_p_o_ret('"string" === "string"');
+xprintln();
+exec_p_o_ret('"string" == new String("string")');
+exec_p_o_ret('"string" === new String("string")');
+exec_p_o_ret('String(1) == new String(1)');
+exec_p_o_ret('String(1) === new String(1)');
+xprintln();
+exec_p_o_ret('new String("string") == new String("string")');
+exec_p_o_ret('new String("string") === new String("string")');
+//*/
+</script>
+
+<hr class="half" />
+
+<h3>type casting revisited</h3>
+
+<script type="text/javascript">
+//*
+exec_def('var x = {\n' +
+'	num: 2,\n' +
+'	valueOf: function() {\n' +
+'		return this.num * 2;\n' +
+'	}\n' +
+'}');
+exec_def('var y = {\n' +
+'	num: 3,\n' +
+'	valueOf: function() {\n' +
+'		return this.num * 2;\n' +
+'	}\n' +
+'}');
+exec_o_ret('x + y;');
+exec_o_ret('Number(x) + Number(y);');
+//*/
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def('var x = {\n' +
+'	num: 2,\n' +
+'	valueOf: function() {\n' +
+'		return this.num;\n' +
+'	}\n' +
+'}');
+exec_def('var y = {\n' +
+'	num: 3,\n' +
+'	toString: function() {\n' +
+'		return String(this.num);\n' +
+'	}\n' +
+'}');
+exec_def('var z = {\n' +
+'	num: 5,\n' +
+'	valueOf: function() {\n' +
+'		return this.num;\n' +
+'	},\n' +
+'	toString: function() {\n' +
+'		return String(this.num * 2);\n' +
+'	}\n' +
+'}');
+exec_o_ret('0 + x;', 'valueOf() called');
+exec_o_ret('Number(x);', 'valueOf() called');
+exec_o_ret('0 + y;', 'toString() called, there is no valueOf()');
+exec_o_ret('Number(y);', 'toString() called, there is no valueOf()');
+exec_o_ret('0 + z;', 'valueOf() called');
+exec_o_ret('Number(z);', 'valueOf() called');
+xprintln();
+exec_o_ret('"" + x;', 'valueOf() called');
+exec_o_ret('String(x);', 'there is no toString()');
+exec_o_ret('"" + y;', 'no valueOf(), instead toString() called');
+exec_o_ret('String(y);', 'toString() called');
+exec_o_ret('"" + z;', 'valueOf() called');
+exec_o_ret('String(z);', 'toString() called');
+
+</script>
+
+<hr />
+
+</body>
+</html>

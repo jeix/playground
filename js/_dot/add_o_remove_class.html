@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+/* STYLE_HERE */
+span { border: 2px dotted #888; }
+.apple { color: #f00; }
+.banana { background-color: #ff0; }
+.orange { border: 2px solid #ffa500; }
+</style>
+<script type="text/javascript" src="simple.util.js"></script>
+<script type="text/javascript">
+// SCRIPT_HERE
+var $ = function(id) { return document.getElementById(id); };
+
+function add_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			if (elem.classList) {
+				elem.classList.add(klass);
+			} else {
+				if (elem.className.split(' ').indexOf(klass) == -1) {
+					elem.className = (elem.className + ' ' + klass).trim();
+				}
+			}
+		} else if (elem.length > 0 && elel[0].classList) {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].classList.add(klass);
+			}
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				if (elem[i].className.split(' ').indexOf(klass) == -1) {
+					elem[i].className = (elem.className + ' ' + klass).trim();
+				}
+			}
+		}
+	}
+}
+function remove_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			if (elem.classList) {
+				elem.classList.remove(klass);
+			} else {
+				var class_list = elem.className.split(' ');
+				var ix = class_list.indexOf(klass);
+				if (ix >= 0) {
+					class_list.splice(ix, 1);
+					elem.className = class_list.join(' ');
+				}
+			}
+		} else if (elem.length > 0 && elel[0].classList) {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].classList.remove(klass);
+			}
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				var class_list = elem[i].className.split(' ');
+				var ix = class_list.indexOf(klass);
+				if (ix >= 0) {
+					class_list.splice(ix, 1);
+					elem[i].className = class_list.join(' ');
+				}
+			}
+		}
+	}
+}
+
+function test_add_o_remove_class() {
+	var elem = $('main');
+	
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => []
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [orange]
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => []
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [orange]
+	
+	elem.className = 'apple';
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple orange]
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple orange]
+	
+	elem.className = 'apple banana';
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana orange]
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana orange]
+	
+	elem.className = 'apple banana orange';
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana orange]
+	remove_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana]
+	add_class(elem, 'orange');
+	xprintln('[' + elem.className + ']'); // => [apple banana orange]
+	
+	remove_class(elem, 'banana');
+	xprintln('[' + elem.className + ']'); // => [apple banana]
+}
+
+function handle_click(trigger) {
+	if (trigger.checked) {
+		add_class($('marker'), trigger.value);
+	} else {
+		remove_class($('marker'), trigger.value);
+	}
+}
+
+onload = function() {
+	test_add_o_remove_class();
+};
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:400px;">
+DIV
+</div>
+<span id="marker">Hello</span><br>
+<input type="checkbox" value="apple" onclick="handle_click(this)">Apple
+<input type="checkbox" value="banana" onclick="handle_click(this)">Banana
+<input type="checkbox" value="orange" onclick="handle_click(this)">Orange
+</body>
+</html>

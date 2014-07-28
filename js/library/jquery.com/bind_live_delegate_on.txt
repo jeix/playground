@@ -1,0 +1,33 @@
+Differences Between jQuery .bind() vs .live() vs .delegate() vs .on()
+@ http://www.elijahmanor.com/2012/02/differences-between-jquery-bind-vs-live.html
+
+$( "#members li a" ).bind( "click", function( e ) {} );
+$( "#members li a" ).live( "click", function( e ) {} ); // attach to the document root // deprecated (1.7)
+$( "#members" ).delegate( "li a", "click", function( e ) {} );
+
+$('#id').bind('click', function (e) {}); // use .bind() with (unique) '#id'
+	// 아래 예에서 보이겠지만
+	// 바인드 시점에 존재하는 요소들에만 영향을 미치고
+	// 바인드 시점에는 존재하지 않았지만
+	// 이벤트 시점에는 존재하는 요소들에는 영향을 미치지 않기 때문이다
+
+// 아래 예에서 보이듯
+// .bind(), .live(), .delegate() 메서드는 모두
+//  jQuery 1.7에서는 .on()을 호출한다
+
+// Bind
+$( "#members li a" ).on( "click", function( e ) {} );
+$( "#members li a" ).bind( "click", function( e ) {} );
+
+// Live
+$( document ).on( "click", "#members li a", function( e ) {} ); // 도큐먼트 루트에 붙인다
+$( "#members li a" ).live( "click", function( e ) {} );
+
+// Delegate
+$( "#members" ).on( "click", "li a", function( e ) {} );
+$( "#members" ).delegate( "li a", "click", function( e ) {} );
+
+// Conclusion
+// .bind() 메서드는 바인드 시점에 존재하는 요소들에만 적용된다
+// .delegate() 메서드는 이벤트 시점에 존재하는 요소들에 적용된다
+// .live() 메서드도 이벤트 시점에 존재하는 요소들에 적용되지만 document 루트에 바인드하므로 사용하지 마라

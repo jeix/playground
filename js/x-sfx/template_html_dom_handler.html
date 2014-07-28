@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.hollow {
+	display: none;
+}
+</style>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+
+(function ($) {
+	function _replace_all(s, seek, repl) {
+		while (s.indexOf(seek) >= 0) {
+			s = s.replace(seek, repl);
+		}
+		return s;
+	}
+	$.fn.tmpl = function (data) {
+		var html = this.html();
+		for (var k in data) {
+			if (data.hasOwnProperty(k)) {
+				html = _replace_all(html, "{{"+k+"}}", data[k]);
+			}
+		}
+		return html;
+	};
+	$.fn.regev = function(handlers) {
+		for (var k in handlers) {
+			if (handlers.hasOwnProperty(k)) {
+				var te = k.split('$');
+				if (te.length > 1) {
+					var target = te[0];
+					var evt = te[1];
+					this.delegate(target, evt, handlers[k]);
+				} else {
+					this.bind(k, handlers[k]);
+				}
+			}
+		}
+		return this;
+	};
+}(jQuery));
+
+</script>
+<script>
+
+var data_json = [
+	'고구마', '고도리', '고드름', '고등어', '고라니', '고사리', '고양이'
+];
+
+var view_json = [];
+
+function fetch_data () {
+	if (data_json.length == view_json.length) {
+		return null;
+	}
+	var data = {
+		id: view_json.length + 1,
+		name: data_json[view_json.length]
+	};
+	return data;
+}
+
+</script>
+<script type="text/template" id="item-template">
+<li id="x-{{id}}" data-id="{{id}}" data-name="{{name}}">
+	<a href="#">{{name}}</a>
+	<button class="del">Del</button>
+</li>
+</script>
+</head>
+<body>
+<div>
+<button id="trigger">Append</button>
+<ul id="container"></ul>
+</div>
+<div id="temp-area" class="hollow"></div>
+<script>
+
+$('#trigger').bind('click', function() {
+	// fetch
+	var data = fetch_data();
+	if (data == null) {
+		console.log("no more data");
+		return;
+	}
+	// build
+	var view = {
+		data: data,
+		handlers: {
+			'click': function () {
+				console.log($(this).attr('data-id')+"::"+$(this).attr('data-name'));
+			},
+			'a$click': function (evt) {
+				evt.preventDefault();
+				evt.stopPropagation();
+				console.log($(this).parent().attr('data-id')+"::"+$(this).text());
+			},
+			'.del$click': function (evt) {
+				evt.stopPropagation();
+				console.log($(this).parent().attr('data-id'));
+			}
+		}
+	}
+	view_json.push(view);
+	// render
+	var template = $('#item-template').tmpl(view.data);
+	$('#temp-area').html(template.trim());
+	var item = $('#x-' + view.data.id).remove().regev(view.handlers);
+	// attach
+	$('#container').append(item);
+});
+
+</script>
+</body>
+</html>

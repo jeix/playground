@@ -1,0 +1,22 @@
+
+> function T() {}
+> T.prototype.t = 'tea';
+
+> new T().t
+  "tea"
+> new T().constructor
+  function T() {}
+> new T().constructor.prototype
+  T
+    constructor: function T() {}
+    t: "tea"
+    __proto__: Object
+
+> T.prototype = {t: 'tea'};
+
+> new T().t
+  "tea"
+> new T().constructor
+  function Object() { [native code] }
+> new T().constructor.prototype
+  Object

@@ -1,0 +1,145 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+div.row { border-top: 1px solid #000;
+cursor: pointer; }
+div#stop { border-bottom: 1px solid #000; }
+p { -webkit-margin-before: 0em;
+-webkit-margin-after: 0em; }
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		body.style.fontFamily = '"Courier New", Monospace';
+		body.style.fontSize = '9pt';
+		body.style.backgroundColor = '#c0c0c0';
+		body.style.color = '#000';
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;" custom_attribute>
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+var x = "yyy";
+(function () {
+	var a = [x, x||"zzz"];
+	var x = "xxx";
+	xprintln(a[0]+"::"+a[1]); // -> undefined::zzz
+})();
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+Account = function(amount, lowest) {
+	this.balance = amount;
+	this.minimum = lowest;
+};
+Account.prototype.deposits = 0;
+Account.deposits++;
+xprintln(Account.deposits); // -> NaN
+account = new Account(500, 200);
+account.deposits++;
+xprintln(account.deposits); // -> 1
+
+Account.incrementDeposits = function() {
+	Account.deposits++;
+};
+Account.incrementDeposits();
+xprintln(Account.deposits); // -> NaN
+Account.prototype.incrementDeposits = function() {
+	this.deposits++;
+};
+account.incrementDeposits();
+xprintln(account.deposits); // -> 2
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

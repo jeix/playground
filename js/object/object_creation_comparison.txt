@@ -1,0 +1,6 @@
+Object.create() vs. constructor vs. object literal
+
+@ http://jsperf.com/object-create-vs-constructor-vs-object-literal/12
+@ http://jsperf.com/object-create-vs-constructor-vs-object-literal/37
+
+Object.create() << constructor < object literal

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+<!-- STYLE_HERE -->
+</style>
+<script type="text/javascript" src="simple.util.js"></script>
+<script type="text/javascript" src="../sfx/exec.js"></script>
+<script type="text/javascript">
+// SCRIPT_HERE
+var $ = function(id) { return document.getElementById(id); };
+
+onload = function() {
+	xprintln("-----------------------");
+	if (! undefined) xprintln("undefined is false");
+	if (! null) xprintln("null is false");
+	if (! NaN) xprintln("NaN is false");
+	if (! 0) xprintln("0 is false");
+	if (! '') xprintln("'' is false");
+	if ('0') xprintln("'0' is true");
+	if ('false') xprintln("'false' is true");
+	xprintln("-----------------------");
+	if (null == undefined) xprintln("null == undefined");
+	if (null !== undefined) xprintln("null !== undefined");
+	xprintln("-----------------------");
+	if (undefined != false) xprintln("undefined != false");
+	if (undefined != 0) xprintln("undefined != 0");
+	if (undefined != '') xprintln("undefined != ''");
+	if (undefined != '0') xprintln("undefined != '0'");
+	xprintln("-----------------------");
+	if (null != false) xprintln("null != false");
+	if (null != 0) xprintln("null != 0");
+	if (null != '') xprintln("null != ''");
+	if (null != '0') xprintln("null != '0'");
+	xprintln("-----------------------");
+	if (false == 0) xprintln("false == 0");
+	if (false == '') xprintln("false == ''");
+	if (false == '0') xprintln("false == '0'");
+	xprintln("-----------------------");
+	if ('' != '0') xprintln("'' != '0'");
+	if ('' == 0) xprintln("'' == 0");
+	if ('0' == 0) xprintln("'0' == 0");
+	xprintln("-----------------------");
+	if (',,,' == new Array(4)) xprintln("',,,' == new Array(4)");
+	if (',,,' == [,,,,]) xprintln("',,,' == [,,,,]");
+	xprintln("-----------------------");
+	if ([] != []) xprintln("[] != []");
+	if (JSON.stringify([]) == JSON.stringify([])) xprintln("JSON.stringify([]) == JSON.stringify([])");
+	xprintln("-----------------------");
+	
+	// @ https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Comparison_Operators
+	
+	exec_if('"abc" === "abc"');
+	xprintln();
+	exec_if('123 === 123');
+	exec_if('NaN != NaN');
+	exec_if('+0 === -0');
+	xprintln();
+	exec_if('true === true');
+	exec_if('false === false');
+	xprintln();
+	exec_if('({x:123}) != ({x:123})');
+	xprintln();
+	exec_def('var foo = bar = {x:123};');
+	exec_if('foo == bar');
+	xprintln();
+	exec_if('null == undefined');
+	exec_if('null !== undefined');
+	xprintln();
+	/*
+	 * if one of operands is (number,boolean)
+	 *   convert operands to number if possible
+	 *   strict comparison
+	 * else if one of operands is (string)
+	 *   convert operands to string if possible
+	 *   strict comparison
+	 */
+	exec_if('25 == "0x19"', '25 === Number("0x19")');
+	exec_if('2 != true', '2 !== 1');
+	xprintln();
+	/*
+	 * if an object is compared with a primitive (number,string)
+	 *   convert object to primitive using valueOf() and toString()
+	 */
+	exec_if('new String("abc") == "abc"', 'valueOf(), toString()');
+	exec_if('new String("abc") != new String("abc")');
+	exec_def('var foo = bar = new String("abc");');
+	exec_if('foo == bar');
+	xprintln("-----------------------");
+};
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:400px;" custom_attribute>
+DIV
+</div>
+</body>
+</html>

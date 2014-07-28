@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>context substitution</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+console.log(foo); // -> function foo() {}
+
+function foo() {}
+
+xprintln("----------");
+
+console.log(bar); // undefined
+
+var bar = function () {};
+
+console.log(bar); // -> function () {}
+
+xprintln("----------");
+
+// console.log(qux); // Uncaught ReferenceError
+
+var baz = function qux() {};
+
+console.log(baz); // -> function qux() {}
+
+// console.log(qux); // Uncaught ReferenceError
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

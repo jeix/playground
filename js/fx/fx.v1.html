@@ -1,0 +1,214 @@
+<style type="text/css">
+
+</style><script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+var $N = function(name) { return document.getElementsByName(name); };
+var $T = function(tag) { return document.getElementsByTagName(tag); };
+
+function xprint(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+}
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	if (s) body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+</script><script type="text/javascript">
+function add_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			if (elem.className.indexOf(klass) == -1) {
+				elem.className = (elem.className + ' ' + klass).trim();
+			}
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				if (elem[i].className.indexOf(klass) == -1) {
+					elem[i].className = (elem[i].className + ' ' + klass).trim();
+				}
+			}
+		}
+	}
+}
+function remove_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			elem.className = elem.className.split(klass).join(' ').replace(/  +/g, ' ').trim();
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].className = elem[i].className.split(klass).join(' ').replace(/  +/g, ' ').trim();
+			}
+		}
+	}
+}
+function change_class(elem, klass_from, klass_to) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			if (elem.className.indexOf(klass_from) >= 0) {
+				elem.className = elem.className.replace(klass_from, klass_to);
+			}
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				if (elem[i].className.indexOf(klass_from) >= 0) {
+					elem[i].className = elem[i].className.replace(klass_from, klass_to);
+				}
+			}
+		}
+	}
+}
+////////////////////////////////////////
+var select_change = function(val) {
+	for (var i = 0; i < this.options.length; i++) {
+		if (this.options[i].value == val) {
+			this.selectedIndex = i;
+			break;
+		}
+	}
+};
+var select_has_option = function(val) {
+	for (var i = 0; i < this.options.length; i++) {
+		if (this.options[i].value == val) {
+			return true;
+		}
+	}
+	return false;
+};
+var select_add = function(val, txt) {
+	this.add(new Option(txt, val), undefined);
+};
+////////////////////////////////////////
+var element_enable = function() {
+	element_enabler.change_activity(this, false);
+};
+var element_disable = function() {
+	element_enabler.change_activity(this, true);
+};
+////////////////////////////////////////
+var element_enabler = {
+	change_activity: function(elem, disable) {
+		if (elem) {
+			var elem_tag;
+			var elem_type;
+			if (elem.type == "select-one" || elem.type == "select-multiple") {
+				this.change_single_activity(elem, disable);
+			} else if (elem.length == undefined) {
+				this.change_single_activity(elem, disable);
+			} else {
+				for (var i = 0; i < elem.length; i++) {
+					this.change_single_activity(elem[i], disable);
+				}
+			}
+		}
+	},
+	change_single_activity: function(elem, disable) {
+		if (elem) {
+			var elem_tag = elem.tagName.toLowerCase();
+			if (elem_tag == "input") {
+				var elem_type = elem.type;
+				if (elem_type == "text") {
+					this.text(elem, disable);
+				} else if (elem_type == "checkbox") {
+					this.checkbox(elem, disable);
+				} else if (elem_type == "radio") {
+					this.radio(elem, disable);
+				}
+			} else if (elem_tag == "select") {
+				this.select(elem, disable);
+			} else if (elem_tag == "img") {
+				this.image(elem, disable);
+			}
+		}
+	},
+	text: function(elem, disable) {
+		if (elem) {
+			if (disable) {
+				change_class(elem, "rw", "ro");
+			} else {
+				change_class(elem, "ro", "rw");
+			}
+			//elem.disabled = disable;
+			elem.readOnly = disable;
+			elem.onselectstart = function () { return disable==false; } // IE -- selection by drag
+			elem.onmousedown = function () { return disable==false; } // FF -- blinking text cursor by click, selection by drag
+			elem.oncopy = function () { return disable==false; } // FF -- selection by tab key
+			if (disable) {
+				elem.style.cursor = 'default';
+			} else {
+				elem.style.cursor = 'text';
+			}
+		}
+	},
+	select: function(elem, disable) {
+		if (elem) {
+			if (disable) {
+				change_class(elem, "rw", "ro");
+			} else {
+				change_class(elem, "rw", "ro");
+			}
+			elem.disabled = disable;
+		}
+	},
+	checkbox: function(elem, disable) {
+		if (elem) {
+			elem.disabled = disable;
+		}
+	},
+	radio: function(elem, disable) {
+		if (elem) {
+			elem.disabled = disable;
+		}
+	},
+	image: function(elem, disable) {
+		if (elem) {
+			elem.style.cursor = (disable ? 'default' : 'pointer');
+		}
+	}
+};
+////////////////////////////////////////
+var multi_enable = function(elems) {
+	element_enabler.change_activity(elems, false);
+};
+var multi_disable = function(elems) {
+	element_enabler.change_activity(elems, true);
+};
+</script><body><input type="checkbox" id="vchkt" checked onclick="this.checked?$('vtxt').enable():$('vtxt').disable()" />
+<input type="text" id="vtxt"><br>
+<input type="checkbox" id="vvchk" onclick="this.checked?$('vchk').enable():$('vchk').disable()" />
+<input type="checkbox" id="vchk" checked onclick="this.checked?$('vsel').enable():$('vsel').disable()" />
+<select id="vsel"></select>
+<span id="vsel_index"></span><br>
+<input type="checkbox" checked onclick="this.checked?multi_enable($N('radio')):multi_disable($N('radio'))" />
+<input type="radio" name="radio" value="1">
+<input type="radio" name="radio" value="1">
+<input type="radio" name="radio" value="1">
+<script type="text/javascript">
+
+var txt = $('vtxt');
+txt.enable = element_enable;
+txt.disable = element_disable;
+
+var sel = $('vsel');
+sel.append = select_add;
+sel.change = select_change;
+sel.has_option = select_has_option; // selectedIndex
+sel.enable = element_enable;
+sel.disable = element_disable;
+sel.onchange = function() { $('vsel_index').innerHTML = this.value + "@" + this.selectedIndex; };
+
+sel.append('1', '고구마');
+sel.append('2', '고등어');
+sel.append('3', '고사리');
+if (sel.has_option('3')) {
+	sel.change('3'); // onchange not occurs
+	sel.onchange();
+}
+
+var chk = $('vchk');
+chk.enable = element_enable;
+chk.disable = element_disable;
+chk.click();
+
+$('vvchk').click();
+
+</script></body>

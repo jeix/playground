@@ -1,0 +1,6 @@
+@ https://developer.mozilla.org/en/JavaScript/Memory_Management
+
+GC
+- reference counting v. cycles
+- mark-and-sweep (reachable v. unreachable)
+  - objects need to be made explicitly unreachable

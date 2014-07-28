@@ -1,0 +1,11 @@
+
+var d = new Date();
+d.toDateString();       // -> "Wed Sep 12 2012"
+d.toTimeString();       // -> "10:42:09 GMT+0900 (대한민국 표준시)"
+d.toString();           // -> "Wed Sep 12 2012 10:42:09 GMT+0900 (대한민국 표준시)"
+d.toLocaleDateString(); // -> "Wednesday, September 12, 2012"
+d.toLocaleTimeString(); // -> "10:42:09"
+d.toLocaleString();     // -> "Wed Sep 12 2012 10:42:09 GMT+0900 (대한민국 표준시)"
+d.toISOString();        // -> "2012-09-12T01:42:09.548Z"
+d.toUTCString();        // -> "Wed, 12 Sep 2012 01:42:09 GMT"
+d.toJSON();             // -> "2012-09-12T01:42:09.548Z"

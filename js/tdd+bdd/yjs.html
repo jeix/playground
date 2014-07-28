@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style type="text/css">
+
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	if (console) console.log(s);
+	return;
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script>
+</head>
+<body>
+<script type="text/javascript">
+
+(function () {
+	var Behav = {
+		suites: [],
+		suite: undefined,
+		case_: undefined,
+		add_suite: function (suite) {
+			this.suites.push(suite);
+		}
+	};
+	var Assertion = {
+		expect: function (exp) {
+			function Assert (_exp, _not) {
+				this.expected = _exp;
+				if (_not) this.negative = true;
+			}
+			Assert.prototype = {
+				expected: undefined,
+				negative: false,
+				to_equal: function (act) {
+					var ret = this.expected == act;
+					if (this._failed(ret)) {
+						var msg = (Behav.suite ? "\t" : "") + (Behav.case_ ? "\t" : "")
+								+ this.expected
+								+ (this.negative ? " NOT" : "")
+								+ " expected BUT " + act;
+						xprintln(msg);
+						// TODO throw exception
+					}
+					if (this.negative) ret = ! ret;
+					return ret;
+				},
+				to_be: function (act) {
+					var ret = this.expected === act;
+					if (this._failed(ret)) {
+						var msg = (Behav.suite ? "\t" : "") + (Behav.case_ ? "\t" : "")
+								+ this.expected
+								+ " " + (this.negative ? "===" : "!==")
+								+ act;
+						xprintln(msg);
+						// TODO throw exception
+					}
+				},
+				_failed: function (result) {
+					return (result ^ this.negative == 0);
+				}
+			};
+			var _assert = new Assert(exp);
+			_assert.not = new Assert(exp, true);
+			return _assert;
+		}
+	};
+	function TestCase (_name, _func) {
+		this.name = _name;
+		this.func = _func;
+	}
+	TestCase.prototype = {
+		results: [],
+		run: function () {
+			Behav.case_ = this;
+			xprintln((Behav.suite ? "\t" : "") + this.name);
+			if (this.before) this.before();
+			this.func();
+			if (this.after) this.after();
+			Behav.case_ = undefined;
+		}
+	};
+	TestCase.it = function (name, func) {
+		var case_ = new TestCase(name, func);
+		if (Behav.suite) Behav.suite.add(case_);
+		if (Behav.suite) case_.before = Behav.suite.before_each;
+		if (Behav.suite) case_.after = Behav.suite.after_each;
+		case_.run();
+	};
+	function TestSuite (_name, _func) {
+		this.name = _name;
+		this.func = _func;
+	}
+	TestSuite.prototype = {
+		cases: [],
+		run: function () {
+			Behav.suite = this;
+			xprintln(this.name);
+			function before_each (func) {
+				Behav.suite.before_each = func;
+			};
+			window.before_each = before_each;
+			function after_each (func) {
+				Behav.suite.after_each = func;
+			};
+			window.after_each = after_each;
+			this.func();
+			Behav.suite = undefined;
+		},
+		add: function (_case) {
+			this.cases.push(_case);
+		}
+	};
+	TestSuite.describe = function (name, func) {
+		var suite = new TestSuite(name, func);
+		Behav.add_suite(suite);
+		suite.run();
+	};
+	window.describe = TestSuite.describe;
+	window.it = TestCase.it;
+	window.expect = Assertion.expect;
+})();
+
+describe("suite", function () {
+	//xprintln("xxx");
+	it("case 1", function () {
+		//xprintln("yyy");
+		expect(4).to_equal("4");
+	})
+	it("case 2", function () {
+		//xprintln("zzz");
+		expect(4).not.to_equal("4");
+	})
+});
+
+it("case only", function () {
+	expect(4).to_equal("4");
+});
+
+xprintln("caseless");
+expect(4).not.to_equal("four");
+
+</script><script type="text/javascript">
+
+//*
+(function () {
+	var suits = [];
+	var SUITLESS = "__suit__";
+	var curr_suit_name;
+	var curr_case_name;
+	function desc (suit_name, suit_func) {
+		curr_suit_name = suit_name;
+		suits[curr_suit_name] = {name:curr_suit_name, func:suit_func, cases:[]};
+		xprintln(curr_suit_name);
+		suit_func();
+		curr_suit_name = undefined;
+	}
+	function before_each (func) {
+		suits[curr_suit_name].before_each = func;
+	}
+	function after_each (func) {
+		suits[curr_suit_name].after_each = func;
+	}
+	function it (case_name, case_func) {
+		curr_case_name = case_name;
+		var suit = suits[curr_suit_name||SUITLESS] = suits[curr_suit_name||SUITLESS] || {name:curr_suit_name||SUITLESS, func:suit_func, cases:[]};
+		xprintln((curr_suit_name ? "\t" : "") + curr_case_name);
+		if (suit.before_each) suit.before_each();
+		suit.cases[curr_case_name] = {name:curr_case_name, func:case_func};
+		case_func();
+		if (suit.after_each) suit.after_each();
+		curr_case_name = undefined;
+	}
+	function expect (exp) {
+		function Assert (_exp, _not) {
+			this.expected = _exp;
+			if (_not) this.negative = true;
+		}
+		Assert.prototype = {
+			expected: undefined,
+			negative: false,
+			to_equal: function (act) {
+				var ret = this.expected == act;
+				if (this._failed(ret)) {
+					var msg = (curr_suit_name ? "\t" : "") + (curr_case_name ? "\t" : "")
+							+ this.expected
+							+ (this.negative ? " NOT" : "")
+							+ " expected BUT " + act;
+					xprintln(msg);
+					// TODO throw exception
+				}
+				if (this.negative) ret = ! ret;
+				return ret;
+			},
+			to_be: function (act) {
+				var ret = this.expected === act;
+				if (this._failed(ret)) {
+					var msg = (curr_suit_name ? "\t" : "") + (curr_case_name ? "\t" : "")
+							+ this.expected
+							+ " " + (this.negative ? "===" : "!==")
+							+ act;
+					xprintln(msg);
+					// TODO throw exception
+				}
+			},
+			_failed: function (result) {
+				return (result ^ this.negative == 0);
+			}
+		};
+		var _assert = new Assert(exp);
+		_assert.not = new Assert(exp, true);
+		return _assert;
+	}
+	window.describe = desc;
+	window.before_each = before_each;
+	window.after_each = after_each;
+	window.it = it;
+	window.expect = expect;
+})();
+//*/
+
+</script><script type="text/javascript">
+
+xprintln("==========");
+
+describe("A suite", function() {
+  it("contains spec with an expectation", function() {
+    expect(true).to_be(true);
+  });
+});
+
+describe("A suite is just a function", function() {
+  var a;
+  it("and so is a spec", function() {
+    a = true;
+    expect(a).to_be(true);
+  });
+});
+
+describe("The 'toBe' matcher compares with ===", function() {
+  it("and has a positive case ", function() {
+    expect(true).to_be(true);
+  });
+
+  it("and can have a negative case", function() {
+    expect(false).not.to_be(true);
+  });
+});
+
+describe("The 'toEqual' matcher", function() {
+  it("works for simple literals and variables", function() {
+    var a = 12;
+    expect(a).to_equal(12);
+  });
+  it("should work for objects", function() {
+    var foo = {
+      a: 12,
+      b: 34
+    };
+    var bar = {
+      a: 12,
+      b: 34
+    };
+    expect(foo).to_equal(bar);
+  });
+});
+
+describe("A spec", function() {
+  it("is just a function, so it can contain any code", function() {
+    var foo = 0;
+    foo += 1;
+    expect(foo).to_equal(1);
+  });
+
+  it("can have more than one expectation", function() {
+    var foo = 0;
+    foo += 1;
+    expect(foo).to_equal(1);
+    expect(true).to_equal(true);
+  });
+});
+
+describe("A spec (with setup and tear-down)", function() {
+  var foo;
+
+  before_each(function() {
+    foo = 0;
+    foo += 1;
+  });
+
+  after_each(function() {
+    foo = 0;
+  });
+
+  it("is just a function, so it can contain any code", function() {
+    expect(foo).to_equal(1);
+  });
+
+  it("can have more than one expectation", function() {
+    expect(foo).to_equal(1);
+    expect(true).to_equal(true);
+  });
+});
+
+</script>
+</body>
+</html>

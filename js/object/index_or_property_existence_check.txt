@@ -1,0 +1,9 @@
+var a = [1,2,3,0];
+var k = 2;
+if (a[k]) console.log(a[k]); // ==> 3
+if (k in a) console.log(a[k]); // ==> 3
+if (a.hasOwnProperty(k)) console.log(a[k]); // ==> 3
+k = 3;
+if (a[k]) console.log(a[k]); // fail
+if (k in a) console.log(a[k]); // ==> 0
+if (a.hasOwnProperty(k)) console.log(a[k]); // ==> 0

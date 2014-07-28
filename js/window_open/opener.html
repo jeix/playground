@@ -1,0 +1,48 @@
+<script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+
+function xprint(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+}
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+/** (1)
+function handle_open() {
+	var popup = window.open('openee.html', 'lollipop', 'width=300,height=200,menubar=no,toolbar=no,location=no,status=yes,resizable=yes');
+	popup.opener = this;
+	popup.popup_id = 'lollipop';
+}
+//*/
+//** (2)
+function handle_open() {
+	popup = window.open('openee.html', 'lollipop', 'width=300,height=200,menubar=no,toolbar=no,location=no,status=yes,resizable=yes');
+	setup_popup();
+}
+var popup;
+var popup_timer;
+function setup_popup() {
+	if (popup != undefined) {
+		popup.opener = window;
+		popup.popup_id = 'lollipop';
+		if (popup_timer) window.clearTimeout(popup_timer);
+	} else {
+		popup_timer = window.setTimeout('setup_popup()', 100);
+	}
+}
+//*/
+
+function handle_popup(popup_id, pencil) {
+	if (popup_id == 'lollipop') {
+		$('paper').innerHTML = pencil;
+	}
+}
+</script>
+
+<span id="paper"></span><br>
+<a href="javascript:void(0)" onclick="handle_open()">open</a>

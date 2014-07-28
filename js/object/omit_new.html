@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>calling constructor w/o new</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+function Waffle() {
+	this.tastes = 'yummy';
+}
+
+xprint_code(Waffle);
+
+exec('var waffle = new Waffle();');
+exec_o_ret('typeof waffle'); // -> object
+exec_o_ret('waffle.tastes'); // -> yummy
+
+xprintln();
+
+exec('var waffle = Waffle();');
+exec_o_ret('typeof waffle'); // -> undefined
+exec_o_ret('window.tastes'); // -> yummy
+
+xprintln("----------");
+
+function Waffle2() {
+	var that = {};
+	that.tastes = 'yummy';
+	return that;
+}
+
+xprint_code(Waffle2);
+
+exec('var waffle = new Waffle2();');
+exec_o_ret('typeof waffle'); // -> object
+exec_o_ret('waffle.tastes'); // -> yummy
+
+xprintln();
+
+exec('var waffle = Waffle2();');
+exec_o_ret('typeof waffle'); // -> object
+exec_o_ret('waffle.tastes'); // -> yummy
+
+xprintln("----------");
+
+function Waffle3() {
+	if (! (this instanceof arguments.callee)) {
+		return new arguments.callee();
+	}
+	this.tastes = 'yummy';
+}
+
+xprint_code(Waffle3);
+
+exec('var waffle = new Waffle3();');
+exec_o_ret('typeof waffle'); // -> object
+exec_o_ret('waffle.tastes'); // -> yummy
+
+xprintln();
+
+exec('var waffle = Waffle3();');
+exec_o_ret('typeof waffle'); // -> object
+exec_o_ret('waffle.tastes'); // -> yummy
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

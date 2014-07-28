@@ -1,0 +1,225 @@
+<script type="text/javascript" src="simple.util.js"></script>
+<script type="text/javascript">
+
+function seek_and_substring(from, seek, subs) {
+	var xpos = from.indexOf(seek);
+	if (xpos > 0) {
+		if (subs == undefined) subs = '';
+		return from.substring(0, xpos) + subs + from.substring(xpos + seek.length);
+	}
+	return from;
+}
+
+function split_and_join(from, seek, subs) {
+	if (subs == undefined) subs = '';
+	return from.split(seek).join(subs);
+}
+
+function avg(a) {
+	if (a && a.length) {
+		var sum = 0;
+		for (var i = 0; i < a.length; i++) {
+			sum += a[i];
+		}
+		return sum / a.length;
+	}
+	return null;
+}
+
+function long_replace_demo() {
+	var s = '<Presentation><A a0="20051" a1="N" a4="********" a5="0801" a8="2009-12-08" a9="2009-12-08" aa="2010-12-08" ad="24:00" ae="24:00" ai="******"><B b0="20051" b1="3" b2="1" b5="2009-12-08" b6="2010-12-08" b9="24:00" ba="24:00" bf="N" bg="1" bh="Y" bi="A10" bj="Y" bk="Y"><C c0="1" c1="1" c2="092900719000" c3="08"/><O o0="50234" o1="1" o5="1" o6="B0000" o7="센타"/><O o0="50281" o1="2" o5="1" o6="B0000" o7="대면판매"/><O o0="55076" o1="0" o5="1" o6="B0000" o7="일반"/><O o0="55281" o1="77" o5="1" o6="B0000" o7="일시납"/><O o0="55583" o1="1" o5="1" o6="B0000" o7="연간"/><O o0="56016" o1="2" o5="1" o6="B0000" o7="자사미산출(개발원확인불가)"/><O o0="56026" o1="Y" o5="1" o6="B0000" o7="미사용"/><O o0="58002" o1="N" o5="1" o6="B0000" o7="자필서명안함"/><O o0="58005" o1="Y" o5="1" o6="B0000" o7="수령했음"/><O o0="55282" o1="1" o5="1" o6="B0000" o7="50만원"/><O o0="P0001" o1="4" o5="1" o6="P0000" o7="만26세이상"/><O o0="P0002" o1="9" o5="1" o6="P0000" o7="가족한정"/><O o0="P0003" o1="0" o5="1" o6="P0000" o7="미가입"/><O o0="10000" o1="N" o5="1" o6="N0000" o7="아니오"/><O o0="55459" o1="PL001" o5="1" o6="B0000"/><O o0="56019" o1="0" o5="1" o6="B0000"/><D d0="1" d1="M0001" d2="0" d4="******" d5="*************" d6="10011857912" d7="01"><O o0="00509" o1="1" o5="1" o6="A0000" o7="주민번호"/><O o0="01623" o1="01" o5="1" o6="A0000" o7="본인"/><O o0="01768" o1="1" o5="1" o6="A0000" o7="개별"/><O o0="01769" o1="1" o5="1" o6="A0000" o7="개인"/><O o0="01777" o1="C" o5="1" o6="A0000" o7="할인그룹"/><O o0="01778" o1="N" o5="1" o6="A0000" o7="해당없음"/><O o0="01938" o1="0" o5="1" o6="A0000" o7="미적용"/><O o0="00383" o1="******" o5="1" o6="A0000"/><O o0="00365" o1="*************" o5="1" o6="A0000"/><O o0="01617" o1="1" o5="1" o6="A0000"/><O o0="01753" o1="01" o5="1" o6="A0000"/><O o0="01616" o1="08" o5="1" o6="A0000"/><O o0="01615" o1="7" o5="1" o6="A0000"/><O o0="01937" o1="16Z" o5="1" o6="A0000"/></D><D d0="1" d1="M0002" d2="1" d4="뉴그랜져XG" d5="TTTTTTTTTTTTTTTTT"><O o0="00373" o1="1" o5="1" o6="A0000" o7="출퇴근및가정용"/><O o0="00452" o1="3" o5="1" o6="A0000" o7="일반"/><O o0="01574" o1="1" o5="1" o6="A0000" o7="차량번호"/><O o0="01774" o1="1" o5="1" o6="A0000" o7="자가용"/><O o0="01776" o1="1" o5="1" o6="A0000" o7="승용차"/><O o0="01813" o1="1" o5="1" o6="A0000" o7="국내산"/><O o0="01958" o1="0" o5="1" o6="A0000" o7="해당무"/><O o0="01966" o1="0" o5="1" o6="A0000" o7="미처리"/><O o0="01974" o1="N" o5="1" o6="A0000" o7="아니오"/><O o0="01775" o1="A323" o5="1" o6="A0000"/><O o0="01456" o1="TTTTTTTTTTTTTTTTT" o5="1" o6="A0000"/><O o0="00407" o1="61C03" o5="1" o6="A0000"/><O o0="00040" o1="2005" o5="1" o6="A0000"/><O o0="01945" o1="2" o5="1" o6="A0000"/><O o0="01936" o1="1" o5="1" o6="A0000"/><O o0="00408" o1="뉴그랜져XG" o5="1" o6="A0000"/><O o0="00192" o1="2493" o5="1" o6="A0000"/><O o0="01942" o1="07CA" o5="1" o6="A0000"/><O o0="01589" o1="S" o5="1" o6="A0000"/><O o0="01591" o1="Y" o5="1" o6="A0000"/><O o0="01770" o1="Y" o5="1" o6="A0000"/><O o0="01811" o1="N" o5="1" o6="A0000"/><O o0="01756" o1="N" o5="1" o6="A0000"/><O o0="00206" o1="2" o5="1" o6="A0000"/><O o0="00454" o2="12550000" o5="2" o6="A0000"/><O o0="01587" o2="12550000" o5="2" o6="A0000"/><O o0="01947" o2="12550000" o5="2" o6="A0000"/><O o0="01977" o1="20" o5="1" o6="A0000"/><K k0="C2002" k1="1" k3="1" k5="PL001" k6="200000000" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" kq="06" ks="A"/><K k0="C0502" k1="1" k3="1" k5="PL001" k6="100000000" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" kq="03" ks="A"/><K k0="C0091" k1="1" k3="1" k5="PL001" k6="100000000" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" kq="01" ks="A"/><K k0="C0501" k1="1" k3="1" k5="PL001" k6="9999999999999" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" kq="02" ks="A"/><K k0="C0261" k1="1" k3="1" k5="PL001" k6="0" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" kk="2" ko="1" kq="04" ks="A" kr="2"/><K k0="C0504" k1="1" k3="1" k5="PL001" k6="0" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="4" ki="24:00" kj="24:00" kq="99" ks="A" kr="Y"/><K k0="C0262" k1="1" k3="1" k5="PL001" k6="12550000" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="1" ki="24:00" kj="24:00" ko="1" kq="05" ks="A"><R r1="1" r2="C0521" r3="50000" r5="KRW"/></K><K k0="C0582" k1="1" k3="1" k5="PL001" k6="0" ka="2009-12-08" kb="2010-12-08" kd="KRW" kh="2" ki="24:00" kj="24:00" ko="2" kq="05" ks="A" kr="Y"/></D><J j0="1" j3="RD301" ja="가입자특성율"/><J j0="2" j3="RD302" j5="0" ja="경력율"/><J j0="3" j3="RD303" j5="0" ja="책임경력율"/><J j0="4" j3="RD305" ja="할인할증율"/><J j0="5" j3="RD306" ja="표준요율"/><J j0="6" j3="RD307" ja="표준요율(대인1)"/><J j0="7" j3="RD309" ja="특별할증율"/><J j0="8" j3="RD358" ja="분납할증율"/><J j0="9" j3="RD359" ja="법규위반경력율"/><J j0="10" j3="RD493" j5="100" ja="고가차량할증요율"/><I/><AR ar0="08" ar1="16Z" ar2="C" ar3="N" ar4="0" ar5="08" ar6="092900719000" ar7="2" ar8="3" ar9="2009-07-27" ar10="2010-07-27"/></B></A></Presentation>';
+	
+	var ss = 0; // seek and substring
+	var sj = 0; // split and join
+	var srs = 0; // string.replace with string
+	var srr = 0; // string.replace with re
+	
+	var oit = 1000; // outer iteration times
+	var iit = 1; // inner iteration times
+	var i, j;
+	var ts1, ts2;
+	
+	for (i = 0; i < oit; i++) {
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			seek_and_substring(s, '<O o0="00145" o1="2" o5="1" o6="A0000" o7="미혼"/>');
+			seek_and_substring(s, '<O o0="00192" o1="1495" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="00206" o1="1" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01591" o1="N" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01770" o1="N" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01811" o1="Y" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="00408" o1="뉴아반떼XD 1.5(VVT)" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01589" o1="S" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01756" o1="N" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01776" o1="1" o5="1" o6="A0000" o7="승용차"/>');
+			seek_and_substring(s, '<O o0="01813" o1="1" o5="1" o6="A0000" o7="국내산"/>');
+			seek_and_substring(s, '<O o0="01942" o1="06BB" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01958" o1="0" o5="1" o6="A0000" o7="해당무"/>');
+			seek_and_substring(s, '<O o0="00454" o2="4760000" o5="2" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01947" o2="4760000" o5="2" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="00206" o1="2" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01591" o1="Y" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01770" o1="Y" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01811" o1="N" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="00408" o1="뉴그랜져XG" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01942" o1="07CA" o5="1" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="00454" o2="12550000" o5="2" o6="A0000"/>');
+			seek_and_substring(s, '<O o0="01947" o2="12550000" o5="2" o6="A0000"/>');
+		}
+		ts2 = new Date();
+		ss += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			split_and_join(s, '<O o0="00145" o1="2" o5="1" o6="A0000" o7="미혼"/>');
+			split_and_join(s, '<O o0="00192" o1="1495" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="00206" o1="1" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01591" o1="N" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01770" o1="N" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01811" o1="Y" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="00408" o1="뉴아반떼XD 1.5(VVT)" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01589" o1="S" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01756" o1="N" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01776" o1="1" o5="1" o6="A0000" o7="승용차"/>');
+			split_and_join(s, '<O o0="01813" o1="1" o5="1" o6="A0000" o7="국내산"/>');
+			split_and_join(s, '<O o0="01942" o1="06BB" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01958" o1="0" o5="1" o6="A0000" o7="해당무"/>');
+			split_and_join(s, '<O o0="00454" o2="4760000" o5="2" o6="A0000"/>');
+			split_and_join(s, '<O o0="01947" o2="4760000" o5="2" o6="A0000"/>');
+			split_and_join(s, '<O o0="00206" o1="2" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01591" o1="Y" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01770" o1="Y" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01811" o1="N" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="00408" o1="뉴그랜져XG" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="01942" o1="07CA" o5="1" o6="A0000"/>');
+			split_and_join(s, '<O o0="00454" o2="12550000" o5="2" o6="A0000"/>');
+			split_and_join(s, '<O o0="01947" o2="12550000" o5="2" o6="A0000"/>');
+		}
+		ts2 = new Date();
+		sj += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			s.replace('<O o0="00145" o1="2" o5="1" o6="A0000" o7="미혼"/>', '');
+			s.replace('<O o0="00192" o1="1495" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="00206" o1="1" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01591" o1="N" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01770" o1="N" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01811" o1="Y" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="00408" o1="뉴아반떼XD 1.5(VVT)" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01589" o1="S" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01756" o1="N" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01776" o1="1" o5="1" o6="A0000" o7="승용차"/>', '');
+			s.replace('<O o0="01813" o1="1" o5="1" o6="A0000" o7="국내산"/>', '');
+			s.replace('<O o0="01942" o1="06BB" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01958" o1="0" o5="1" o6="A0000" o7="해당무"/>', '');
+			s.replace('<O o0="00454" o2="4760000" o5="2" o6="A0000"/>', '');
+			s.replace('<O o0="01947" o2="4760000" o5="2" o6="A0000"/>', '');
+			s.replace('<O o0="00206" o1="2" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01591" o1="Y" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01770" o1="Y" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01811" o1="N" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="00408" o1="뉴그랜져XG" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="01942" o1="07CA" o5="1" o6="A0000"/>', '');
+			s.replace('<O o0="00454" o2="12550000" o5="2" o6="A0000"/>', '');
+			s.replace('<O o0="01947" o2="12550000" o5="2" o6="A0000"/>', '');
+		}
+		ts2 = new Date();
+		srs += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			s.replace(/<O o0="00145".+>/, '');
+			s.replace(/<O o0="00192".+>/, '');
+			s.replace(/<O o0="00206".+>/, '');
+			s.replace(/<O o0="01591".+>/, '');
+			s.replace(/<O o0="01770".+>/, '');
+			s.replace(/<O o0="01811".+>/, '');
+			s.replace(/<O o0="00408".+>/, '');
+			s.replace(/<O o0="01589".+>/, '');
+			s.replace(/<O o0="01756".+>/, '');
+			s.replace(/<O o0="01776".+>/, '');
+			s.replace(/<O o0="01813".+>/, '');
+			s.replace(/<O o0="01942".+>/, '');
+			s.replace(/<O o0="01958".+>/, '');
+			s.replace(/<O o0="00454".+>/, '');
+			s.replace(/<O o0="01947".+>/, '');
+			s.replace(/<O o0="00206".+>/, '');
+			s.replace(/<O o0="01591".+>/, '');
+			s.replace(/<O o0="01770".+>/, '');
+			s.replace(/<O o0="01811".+>/, '');
+			s.replace(/<O o0="00408".+>/, '');
+			s.replace(/<O o0="01942".+>/, '');
+			s.replace(/<O o0="00454".+>/, '');
+			s.replace(/<O o0="01947".+>/, '');
+		}
+		ts2 = new Date();
+		srr += ts2.valueOf() - ts1.valueOf();
+	}
+	
+	xprintln(ss);
+	xprintln(sj);
+	xprintln(srs);
+	xprintln(srr);
+}
+
+function short_replace_demo() {
+	var s = '2143574578412390709SEP46137829649857409328';
+	
+	var ss = 0; // seek and substring
+	var sj = 0; // split and join
+	var srs = 0; // string.replace with string
+	var srr = 0; // string.replace with re
+	
+	var oit = 10000; // outer iteration times
+	var iit = 1; // inner iteration times
+	var i, j;
+	var ts1, ts2;
+	
+	for (var i = 0; i < oit; i++) {
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			seek_and_substring(s, 'SEP', 'PES');
+		}
+		ts2 = new Date();
+		ss += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			split_and_join(s, 'SEP', 'PES');
+		}
+		ts2 = new Date();
+		sj += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			s.replace('SEP', 'PES');
+		}
+		ts2 = new Date();
+		srs += ts2.valueOf() - ts1.valueOf();
+		
+		ts1 = new Date();
+		for (j = 0; j < iit; j++) {
+			s.replace(/SEP/, 'PES');
+		}
+		ts2 = new Date();
+		srr += ts2.valueOf() - ts1.valueOf();
+	}
+	
+	xprintln(ss);
+	xprintln(sj);
+	xprintln(srs);
+	xprintln(srr);
+}
+
+onload = function() {
+	long_replace_demo();
+	short_replace_demo();
+	
+	/** Conclusion:
+	FF 3.5 -- use seek and substring
+	IE 6 -- use replace
+	Chrome 4 -- use seek and substring
+	//**/
+};
+</script>

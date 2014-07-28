@@ -1,0 +1,72 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:480px;" custom_attribute>
+<span id="line"></span>
+</div>
+<script type="text/javascript">
+
+function print_line(s) {
+	$("line").innerHTML = s;
+}
+
+var x;
+
+function f1() {
+	print_line("aaa");
+	setTimeout("f2()", 500);
+}
+function f2() {
+	print_line("bbb");
+	setTimeout(f3, 500);
+}
+function f3() {
+	print_line("ccc");
+	setTimeout(function(){f4();}, 500);
+}
+function f4() {
+	print_line("ddd");
+	setTimeout("f5('eee')", 500);
+}
+function f5(s) {
+	print_line(s);
+	x = "fff";
+	setTimeout("f6(x)", 500);
+}
+function f6(s) {
+	print_line(s);
+	var x = "ggg";
+	setTimeout(function(){f7(x);}, 500);
+}
+function f7(s) {
+	print_line(s);
+	setTimeout("(function(){f1();})()", 500);
+}
+
+f1();
+
+</script>
+</body>
+</html>

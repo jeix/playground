@@ -1,0 +1,8 @@
+
+dynamic select & option
+
+- IE에서
+  container.innerHTML = '<select ...</select>'
+  는 되지만
+  select.innerHTML = '<option ...</option>'
+  은 안된다

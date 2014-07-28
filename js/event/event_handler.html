@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Event Listener</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script>
+</head>
+<body>
+<div>
+<button type="button" id="button_1" onclick="do_something(event, this)">button 1</button>
+<button type="button" id="button_2">button 2</button>
+<button type="button" id="button_3">button 3</button>
+<button type="button" id="button_4">button 4</button>
+</div>
+<script form="f2" type="text/javascript">
+
+function do_something(evt, trg) {
+	var sb = [];
+	if (evt) {
+		sb.push("event.type=" + evt.type);
+		sb.push("event.target.id=" + evt.target.id);
+	}
+	if (trg) {
+		sb.push("target.id=" + trg.id);
+	}
+	if (this) {
+		sb.push("this.id=" + this.id);
+	}
+	xprintln(sb.join(";"));
+}
+
+$('button_2').onclick = do_something;
+$('button_3').addEventListener('click', do_something, false);
+$('button_4').onclick = function (evt) { do_something(evt, this); };
+
+xprint_code("$('button_1').onclick = " + $('button_1').onclick + ";");
+// -> event.type=click;event.target.id=button_1;target.id=button_1;this.id=undefined
+
+xprint_code("$('button_2').onclick = " + $('button_2').onclick + ";");
+// -> event.type=click;event.target.id=button_2;this.id=button_2
+
+xprint_code("$('button_3').onclick = " + $('button_3').onclick + ";");
+// -> event.type=click;event.target.id=button_3;this.id=button_3
+
+xprint_code("$('button_4').onclick = " + $('button_4').onclick + ";");
+// -> event.type=click;event.target.id=button_4;target.id=button_4;this.id=undefined
+
+</script>
+</body>
+</head>

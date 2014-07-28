@@ -1,0 +1,156 @@
+<body><script type="text/javascript">
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+// by Douglas Crockford
+if (typeof Object.create !== 'function') { // pre 1.8.5
+	xprintln('pre 1.8.5');
+	Object.create = function (o) {
+		function F() {}
+		F.prototype = o;
+		return new F();
+	};
+}
+
+var Fx = {
+	add: function(o) {
+		this.v += o.v;
+	},
+	sub: function(o) {
+		this.v -= o.v;
+	}
+};
+
+var f = Object.create(Fx);
+f.v = 4;
+var g = Object.create(Fx);
+g.v = 8;
+
+g.add(f); // 12
+xprintln(g.v);
+g.sub(f); // 8
+xprintln(g.v);
+
+function Foo(v) {
+	if (Object.defineProperty) { // 1.8.5
+		var val = {value:v, writable:true, enumerable:true};
+		return Object.create(Fx, {v:val});
+	} else { // pre 1.8.5
+		xprintln('pre 1.8.5');
+		var f = Object.create(Fx);
+		f.v = v;
+		return f;
+	}
+}
+
+f = /*new*/ Foo(4);
+g = /*new*/ Foo(8);
+
+g.add(f); // 12
+xprintln(g.v);
+g.sub(f); // 8
+xprintln(g.v);
+
+xprintln(g.mixin); // undefined
+
+Object.prototype.mixin = function(o) {
+	if (o) {
+		var if_only_not_exist = arguments[1];
+		if (if_only_not_exist) {
+			for (var k in o) {
+				if (!this[k]) {
+					this[k] = o[k];
+				}
+			}
+		} else {
+			for (var k in o) {
+				if (this[k] != o[k]) {
+					this[k] = o[k];
+				}
+			}
+		}
+	}
+};
+
+var Gx = {
+	mul: function(o) {
+		this.v *= o.v;
+	},
+	div: function(o) {
+		this.v /= o.v;
+	}
+};
+
+g.mixin(Gx);
+
+g.mul(f); // 32
+xprintln(g.v);
+g.div(f); // 8
+xprintln(g.v);
+
+Fx.mixin(Gx);
+
+f = /*new*/ Foo(4);
+g = /*new*/ Foo(8);
+
+g.mul(f); // 32
+xprintln(g.v);
+g.div(f); // 8
+xprintln(g.v);
+
+</script><script type="text/javascript">
+
+xprintln("--------------------");
+
+Object.prototype.run = function(f) {
+	f.apply(this, Array.prototype.slice.call(arguments, 1));
+};
+
+f = {v:4};
+g = {v:8};
+g.run(Fx.add, f); // 12
+xprintln(g.v);
+g.run(Fx.sub, f); // 8
+xprintln(g.v);
+g.run(Gx.mul, f); // 32
+xprintln(g.v);
+g.run(Gx.div, f); // 8
+xprintln(g.v);
+
+if (! Function.prototype.bind) { // pre 1.8.5
+	xprintln('pre 1.8.5');
+	Function.prototype.bind = function (obj) {
+		var slice = [].slice;
+		var args = slice.call(arguments, 1);
+		var self = this;
+		var nop = function () {};
+		var bound = function () {
+			return self.apply(this instanceof nop ? this : (obj || {}),
+							args.concat(slice.call(arguments))
+					);
+		};
+		nop.prototype = self.prototype;
+		bound.prototype = new nop();
+		return bound;
+	};
+}
+
+var gadd = Fx.add.bind(g);
+gadd(f);
+xprintln(g.v); // 12
+var gsub = Fx.sub.bind(g);
+gsub(f);
+xprintln(g.v); // 8
+var gmul = Gx.mul.bind(g);
+gmul(f);
+xprintln(g.v); // 32
+var gdiv = Gx.div.bind(g);
+gdiv(f);
+xprintln(g.v); // 8
+
+</script></body>

@@ -1,0 +1,23 @@
+// one time function
+
+var o = {
+  a: undefined,
+  b: function () {
+    this.a = 'foo';
+    this.b = function () {};
+  },
+  c: function () {
+    this.b();
+    console.log(this.a);
+  }
+};
+
+o.a // undefined
+o.b // function () { this.a = 'foo'; this.b = function () {}; }
+
+o.c(); // ==> foo
+
+o.a // "foo"
+o.b // function () {}
+
+o.c(); // ==> foo

@@ -1,0 +1,384 @@
+
+@ http://www.html5rocks.com/en/tutorials/forms/constraintvalidation/
+
+<<Constraint Validation>>
+
+=What is Constraint Validation?
+
+<form>
+  <input type="text" required value="" />
+  <input type="submit" value="Submit" />
+</form>
+
+=DOM API
+
+-willValidate
+
+<div id="one"></div>
+<input type="text" id="two" />
+<input type="text" id="three" disabled />'
+
+document.getElementById('one').willValidate; // ==> undefined
+document.getElementById('two').willValidate; // ==> true
+document.getElementById('three').willValidate; // ==> false
+
+-validity
+
+.customError
+
+<input id="foo" />
+<input id="bar" />
+
+document.getElementById('foo').validity.customError; // ==> false
+document.getElementById('bar').setCustomValidity('Invalid');
+document.getElementById('bar').validity.customError; // ==> true
+
+.patternMismatch
+
+<input id="foo" pattern="[0-9]{4}" value="1234" />
+<input id="bar" pattern="[0-9]{4}" value="ABCD" />
+
+document.getElementById('foo').validity.patternMismatch; // ==> false
+document.getElementById('bar').validity.patternMismatch; // ==> true
+
+.rangeOverflow
+
+<input id="foo" type="number" max="2" value="1" />
+<input id="bar" type="number" max="2" value="3" />
+
+document.getElementById('foo').validity.rangeOverflow; // ==> false
+document.getElementById('bar').validity.rangeOverflow; // ==> true
+
+.rangeUnderflow
+
+<input id="foo" type="number" min="2" value="3" />
+<input id="bar" type="number" min="2" value="1" />
+
+document.getElementById('foo').validity.rangeUnderflow; // ==> false
+document.getElementById('bar').validity.rangeUnderflow; // ==> true
+
+.stepMismatch
+
+<input id="foo" type="number" step="2" value="4" />
+<input id="bar" type="number" step="2" value="3" />
+
+document.getElementById('foo').validity.stepMismatch; // ==> false
+document.getElementById('bar').validity.stepMismatch; // ==> true
+
+.tooLong
+
+<input id="foo" maxlength="3" value="123" />
+<input id="bar" maxlength="3" value="1234" />
+
+document.getElementById('foo').validity.tooLong; // ==> false
+document.getElementById('foo').validity.tooLong; // ==> true
+
+.typeMismatch
+
+<input id="foo" type="url" value="http://foo.com" />
+<input id="bar" type="url" value="foo" />
+
+<input id="foo2" type="email" value="foo@foo.com" />
+<input id="bar2" type="email" value="bar" />
+
+document.getElementById('foo').validity.typeMismatch; // ==> false
+document.getElementById('bar').validity.typeMismatch; // ==> true
+
+document.getElementById('foo2').validity.typeMismatch; // ==> false
+document.getElementById('bar2').validity.typeMismatch; // ==> true
+
+.valueMissing
+
+<input id="foo" type="text" required value="foo" />
+<input id="bar" type="text" required value="" />
+
+document.getElementById('foo').validity.valueMissing; // ==> false
+document.getElementById('bar').validity.valueMissing; // ==> true
+
+.valid
+
+document.getElementById('foo').validity.valid; // ==> true
+document.getElementById('bar').validity.valid; // ==> false
+
+-validationMessage
+
+<input type="text" id="foo" required />
+
+document.getElementById('foo').validationMessage; // ==> (Chrome) "Please fill out this field."
+
+-checkValidity()
+
+<form id="form-1">
+  <input id="input-1" type="text" required />
+</form>
+<form id="form-2">
+  <input id="input-2" type="text" />
+</form>
+
+document.getElementById('form-1').checkValidity(); // ==> false
+document.getElementById('input-1').checkValidity(); // ==> false
+
+document.getElementById('form-2').checkValidity(); // ==> true
+document.getElementById('input-2').checkValidity(); // ==> true
+
+document.getElementById('input-1').addEventListener('invalid', function() {
+	console.log('invalid');
+}, false);
+
+document.getElementById('input-1').addEventListener('change', function(event) {
+  if (event.target.validity.valid) {
+    console.log('valid');
+  } else {
+    console.log('invalid');
+  }
+}, false);
+
+-setCustomValidity()
+
+if (document.getElementById('password1').value != document.getElementById('password2').value) {
+  document.getElementById('password1').setCustomValidity('Passwords must match.');
+} else {
+  document.getElementById('password1').setCustomValidity('');
+}
+
+=HTML Attributes
+
+-maxlength
+-min
+-max
+-step
+-pattern
+-type
+
+-novalidate
+
+<form novalidate>
+  <input type="text" required />
+  <input type="submit" value="Submit" />
+</form>
+
+-formnovalidate
+
+<form>
+  <input type="text" required />
+  <input type="submit" value="Validate" />
+  <input type="submit" value="Do NOT Validate" formnovalidate />
+</form>
+
+=CSS Hooks
+
+<form>
+  <input type="text" id="foo" required />
+  <input type="text" id="bar" />
+</form>
+
+document.querySelectorAll('input[type="text"]:invalid'); // ==> [<input type="text" id="foo" required>]
+document.querySelectorAll('input[type="text"]:valid');   // ==> [<input type="text" id="bar">]
+
+<<Customize View>>
+
+-Resetting Default Styling
+
+:invalid {
+  box-shadow: none; /* FF */
+  outline: 0;       /* IE 10 */
+}
+
+=Inline Bubbles
+
+::-webkit-validation-bubble {}
+::-webkit-validation-bubble-message {}
+::-webkit-validation-bubble-arrow {}
+::-webkit-validation-bubble-arrow-clipper {}
+
+-Removing The Default Bubble
+
+var forms = document.getElementsByTagName('form');
+for (var i = 0; i < forms.length; i++) {
+  forms[i].addEventListener('invalid', function(e) {
+    e.preventDefault();
+    //Possibly implement your own here.
+  }, true);
+}
+
+=Current Implementation Issues and Limitations
+
+-Handling multiple errors on one field
+
+There is no mechanism to handle for an array of error messages or a way of displaying multiple error messages to the user.
+One way of handling this is to append additional messages to the node's validationMessage as such.
+
+var foo = document.getElementById('foo');
+foo.setCustomValidity(foo.validationMessage + ' An error occurred'); // to append additional messages
+
+-Knowing when to check the validity of a field
+
+2개의 패스워드 필드 값 비교
+
+<form>
+  <fieldset>
+    <legend>Change Your Password</legend>
+    <ul>
+      <li>
+        <label for="password1">Password 1:</label>
+        <input type="password" required id="password1" />
+      </li>
+      <li>
+        <label for="password2">Password 2:</label>
+        <input type="password" required id="password2" />
+      </li>
+    </ul>
+    <input type="submit" />
+  </fieldset>
+</form>
+
+var password1 = document.getElementById('password1');
+var password2 = document.getElementById('password2');
+
+var checkPasswordValidity = function() {
+  if (password1.value != password2.value) {
+    password1.setCustomValidity('Passwords must match.');
+  } else {
+    password1.setCustomValidity('');
+  }
+};
+
+password1.addEventListener('change', checkPasswordValidity, false);
+password2.addEventListener('change', checkPasswordValidity, false);
+
+-Knowing when a user attempts to submit a form
+
+사용자가 submit 했을 때 문제가 있다면 보여줘야 하는데, 문제 없이 폼을 submit하기 전에라야 submit 이벤트가 발생하기 때문에
+자동 유효성 체크를 끄고 submit 이벤트 핸들러에서 직접 유효성을 확인해야 한다.
+
+<form id="passwordForm" novalidate>
+  <fieldset>
+    <legend>Change Your Password</legend>
+    <ul>
+      <li>
+        <label for="password1">Password 1:</label>
+        <input type="password" required id="password1" />
+      </li>
+      <li>
+        <label for="password2">Password 2:</label>
+        <input type="password" required id="password2" />
+      </li>
+    </ul>
+    <input type="submit" />
+  </fieldset>
+</form>
+
+var password1 = document.getElementById('password1');
+var password2 = document.getElementById('password2');
+
+var checkPasswordValidity = function() {
+	if (password1.value != password2.value) {
+		password1.setCustomValidity('Passwords must match.');
+	} else {
+		password1.setCustomValidity('');
+	}        
+};
+
+password1.addEventListener('change', checkPasswordValidity, false);
+password2.addEventListener('change', checkPasswordValidity, false);
+
+var form = document.getElementById('passwordForm');
+form.addEventListener('submit', function() {
+  checkPasswordValidity();
+  if (!this.checkValidity()) {
+    event.preventDefault();
+    //Implement you own means of displaying error messages to the user here.
+    password1.focus();
+  }
+}, false);
+
+-Safari
+
+사파리 브라우저는 유효성 체크를 하기는 하지만 (version 6), 유효하지 않다고 폼 submit을 막지 않으므로
+자동 유효성 체크를 끄고 submit 이벤트 핸들러에서 직접 유효성을 확인해야 한다.
+
+var forms = document.getElementsByTagName('form');
+for (var i = 0; i < forms.length; i++) {
+  forms[i].noValidate = true;
+  
+  forms[i].addEventListener('submit', function(event) {
+    //Prevent submission if checkValidity on the form returns false.
+    if (!event.target.checkValidity()) {
+      event.preventDefault();
+      //Implement you own means of displaying error messages to the user here.
+    }
+  }, false);
+}
+
+=Declarative Error Messages
+
+<form>
+  <input type="text" required x-moz-errormessage="Fill this out." /><!-- Firefox only -->
+  <input type="submit" value="Submit" />
+</form>
+
+-Additional Message with title Attribute
+
+<form>
+  <label for="price">Price: $</label>
+  <input type="text" pattern="[0-9].[0-9][0-9]" 
+    title="Please enter the price in x.xx format (e.g. 3.99)"
+    id="price" value="3" />
+  <input type="submit" value="Submit" />
+</form>
+
+=Styling with :valid and :invalid pseudo-class
+
+<style>
+:invalid {
+  border: 1px solid red;
+}
+:valid {
+  border: 1px solid green;
+}
+</style>
+<form>
+  <input type="text" required />
+  <input type="text" />
+</form>
+
+입력 하기도 전에 스타일이 적용되므로
+입력한 후에 스타일을 적용하려면
+
+<style>
+.interacted:invalid {
+  border: 1px solid red;
+}
+.interacted:valid {
+  border: 1px solid green;
+}
+</style>
+<form>
+  <input type="text" required />
+  <input type="text" />
+  <input type="submit" />
+</form>
+
+var inputs = document.querySelectorAll('input[type=text]');
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].addEventListener('blur', function(event) {
+    event.target.classList.add('interacted');
+  }, false);
+}
+
+blur 이벤트로는 포커스만 줬다가 나와도 스타일이 적용되므로
+change 이벤트 핸들러에서 해야 하지 않을까.
+
+<style>
+:-moz-ui-invalid {
+  border: 1px solid red;
+}
+:-moz-ui-valid {
+  border: 1px solid green;
+}
+
+=Dealing With Unsupported Browsers
+
+-Server Side Validation
+
+-Polyfill

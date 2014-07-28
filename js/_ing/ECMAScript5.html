@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title></title><style type="text/css">
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><body><script type="text/javascript">
+
+</script></head><body>
+<script type="text/javascript">
+
+// @ http://kangax.github.com/es5-compat-table/
+
+xprintln("--------------------");
+
+// Object.create
+xprintln("Object.create");
+// Object.defineProperty
+xprintln("Object.defineProperty");
+// Object.defineProperties
+xprintln("Object.defineProperties");
+// Object.getOwnPropertyDescriptor
+xprintln("Object.getOwnPropertyDescriptor");
+// Object.keys
+xprintln("Object.keys");
+// Object.getOwnPropertyNames
+xprintln("Object.getOwnPropertyNames");
+// Object.getPrototypeOf
+xprintln("Object.getPrototypeOf");
+// Object.preventExtensions
+xprintln("Object.preventExtensions");
+// Object.isExtensible
+xprintln("Object.isExtensible");
+// Object.seal
+xprintln("Object.seal");
+// Object.isSealed
+xprintln("Object.isSealed");
+// Object.freeze
+xprintln("Object.freeze");
+// Object.isFrozen
+xprintln("Object.isFrozen");
+
+var o = {};
+Object.defineProperty(o, "a", {
+	value: 42,
+	writable: true,
+	configurable : true,
+	enumerable: true
+}); // o.a = 42;
+Object.defineProperty(o, "b", {
+	value: 72/*,
+	writable: false,
+	configurable : false,
+	enumerable: false */
+});
+var o$x;
+Object.defineProperty(o, "x", {
+	//value: 42,
+	//writable: false,
+	// property descriptors must not specify a value or be writable when a getter or setter has been specified
+	get: function () { return o$x; },
+	set: function (v) { o$x = v; },
+	enumerable: true
+});
+
+xprintln("----------");
+
+for (var k in o) { // a, x, mixin
+	if (o.hasOwnProperty(k)) { // filtrate mixin
+		xprintln(k+":"+o[k]);
+	}
+}
+
+xprintln("----------");
+
+var keys = Object.keys(o); // own enumerable properties // [a, x]
+for (var i = 0 ; i < keys.length; i++) {
+	xprintln(keys[i]+":"+o[keys[i]]);
+}
+
+xprintln("----------");
+
+var prop_names = Object.getOwnPropertyNames(o); // own enumerable and non-enumerable properties // [a, b, x]
+for (var i = 0 ; i < prop_names.length; i++) {
+	xprintln(prop_names[i]+":"+o[prop_names[i]]);
+}
+
+xprintln("--------------------");
+
+// Date.prototype.toISOString
+exec("new Date().toISOString()");
+// Date.now
+exec("Date.now()");
+
+// Array.isArray
+exec("Array.isArray([])");
+exec("Array.isArray({})");
+
+// JSON
+xprintln("JSON");
+// Function.prototype.bind
+xprintln("Function#bind");
+// String.prototype.trim
+exec('" monkey ".trim()');
+
+xprintln("--------------------");
+
+// Array.prototype.indexOf
+xprintln("Array#indexOf");
+// Array.prototype.lastIndexOf
+xprintln("Array#lastIndexOf");
+// Array.prototype.every
+xprintln("Array#every");
+// Array.prototype.some
+xprintln("Array#some");
+// Array.prototype.forEach
+xprintln("Array#forEach");
+// Array.prototype.map
+xprintln("Array#map");
+// Array.prototype.filter
+xprintln("Array#filter");
+// Array.prototype.reduce
+xprintln("Array#reduce");
+// Array.prototype.reduceRight
+xprintln("Array#reduceRight");
+
+xprintln("--------------------");
+
+// Getter in property initializer
+exec("o.x", undefined, "getter property");
+// Setter in property initializer
+exec("o.x = 54", "noret", "setter property");
+exec("o.x", undefined, "getter property");
+
+xprintln("--------------------");
+
+// Property access on strings
+exec('"foobar"[3]');
+// Reserved words as property names
+exec("({ if: 1 }).if");
+
+// Strict mode
+(function(){ "use strict"; return !this; })();
+
+</script></body><html>

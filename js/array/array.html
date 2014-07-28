@@ -1,0 +1,321 @@
+<meta charset="UTF-8">
+<style type="text/css">
+.rw { border: 1px solid gray; }
+.ro { border: 1px dotted gray; }
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript" src="array.js">
+</script><body><script type="text/javascript">
+// indexOf
+//*
+xprintln("--------------------");
+
+exec('array = [2, 5, 9]');
+exec_o_ret('array.indexOf(2)');
+exec_o_ret('array.indexOf(7)');
+
+xprintln("----------");
+
+exec('array = [2, 5, 9, 2, 5, 9]');
+exec('indices = []');
+exec('idx = array.indexOf(5)');
+exec_def('while (idx != -1) {\n' +
+'	indices.push(idx);\n' +
+'	idx = array.indexOf(5, idx + 1);\n' +
+'}');
+exec_o_ret('indices');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// lastIndexOf
+//*
+exec('array = [2, 5, 9, 2]');
+exec_o_ret('array.lastIndexOf(2)');
+exec_o_ret('array.lastIndexOf(7)');
+exec_o_ret('array.lastIndexOf(2, 3)');
+exec_o_ret('array.lastIndexOf(2, 2)');
+exec_o_ret('array.lastIndexOf(2, -2)');
+exec_o_ret('array.lastIndexOf(2, -1)');
+
+xprintln("----------");
+
+exec('indices = []');
+exec('idx = array.lastIndexOf(2)');
+exec_def('while (idx != -1) {\n' +
+'	indices.push(idx);\n' +
+'	idx = (idx > 0 ? array.lastIndexOf(2, idx - 1) : -1);\n' +
+'}');
+exec_o_ret('indices');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// every
+//*
+function isBigEnough(element, index, array) {
+	return (element >= 10);
+}
+xprint_code(isBigEnough.toString().replace(/ {4}/g, "  "));
+exec('passed = [12, 5, 8, 130, 44].every(isBigEnough)');
+exec_o_ret('passed');
+exec_o_ret('passed = [12, 54, 18, 130, 44].every(isBigEnough)');
+exec_o_ret('passed');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// filter
+//*
+function isBigEnough(element, index, array) {
+	return (element >= 10);
+}
+xprint_code(isBigEnough.toString().replace(/ {4}/g, "  "));
+exec('filtered = [12, 5, 8, 130, 44].filter(isBigEnough)');
+exec_o_ret('filtered');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// forEach
+//*
+function printElt(element, index, array) {
+	xprintln("[" + index + "] is " + element);
+}
+xprint_code(printElt.toString().replace(/ {4}/g, "  "));
+exec('[2, 5, 9].forEach(printElt)');
+
+xprintln("----------");
+
+def = 'writer = {\n' +
+'	sb: [],\n' +
+'	write: function (s) {\n' +
+'		this.sb.push(s);\n' +
+'	},\n' +
+'	writeln: function (s) {\n' +
+'		this.write(s + "\\n");\n' +
+'	},\n' +
+'	toString: function () {\n' +
+'		return this.sb.join("");\n' +
+'	}\n' +
+'};';
+exec_def(def);
+exec('[2, 5, 9].forEach(writer.writeln, writer)');
+exec_o_ret('writer.toString()');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// map
+//*
+function makePseudoPlural(single) {
+	return single.replace(/o/g, "e");
+}
+xprint_code(makePseudoPlural.toString().replace(/ {4}/g, "  "));
+exec('singles = ["foot", "goose", "moose"]');
+exec_o_ret('singles');
+exec('plurals = singles.map(makePseudoPlural)');
+exec_o_ret('plurals');
+
+xprintln("----------");
+
+exec('numbers = [1, 4, 9]');
+exec_o_ret('numbers.map(Math.sqrt)');
+
+xprintln("----------");
+
+exec_o_ret('Array.prototype.map.call("Hello World", function(x) { return x.charCodeAt(0); })');
+exec_o_ret('Array.map("Hello World", function(x) { return x.charCodeAt(0); })');
+	// Array and String generics work with FF not Ch
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// some
+//*
+function isBigEnough(element, index, array) {
+	return (element >= 10);
+}
+xprint_code(isBigEnough.toString().replace(/ {4}/g, "  "));
+exec('passed = [2, 5, 8, 1, 4].some(isBigEnough)');
+exec_o_ret('passed');
+exec('passed = [12, 5, 8, 1, 4].some(isBigEnough)');
+exec_o_ret('passed');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// reduce
+//*
+exec('total = [0, 1, 2, 3].reduce(function(a, b){ return a + b; })');
+exec_o_ret('total');
+
+xprintln("----------");
+
+def = 'flattened = [[0,1], [2,3], [4,5]].reduce(function(a, b) {\n' +
+'	return a.concat(b);\n' +
+'}, []);';
+exec_def(def);
+exec_o_ret('flattened');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// reduceRight
+//*
+exec('total = [0, 1, 2, 3].reduceRight(function(a, b) { return a + b; })');
+exec_o_ret('total');
+
+xprintln("----------");
+
+def = 'flattened = [[0, 1], [2, 3], [4, 5]].reduceRight(function(a, b) {\n' +
+'	return a.concat(b);\n' +
+'}, []);';
+exec_def(def);
+exec_o_ret('flattened');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// contains
+//*
+exec('array = [2, 5, 9]');
+exec_o_ret('array.contains(2)');
+exec_o_ret('array.contains(3)');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// remove
+//*
+exec('array = [2, 5, 9]');
+exec('array.remove(2)');
+exec_o_ret('array');
+exec('array.remove(3)');
+exec_o_ret('array');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+// append
+//*
+exec('array = [2, 5, 9]');
+exec('array.append(5)');
+exec_o_ret('array');
+exec('array.append(9, "nodup")');
+exec_o_ret('array');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+//*
+exec('a = ["캥","거","루"]');
+	
+exec_o_ret('a.concat(a).slice(1, 4)');
+exec_o_ret('a.concat(a).slice(-4, -1)');
+
+xprintln("----------");
+
+exec_o_ret('a.sort()');
+def = 'f = function(e1,e2) {\n' +
+'	return e1.charCodeAt(0)-e2.charCodeAt(0);\n' +
+'}';
+exec_def(def);
+exec_o_ret('a.sort(f)');
+def = 'f = function(e1,e2) {\n' +
+'	return e2.charCodeAt(0)-e1.charCodeAt(0); // reversed\n' +
+'}';
+exec_def(def);
+exec_o_ret('a.sort(f)');
+exec_o_ret('a.sort().reverse()');
+
+xprintln("--------------------");
+//*/
+</script><script type="text/javascript">
+//*
+exec('a = []');
+exec('a[9] = ["고구마"]');
+exec_o_ret('a.length');
+
+xprintln("----------");
+
+exec('a = ["고구마", "고등어", "고사리"]');
+exec_o_ret('a.length');
+exec('a.length = 2');
+exec_o_ret('a');
+exec('a.length = 0');
+exec_o_ret('a');
+
+xprintln("--------------------");
+//*/
+</script><script type="application/javascript;version=1.7">
+//*
+exec('a = [1, 2, 3, 4]');
+exec('squared = [i * i for each (i in a)]')
+exec_o_ret('squared');
+exec('evens = [i for each (i in a) if (i % 2 == 0)]')
+exec_o_ret('evens');
+
+xprintln("----------");
+
+exec('squared = [i * i for each (i in a) if (typeof i == "number")]')
+exec_o_ret('squared');
+
+xprintln("--------------------");
+//*/
+</script><script type="application/javascript;version=1.8">
+//*
+exec('a = [1, 2, 3, 4]');
+exec('squared = (i * i for each (i in a))')
+exec('result = []');
+exec_def('for (j = 0; j < a.length; j++) {\n' +
+'	result.push(squared.next());\n' +
+'}');
+exec_o_ret('result');
+exec('evens = (i for each (i in a) if (i % 2 == 0))')
+exec('result = []');
+exec_def('for (j = 0; j < a.length; j++) {\n' +
+'	try {\n' +
+'		result.push(evens.next());\n' +
+'	} catch (StopIteration) {\n' +
+'		break;\n' +
+'	}\n' +
+'}');
+exec_o_ret('result');
+
+xprintln("--------------------");
+//*/
+</script><script type="application/javascript;version=1.8">
+// Iterator
+//*
+exec('a = ["고구마", "고등어", "고사리"]');
+exec('it = Iterator(a)');
+exec('result = []');
+exec_def('for (pair in it) {\n' +
+'	result.push(pair);\n' +
+'}');
+exec_o_ret('result');
+
+xprintln("----------");
+
+exec('a = ["고구마", "고등어", "고사리"]');
+exec('it = Iterator(a, true)');
+exec('result = []');
+exec_def('for (i in it) {\n' +
+'	result.push(i + ":" + a[i]);\n' +
+'}');
+exec_o_ret('result');
+
+xprintln("----------");
+
+exec('a = ["고구마", "고등어", "고사리"]');
+exec('it = Iterator(a)');
+exec('result = []');
+exec_def('for ([i,x] in it) {\n' +
+'	result.push(i + ":" + x);\n' +
+'}');
+exec_o_ret('result');
+
+xprintln("--------------------");
+//*/
+</script></body>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+input, label { line-height: 1.5em; }
+div#log { color:red; }
+
+.apple { color: #f00; }
+.banana { background-color: #ff0; }
+.orange { border: 2px solid #ffa500; }
+</style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+<ul>
+	<li>aaa</li>
+	<li>bbb</li>
+	<li>ccc</li>
+</ul>
+<div>
+	<button id="btn-html-get">get html</button>
+	<button id="btn-html-set">set html</button>
+	<button id="btn-html-set-func">set html func</button>
+</div>
+<div>
+	<button id="btn-text-get">get text</button>
+	<button id="btn-text-set">set text</button>
+	<button id="btn-text-set-func">set text func</button>
+</div>
+<div>
+	<button id="btn-attr-get">get attr</button>
+	<button id="btn-attr-set">set attr</button>
+	<button id="btn-attr-set-func">set attr func</button>
+	<button id="btn-attr-set-obj">set attr obj</button>
+	<button id="btn-attr-remove">remove attr</button>
+</div>
+<div>
+	<button id="btn-class-add">add class</button>
+	<button id="btn-class-add-func">add class func</button>
+	<button id="btn-class-check">check class</button>
+	<button id="btn-class-remove">remove class</button>
+	<button id="btn-class-remove-func">remove class func</button>
+	<button id="btn-class-toggle">toggle class</button>
+	<button id="btn-class-toggle-func">toggle class func</button>
+</div>
+<div>
+	<button id="btn-data-get">get data</button>
+	<button id="btn-data-set">set data</button>
+	<button id="btn-data-set-obj">set data obj</button>
+	<button id="btn-data-remove">remove data</button>
+</div>
+<div>
+	<button id="btn-css-get">get css</button>
+	<button id="btn-css-set">set css</button>
+	<button id="btn-css-set-func">set css func</button>
+	<button id="btn-css-set-obj">set css obj</button>
+</div>
+<div>
+	<button id="btn-height-get">get height</button>
+	<button id="btn-height-set">set height</button>
+	<button id="btn-height-set-func">set height func</button>
+	<button id="btn-inner-height-get">get inner height</button>
+</div>
+<div>
+	<input id="chk-1" type="checkbox" checked="checked" />
+	<input id="chk-2" type="checkbox" />
+	<input id="chk-3" type="checkbox" />
+</div>
+<div>
+	<button id="btn-prop-get">get prop</button>
+	<button id="btn-prop-set">set prop</button>
+	<button id="btn-prop-set-func">set prop func</button>
+	<button id="btn-prop-set-obj">set prop obj</button>
+	<button id="btn-prop-remove">remove prop</button>
+</div>
+<div>
+	<input id="txt-1" type="text" />
+	<input id="txt-2" type="text" />
+	<input id="txt-3" type="text" />
+</div>
+<div>
+	<button id="btn-val-get">get val</button>
+	<button id="btn-val-set">set val</button>
+	<button id="btn-val-set-func">set val func</button>
+</div>
+<div id="log"></div>
+
+<script>
+
+(function () {
+	var jqo = $("li");
+	// size
+	var size = jqo.size();
+	console.log("jqo.size() -> " + size); // -> 3
+	// each
+	jqo.each(function (ix, elem) {
+		console.log("[" + ix + "] -> [" + elem.innerHTML + "]"); // -> [0] -> [aaa]
+																 // -> [1] -> [bbb]
+																 // -> [2] -> [ccc]
+	});
+	// get
+	var elem = jqo.get(1);
+	console.log("[" + $(elem).index() + "] -> [" + elem.innerHTML + "]"); // -> [1] -> [bbb]
+	// toArray
+	jqo.toArray().forEach(function (elem, ix, array) {
+		console.log("[" + ix + "] -> [" + $(elem).html() + "]"); // -> [0] -> [aaa]
+																 // -> [1] -> [bbb]
+																 // -> [2] -> [ccc]
+	});
+})();
+
+// html
+$("#btn-html-get").click(function() {
+	var html = $("li").html(); // get the first
+	$("#log").html("[" + html + "]");
+});
+
+$("#btn-html-set").click(function() {
+	$("li").html($("<b>html</b>")); // set for each
+});
+
+$("#btn-html-set-func").click(function() {
+	$("li").html(function (ix, curr_html) {
+		return curr_html + " " + ix;
+	});
+});
+
+// text
+$("#btn-text-get").click(function() {
+	var text = $("li").text(); // get all tag-trimmed and concatenated
+	$("#log").html("[" + text + "]");
+});
+
+$("#btn-text-set").click(function() {
+	$("li").text($("<b>text</b>").html()); // set tag-trimmed for each
+});
+
+$("#btn-text-set-func").click(function() {
+	$("li").text(function (ix, curr_text) {
+		return curr_text + " " + ix;
+	});
+});
+
+// attr
+$("#btn-attr-get").click(function() {
+	var attr = $("li").attr('id'); // get the first
+	$("#log").html("[" + attr + "]");
+});
+
+$("#btn-attr-set").click(function() {
+	$("li").attr('id', 'li'); // set for each
+});
+
+$("#btn-attr-set-func").click(function() {
+	$("li").attr('id', function (ix, curr_attr) {
+		return curr_attr + "-" + ix;
+	});
+});
+
+$("#btn-attr-set-obj").click(function() {
+	$("li").attr({x:'a',y:'b',z:'c'}); // set for each
+});
+
+$("#btn-attr-remove").click(function() {
+	$("li").removeAttr('id'); // remove for each
+});
+
+// class
+$("#btn-class-add").click(function() {
+	$("li").addClass('apple banana orange'); // add for each
+});
+
+$("#btn-class-add-func").click(function() {
+	var klasses = ['apple', 'banana', 'orange'];
+	$("li").addClass(function (ix, curr_class) {
+		return klasses[ix];
+	});
+});
+
+$("#btn-class-check").click(function() {
+	var klass = "orange";
+	if ($("li").hasClass(klass)) { // at least one
+		$("#log").html("at least one has '" + klass + "' class");
+	} else {
+		$("#log").html("none has '" + klass + "' class");
+	}
+});
+
+$("#btn-class-remove").click(function() {
+	$("li").removeClass('apple banana orange'); // remove for each
+});
+
+$("#btn-class-remove-func").click(function() {
+	var klasses = ['apple', 'banana', 'orange'];
+	$("li").removeClass(function (ix, curr_class) {
+		return klasses[ix];
+	});
+});
+
+$("#btn-class-toggle").click(function() {
+	$("li").toggleClass('apple banana orange'); // toggle for each
+});
+
+$("#btn-class-toggle-func").click(function() {
+	var klasses = ['apple', 'banana', 'orange'];
+	$("li").toggleClass(function (ix, curr_class) {
+		return klasses[ix];
+	});
+});
+
+// data
+$("#btn-data-get").click(function() {
+	var data = $("li").data('x'); // get the first
+	$("#log").html("[" + data + "]");
+});
+
+$("#btn-data-set").click(function() {
+	$("li").data('x', 'p').data('y', 'q').data('z', 'r'); // set for each
+});
+
+$("#btn-data-set-obj").click(function() {
+	$("li").data({x:'a',y:'b',z:'c'}); // set for each
+});
+
+$("#btn-data-remove").click(function() {
+	$("li").removeData('x'); // remove for each
+});
+
+// css
+$("#btn-css-get").click(function() {
+	var css = $("li").css('border'); // get the first
+	$("#log").html("[" + css + "]");
+});
+
+$("#btn-css-set").click(function() {
+	$("li").css('border', '1px solid blue'); // set for each
+});
+
+$("#btn-css-set-func").click(function() {
+	$("li").css('width', function (ix) {
+		return ix * 40;
+	});
+});
+
+$("#btn-css-set-obj").click(function() {
+	$("li").css({'background-color':'yellow','color':'violet','width':'40'}); // set for each
+});
+
+// height
+$("#btn-height-get").click(function() {
+	var height = $("li").height(); // get the first
+	$("#log").html("[" + height + "]");
+});
+
+$("#btn-height-set").click(function() {
+	$("li").height(10); // set for each
+});
+
+$("#btn-height-set-func").click(function() {
+	$("li").height(function (ix, curr_height) {
+		return curr_height + ix;
+	});
+});
+
+$("#btn-inner-height-get").click(function() {
+	var inner_height = $("li").innerHeight(); // get the first
+	$("#log").html("[" + inner_height + "]");
+});
+
+// DOM properties
+$("#btn-prop-get").click(function() {
+	var prop = $(":checkbox").prop('checked'); // get the first
+	$("#log").html("[" + prop + "]");
+});
+
+$("#btn-prop-set").click(function() {
+	$(":checkbox").prop('checked', true); // set for each
+});
+
+$("#btn-prop-set-func").click(function() {
+	$(":checkbox").prop('checked', function (ix, curr_prop) {
+		return ! curr_prop;
+	});
+});
+
+$("#btn-prop-set-obj").click(function() {
+	$(":checkbox").prop({checked:false,disabled:true}); // set for each
+});
+
+$("#btn-prop-remove").click(function() {
+	$(":checkbox").removeProp('disabled'); // remove for each
+		// Do not use this method to remove native properties such as checked, disabled, or selected.
+		// This will remove the property completely and, once removed, cannot be added again to element.
+		// Use .prop() to set these properties to false instead.
+});
+
+// val
+$("#btn-val-get").click(function() {
+	var data = $(":text").val(); // get the first
+	$("#log").html("[" + data + "]");
+});
+
+$("#btn-val-set").click(function() {
+	$(":text").val('foo'); // set for each
+});
+
+$("#btn-val-set-func").click(function() {
+	$(":text").val(function (ix, curr_val) {
+		return curr_val + ' ' + ix;
+	});
+});
+</script>
+
+</body>
+</html>

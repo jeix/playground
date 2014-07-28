@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<meta charset="UTF-8">
+
+<script>
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+/**
+
+SFX				Top Level Namespace
+
+SFX.str			String
+SFX.tmpl		Template
+SFX.array		Array
+SFX.data		Date
+
+SFX.dom			DOM
+
+SFX.form		Form
+
+SFX.xml			XML
+
+$biz			Biz
+$btn			Button Area
+$ctx			Context
+$ctx.sso		SSO Login Info
+$ctx.params		Parameter
+$dat			Data
+$etc			Etc
+$frm			Form
+$frm.text		
+$pgn			Pagination
+$sch			Search Area
+$tab			Tab Area
+
+//*/
+
+(function (win) {
+	
+	// Top level Namespace
+	var SFX = {};
+	
+	SFX.mix = function (dst, src) {
+		//...
+	};
+	
+	// String
+	SFX.str = {
+		replace: function (s, seek, repl) {
+			//...
+		},
+		ltrim: function (s) {
+			//...
+		},
+		rtrim: function (s) {
+			//...
+		},
+		format: function (s, val) {
+			//...
+		}
+	};
+	
+	// Template
+	SFX.tmpl = {
+		format: function (tmpl_id, vals) {
+			//...
+		},
+		render: function (pane_id, tmpl_id, vals) {
+			//...
+		}
+	};
+	
+	// Arrsy
+	SFX.array = {
+		index_of: function (a, o) {
+			//...
+		},
+		contain: function (a, o) {
+			//...
+		},
+		remove: function (a, o) {
+			//...
+		},
+		append: function (a, o) {
+			//...
+		},
+		prepend: function (a, o) {
+			//...
+		},
+		insert: function (a, i, o) {
+			//...
+		},
+		remove_first: function (a) {
+			//...
+		},
+		remove_last: function (a) {
+			//...
+		},
+		remove_at: function (a, i, n) {
+			//...
+		},
+		replace: function (a, i, n, o) {
+			//...
+		},
+		clear: function (a) {
+			//...
+		}
+	};
+	
+	// Date
+	SFX.date = {
+		SEP: "-",
+		// YYYY-MM-DD
+		format: function (dt) {
+			var buf = String(dt.getFullYear());
+			buf = buf + this.SEP;
+			var mm = dt.getMonth() + 1;
+			if (mm < 10) buf = buf + "0";
+			buf = buf + mm;
+			buf = buf + this.SEP;
+			var dd = dt.getDate();
+			if (dd < 10) buf = buf + "0";
+			buf = buf + dd;
+			return buf;
+		},
+		// 오늘
+		today: function () {
+			return this.format(new Date());
+		},
+		// 요일
+		today_weekday: function () {
+			return new Date().getDay();
+		},
+		// [주초, 주말, 주초 요일]
+		_week: function (begin_dt) {
+			var dt = begin_dt;
+			var bdt = this.format(dt);
+			var weekday = dt.getDay();
+			dt.setDate(dt.getDate() + 6);
+			var edt = this.format(dt);
+			return [bdt, edt, weekday];
+		},
+		// 이번주 주간
+		this_week: function () {
+			var dt = new Date();
+			dt.setDate(dt.getDate() - dt.getDay());
+			return this._week(dt);
+		},
+		// 전주(n주 전) 주간
+		prev_week: function (n) {
+			if (n == undefined) n = 1;
+			var dt = new Date();
+			dt.setDate(dt.getDate() - dt.getDay() - 7 * n);
+			return this._week(dt);
+		},
+		// 다음주(n주 후) 주간
+		next_week: function (n) {
+			if (n == undefined) n = 1;
+			var dt = new Date();
+			dt.setDate(dt.getDate() - dt.getDay() + 7 * n);
+			return this._week(dt);
+		},
+		// [월초, 월말, 월초 요일]
+		_mon: function (begin_dt) {
+			var dt = begin_dt;
+			var bdt = this.format(dt);
+			var weekday = dt.getDay();
+			dt.setMonth(dt.getMonth() + 1);
+			dt.setDate(0);
+			var edt = this.format(dt);
+			return [bdt, edt, weekday];
+		},
+		// 이번달 월간
+		this_mon: function () {
+			var dt = new Date();
+			dt.setDate(1);
+			return this._mon(dt);
+		},
+		// 전달(n개월 전) 월간
+		prev_week: function (n) {
+			if (n == undefined) n = 1;
+			var dt = new Date();
+			dt.setMonth(dt.getMonth() - n);
+			dt.setDate(1);
+			return this._mon(dt);
+		},
+		// 다음달(n개월 후) 월간
+		next_min: function (n) {
+			if (n == undefined) n = 1;
+			var dt = new Date();
+			dt.setMonth(dt.getMonth() + n);
+			dt.setDate(1);
+			return this._mon(dt);
+		},
+		// 최근 n개월 (이번달 포함)
+		latest_month: function (n) {
+			var buf = [];
+			for (var i = n - 1; i >= 0; i--) {
+				buf.push(this.prev_mon(i));
+			}
+			return buf;
+		},
+		// 특정날짜 s 다음달 (?) 
+		next_mon_since: function (s, n) {
+			var ymd = s.split(this.SEP);
+			var dt = new Date();
+			dt.setFullYear(Number(ymd[0]));
+			dt.setMonth(Number(ymd[0]) - 1);
+			dt.setDate(Number(ymd[2]));
+			
+			if (n == undefined) n = 1;
+			dt.setMonth(dt.getMeonth() + n);
+			dt.setDate(1);
+			return this._mon(dt);
+		}
+	};
+	
+	// DOM
+	SFX.dom = {
+		_: function (elem) {
+			if (typeof(elem) === 'string') {
+				elem = $(elem);
+			}
+			return elem;
+		},
+		// Attribute
+		attr: function (elem, name, value) {
+			//...
+		},
+		remove_attr: function (elem, name) {
+			//...
+		},
+		// className
+		cls: function (elem, klass) {
+			//...
+		},
+		remove_cls: function (elem, klass) {
+			//...
+		}
+	};
+	
+	// Form
+	SFX.form = {
+		select_options: function (elem, opts) {
+			//...
+		}.
+		select_text: function (elem) {
+			//...
+		}
+	};
+	
+	SFX.form.text = {};
+	SFX.form.checkbox = {};
+	SFX.form.radio = {};
+	SFX.form.select = {};
+	SFX.form.textarea = {};
+	
+	// Event
+	SFX.evt = {};
+	
+	// Validate
+	SFX.val = {};
+	
+	// XML
+	SFX.xml = {
+		load_xml_str: function (str) {
+			var xml_doc = new ActiveXObject("Microsoft.XMLDOM");
+			xml_doc.async = false;
+			var res = xml_doc.loadXML(str);
+			if (res == false) {
+				debug('[load_xml_str] parseError=' + xml_doc.parseError.errorCode);
+				debug('[load_xml_str] reason=' + xml_doc.parseError.reason);
+				debug('[load_xml_str] line=' + xml_doc.parseError.line);
+			}
+			return xml_doc;
+		},
+		node_attr: function (node, name) {
+			//...
+		},
+		node_text: function (node) {
+			//...
+		}
+	};
+	
+	win.SFX = SFX;
+	win.sfx = SFX;
+	win.$FX = SFX;
+})(window);
+
+</script>

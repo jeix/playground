@@ -1,0 +1,360 @@
+<style type="text/css">
+.rw { border: 1px solid gray; }
+.ro { border: 1px dotted gray; }
+</style><script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+var $N = function(name) { return document.getElementsByName(name); };
+var $T = function(tag) { return document.getElementsByTagName(tag); };
+
+function xprint(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+}
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	if (s) body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+Object.prototype.mixin = function(o) {
+	for (var k in o) {
+		if (this[k] != o[k]) {
+			this[k] = o[k];
+		}
+	}
+};
+</script><script type="text/javascript" src="string.js"></script>
+<script type="text/javascript" src="validate.js"></script>
+<script type="text/javascript" src="format.v3a.js"></script><script type="text/javascript">
+////////////////////////////////////////
+function add_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.tagName) {
+			if (elem.className.indexOf(klass) == -1) {
+				elem.className = (elem.className + ' ' + klass).trim();
+			}
+		} else if (elem.length != undefined) {
+			for (var i = 0; i < elem.length; i++) {
+				if (elem[i].className.indexOf(klass) == -1) {
+					elem[i].className = (elem[i].className + ' ' + klass).trim();
+				}
+			}
+		}
+	}
+}
+function remove_class(elem, klass) {
+	if (elem != undefined) {
+		if (elem.tagName) {
+			elem.className = elem.className.split(klass).join(' ').replace(/  +/g, ' ').trim();
+		} else if (elem.length != undefined) {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].className = elem[i].className.split(klass).join(' ').replace(/  +/g, ' ').trim();
+			}
+		}
+	}
+}
+function change_class(elem, klass_from, klass_to) {
+	if (elem != undefined) {
+		if (elem.tagName) {
+			if (elem.className.indexOf(klass_from) >= 0) {
+				elem.className = elem.className.replace(klass_from, klass_to);
+			}
+		} else if (elem.length != undefined) {
+			for (var i = 0; i < elem.length; i++) {
+				if (elem[i].className.indexOf(klass_from) >= 0) {
+					elem[i].className = elem[i].className.replace(klass_from, klass_to);
+				}
+			}
+		}
+	}
+}
+
+var fx$klass = {
+	add_class: function(klass) {
+		if (this.className.indexOf(klass) == -1) {
+			this.className = (this.className + ' ' + klass).trim();
+		}
+	},
+	remove_class: function(klass) {
+		this.className = this.className.split(klass).join(' ').replace(/  +/g, ' ').trim();
+	},
+	change_class: function(klass_from, klass_to) {
+		if (this.className.indexOf(klass_from) >= 0) {
+			this.className = this.className.replace(klass_from, klass_to);
+		}
+	}
+};
+////////////////////////////////////////
+var fx$select = {
+	append: function(val, txt) {
+		this.add(new Option(txt, val), undefined);
+	},
+	change: function(val) {
+		for (var i = 0; i < this.options.length; i++) {
+			if (this.options[i].value == val) {
+				this.selectedIndex = i;
+				break;
+			}
+		}
+	},
+	has_option: function(val) {
+		for (var i = 0; i < this.options.length; i++) {
+			if (this.options[i].value == val) {
+				return true;
+			}
+		}
+		return false;
+	}
+};
+////////////////////////////////////////
+function change_enable(elem, enable) {
+	if (elem) {
+		if (elem.tagName) {
+			fx$enabler$worker.change_enable(elem, enable);
+		} else if (elem.length != undefined) {
+			for (var i = 0; i < elem.length; i++) {
+				fx$enabler$worker.change_enable(elem[i], enable);
+			}
+		}
+	}
+}
+var multi_enable = function(elems) {
+	change_enable(elems, true);
+};
+var multi_disable = function(elems) {
+	change_enable(elems, false);
+};
+
+var fx$enabler = {
+	enable: function() {
+		fx$enabler$worker.change_enable(this, true);
+	},
+	disable: function() {
+		fx$enabler$worker.change_enable(this, false);
+	}
+};
+var fx$enabler$worker = {
+	change_enable: function(elem, enable) {
+		if (elem) {
+			var elem_tag = elem.tagName.toLowerCase();
+			if (elem_tag == "input") {
+				var elem_type = elem.type;
+				if (elem_type == "text") {
+					this.text(elem, enable);
+				} else if (elem_type == "checkbox") {
+					this.checkbox(elem, enable);
+				} else if (elem_type == "radio") {
+					this.radio(elem, enable);
+				}
+			} else if (elem_tag == "select") {
+				//var elem_type = elem.type; // select-one or select-multiple
+				this.select(elem, enable);
+			} else if (elem_tag == "img") {
+				this.image(elem, enable);
+			} else if (elem_tag == "textarea") {
+				// TODO
+			}
+		}
+	},
+	text: function(elem, enable) {
+		if (elem) {
+			var klass_from = "rw";
+			var klass_to = "ro";
+			if (enable) {
+				klass_from = "ro";
+				klass_to = "rw";
+			}
+			if (elem.change_class) {
+				elem.change_class(klass_from, klass_to);
+			} else {
+				change_class(elem, klass_from, klass_to);
+			}
+			//elem.disabled = (enable == false);
+			elem.readOnly = (enable == false);
+			elem.onselectstart = function () { return enable; } // IE -- selection by drag
+			elem.onmousedown = function () { return enable; } // FF -- blinking text cursor by click, selection by drag
+			elem.oncopy = function () { return enable; } // FF -- selection by tab key
+			elem.style.cursor = (enable ? 'text' : 'default');
+		}
+	},
+	select: function(elem, enable) {
+		if (elem) {
+			var klass_from = "rw";
+			var klass_to = "ro";
+			if (enable) {
+				klass_from = "ro";
+				klass_to = "rw";
+			}
+			if (elem.change_class) {
+				elem.change_class(klass_from, klass_to);
+			} else {
+				change_class(elem, klass_from, klass_to);
+			}
+			elem.disabled = (enable == false);
+		}
+	},
+	checkbox: function(elem, enable) {
+		if (elem) {
+			elem.disabled = (enable == false);
+		}
+	},
+	radio: function(elem, enable) {
+		if (elem) {
+			elem.disabled = (enable == false);
+		}
+	},
+	image: function(elem, enable) {
+		if (elem) {
+			elem.style.cursor = (enable ? 'pointer' : 'default');
+		}
+	}
+};
+////////////////////////////////////////
+var fx$format = {
+	onfocus: function() {
+		var x = this.ivalue();
+		if (x) this.value = x;
+	},
+	onblur: function() {
+		var x = this.fvalue();
+		if (x) this.value = x;
+	},
+	fvalue: function() {
+		if ('date' == this.format) {
+			var dt = Formatter.date.parse(this.value);
+			if (dt) return Formatter.date.format(this.pattern || Formatter.date.pattern, dt[0], dt[1], dt[2]);
+		} else if ('time' == this.format) {
+			var tm = Formatter.time.parse(this.value);
+			if (tm) return Formatter.time.format(this.pattern || Formatter.time.pattern, tm[0], tm[1], tm[2]);
+		} else if ('number' == this.format) {
+			var n = Formatter.number.parse(this.value);
+			if (n) return Formatter.number.format(n);
+		}
+	},
+	ivalue: function() {
+		if ('date' == this.format) {
+			return this.value.replace(/\-/g, '');
+		} else if ('time' == this.format) {
+			return this.value.replace(/:/g, '');
+		} else if ('number' == this.format) {
+			return this.value.replace(/,/g, '');
+		}
+	}
+};
+////////////////////////////////////////
+var fx = {
+	classer: function() {
+		if (this.elem && this.elem.mixin) {
+			this.elem.mixin(fx$klass);
+		}
+		return this;
+	},
+	enabler: function() {
+		if (this.elem && this.elem.mixin) {
+			this.elem.mixin(fx$enabler);
+		}
+		return this;
+	},
+	selecter: function() {
+		if (this.elem && this.elem.mixin) {
+			this.elem.mixin(fx$select);
+		}
+		return this;
+	},
+	formatter: function(format, pattern) {
+		if (this.elem) {
+			this.elem.format = format;
+			if (pattern) {
+				this.elem.pattern = pattern;
+			}
+			if (this.elem.mixin) {
+				this.elem.mixin(fx$format);
+			}
+		}
+		return this;
+	},
+	event_handler: function(handlers) {
+		if (this.elem && this.elem.mixin) {
+			this.elem.mixin(handlers); // not support addEventListener/removeEventListener
+		}
+		return this;
+	},
+	end: function() {
+		return this.elem;
+	}
+};
+
+function Fx(elem) {
+	//this.mixin(fx);
+	if (typeof elem == "string") elem = $(elem);
+	if (elem) {
+		if (elem.mixin == undefined) elem.mixin = Object.prototype.mixin;
+		this.elem = elem;
+		this.classer().enabler();
+		if (elem.tagName.toLowerCase() == "select") this.selecter();
+	}
+}
+Fx.prototype.mixin(fx);
+Fx.multi = function(elems) {
+	if (typeof elems == "string") elems = $N(elems);
+	if (elems) {
+		for (var i = 0; i < elems.length; i++) {
+			elems[i] = new Fx(elems[i]);
+		}
+	}
+	return elems;
+};
+////////////////////////////////////////
+</script><body><input type="checkbox" id="chk4txt" checked />
+<input type="text" id="txt" class="rw"><br>
+<input type="checkbox" id="chk4chk" />
+<input type="checkbox" id="chk4sel" checked />
+<select id="sel" class="rw"></select>
+<span id="sel_index"></span><br>
+<input type="checkbox" id="chk4rad" checked />
+<input type="radio" name="radio" value="1">
+<input type="radio" name="radio" value="2">
+<input type="radio" name="radio" value="3"><br>
+number: <input type="text" id="ntxt" class="rw" style="ime-mode:disabled;width:120px;"><br>
+date: <input type="text" id="dtxt" class="rw" style="ime-mode:disabled;width:100px;"><br>
+time: <input type="text" id="ttxt" class="rw" style="ime-mode:disabled;width:40px;"><br>
+<script type="text/javascript">
+
+new Fx('chk4txt').event_handler({
+	onclick: function() { this.checked ? $('txt').enable() : $('txt').disable(); }
+}).end()
+
+new Fx('txt').end();
+
+var sel = new Fx('sel').event_handler({
+	onchange: function() { $('sel_index').innerHTML = this.value + "@" + this.selectedIndex; }
+}).end();
+
+sel.append('1', '고구마');
+sel.append('2', '고등어');
+sel.append('3', '고사리');
+if (sel.has_option('3')) {
+	sel.change('3'); // does not call onchange
+	sel.onchange();
+}
+
+new Fx('chk4sel').event_handler({
+	onclick: function() { this.checked ? $('sel').enable() : $('sel').disable(); }
+}).end().click();
+
+new Fx('chk4chk').event_handler({
+	onclick: function() { this.checked ? $('chk4sel').enable() : $('chk4sel').disable(); }
+}).end().click();
+
+var radios = Fx.multi('radio'); // {name:'radio',klass:'radio',tag:'input'}
+
+new Fx('chk4rad').event_handler({
+	onclick: function() { this.checked ? multi_enable($N('radio')) : multi_disable($N('radio')); }
+}).end();
+
+new Fx('ntxt').formatter('number').end();
+new Fx('dtxt').formatter('date', 'yyyy-mm-dd').end();
+new Fx('ttxt').formatter('time', 'hh:mm').end();
+
+</script></body>

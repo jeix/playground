@@ -1,0 +1,23 @@
+
+기존 객체에 다른 객체의 기능을 추가하기
+또는
+기존 객체에서 다른 객체의 기능을 사용하기
+
+(다른 객체/프로토타입의 함수 또는 글로벌 함수)
+
+(1) o.f = f
+    C.prototype.f = f
+
+(2) C.prototype = o											@see subtyping.html
+    Object.create(o)										@see create.html
+
+(2) for (var k in o) x[k] = o[k]							@see include_extend.html
+    -> Object.prototype.mixin(o)
+
+(3) f.apply(o, args)										@see run.html
+    -> Object.prototype.run(f)
+
+(3a) a.f.call(s, ...) // Array and String generics (1.6)	@see bind.html
+
+(4) f.bind(o, ...)(...)										@see run.html
+															@see bind.html

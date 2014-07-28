@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+p { -webkit-margin-before: 0em; margin-top: 0em;
+	-webkit-margin-after: 0em; margin-bottom: 0em; }
+.indent { margin-left: 2em; }
+</style>
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		body.style.fontFamily = '"Courier New", Monospace';
+		body.style.fontSize = '9pt';
+		body.style.backgroundColor = '#c0c0c0';
+		body.style.color = '#000';
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<form id="f1" name="form_with_input_submit" onsubmit="return form_submit(this.name)"></form>
+<form id="f2" name="form_with_button_submit" onsubmit="return form_submit(this.name)"></form>
+<div>
+<p>input</p>
+<span class="indent">
+<input form="f1" type="text" name="text" placeholder="enter to submit" onchange="this.form.output.value = this.value">
+<input form="f1" type="button" name="button" value="button" onclick="return input_click(this.name)">
+<input form="f1" type="submit" name="submit" value="submit" onclick="return input_click(this.name)">
+<input form="f1" type="submit" name="submit2" value="submit" onclick="return input_click(this.name)">
+<output form="f1" name="output">output</output>
+</span>
+<p class="indent">input's default type is 'text'</p>
+</div>
+<div>
+<p>button</p>
+<span class="indent">
+<input form="f2" type="text" name="text" placeholder="enter to submit" onchange="$(this.form.id).output.value = this.value">
+<button form="f2" type="button" name="button" value="button" onclick="return button_click(this.name)">button</button>
+<button form="f2" type="submit" name="submit" value="submit" onclick="return button_click(this.name)">submit</button>
+<button form="f2" type="submit" name="submit2" value="submit" onclick="return button_click(this.name)">submit</button>
+<output form="f2" name="output">output</output>
+</span>
+<p class="indent">button's default type is 'submit' (except IE 'button')</p>
+</div>
+<script form="f2" type="text/javascript">
+
+function form_submit(name) {
+	xprintln("form[" + name + "] submitted");
+	return false;
+}
+function input_click(name) {
+	xprintln("input[" + name + "] clicked");
+	return true;
+}
+function button_click(name) {
+	xprintln("button[" + name + "] clicked");
+	return true;
+}
+
+xprintln("--------------------");
+
+</script>
+</body>
+</head>

@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Array#insert()</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style>
+<script type="text/javascript" src="../sfx/base.js"></script>
+<script type="text/javascript">
+</script><body><script type="text/javascript">
+
+Array.prototype.insert = function (item, compare) {
+	var size = this.length;
+	for (var i = 0; i < size; i++) {
+		var x = this[i];
+		if ((compare && compare(x, item) > 0) || (x > item)) {
+			this.splice(i, 0, item);
+			return;
+		}
+	}
+	this.push(item);
+};
+
+function xprinta(a) {
+	for (var i = 0; i < a.length; i++) {
+		xprintln(a[i]);
+	}
+}
+function xprintan(a) {
+	for (var i = 0; i < a.length; i++) {
+		xprintln(a[i].n);
+	}
+}
+
+xprintln("--------------------");
+xprintln("// insert with compare function");
+xprintln("----------");
+
+var a = [
+	{n:'apple', seq:1},
+	{n:'orange', seq:3}
+];
+function compare_asc(x1, x2) {
+	return x1.seq - x2.seq;
+}
+a.insert({n:'acorn', seq:0}, compare_asc);
+a.insert({n:'banana', seq:2}, compare_asc);
+a.insert({n:'pear', seq:4}, compare_asc);
+
+xprintan(a);
+
+xprintln("----------");
+
+a = [
+	{n:'orange', seq:3},
+	{n:'apple', seq:1}
+];
+function compare_dsc(x1, x2) {
+	return x2.seq - x1.seq;
+}
+a.insert({n:'acorn', seq:0}, compare_dsc);
+a.insert({n:'banana', seq:2}, compare_dsc);
+a.insert({n:'pear', seq:4}, compare_dsc);
+
+xprintan(a);
+
+xprintln("--------------------");
+xprintln("// insert with NO compare function");
+xprintln("----------");
+
+a = [
+	'apple',
+	'orange'
+];
+a.insert('acorn');
+a.insert('banana');
+a.insert('pear');
+
+xprinta(a);
+
+xprintln("----------");
+
+a = [
+	'orange',
+	'apple'
+];
+a.sort(); // cuz a is not sorted
+a.insert('acorn');
+a.insert('banana');
+a.insert('pear');
+a.reverse();
+
+xprinta(a);
+
+xprintln("--------------------");
+xprintln("// push then sort with compare function");
+xprintln("----------");
+
+a = [
+	{n:'apple', seq:1},
+	{n:'orange', seq:3}
+];
+a.push({n:'acorn', seq:0});
+a.push({n:'banana', seq:2});
+a.push({n:'pear', seq:4});
+a.sort(compare_asc);
+
+xprintan(a);
+
+xprintln("----------");
+
+a = [
+	{n:'orange', seq:3},
+	{n:'apple', seq:1}
+];
+a.push({n:'acorn', seq:0});
+a.push({n:'banana', seq:2});
+a.push({n:'pear', seq:4});
+a.sort(compare_dsc);
+
+xprintan(a);
+
+xprintln("--------------------");
+xprintln("// push then sort with NO compare function");
+xprintln("----------");
+
+a = [
+	'apple',
+	'orange'
+];
+a.push('acorn');
+a.push('banana');
+a.push('pear');
+a.sort();
+
+xprinta(a);
+
+xprintln("----------");
+
+a = [
+	'orange',
+	'apple'
+];
+a.push('acorn');
+a.push('banana');
+a.push('pear');
+a.sort().reverse();
+
+xprinta(a);
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

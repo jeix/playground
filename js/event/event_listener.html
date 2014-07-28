@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Event Listener</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+div.row { cursor: pointer; }
+div.begin-of-rows { border-top: 1px solid #000; }
+div.end-of-rows { border-bottom: 1px solid #000; }
+p, ul { -webkit-margin-before: 0em; margin-top: 0em;
+	-webkit-margin-after: 0em; margin-bottom: 0em; }
+p.indent { margin-left: 2em; }
+a { text-decoration: none; color: #000; }
+a:active, a:hover { border-bottom: dotted 1px #808080;
+	cursor: pointer; }
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		body.style.fontFamily = '"Courier New", Monospace';
+		body.style.fontSize = '9pt';
+		body.style.backgroundColor = '#c0c0c0';
+		body.style.color = '#000';
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:800px;">
+	<div class="begin-of-rows">
+		<ul>
+			<li>traditional inline handler
+			<li>various points preventing default
+		</ul>
+		<p>&nbsp;</p>
+	</div>
+	<div class="row end-of-rows" onclick="confirm('div onclick');">
+		<p>&lt;div onclick=&quot;confirm('div onclick');&quot;&gt;</p>
+		<p class="indent"><a href="javascript:confirm('href');" onclick="confirm('onclick');">&lt;a href=&quot;javascript:confirm('href');&quot; onclick=&quot;confirm('onclick');&quot;&gt;</a></p>
+		<p class="indent"><a href="javascript:(function () {confirm('href'); return void(0);})();" onclick="confirm('onclick');">&lt;a href=&quot;javascript:(function () {confirm('href'); return void(0);})();&quot; onclick=&quot;confirm('onclick');&quot;&gt;</a></p>
+		<p class="indent"><a href="javascript:(function () {confirm('href'); return undefined;})();" onclick="confirm('onclick');">&lt;a href=&quot;javascript:(function () {confirm('href'); return undefined;})();&quot; onclick=&quot;confirm('onclick');&quot;&gt;</a></p>
+		<p class="indent"><a href="javascript:undefined;" onclick="confirm('onclick');">&lt;a href=&quot;javascript:undefined;&quot; onclick=&quot;confirm('onclick');&quot;&gt;</a></p>
+		<p class="indent"><a href="javascript:confirm('href');" onclick="confirm('onclick'); return false;">&lt;a href=&quot;javascript:confirm('href');&quot; onclick=&quot;confirm('onclick'); return false;&quot;&gt;</a></p>
+		<p>&lt;/div&gt;</p>
+	</div>
+	<p>&nbsp;</p>
+	<div id="end" class="row begin-of-rows">
+		<p>&lt;div&gt;</p>
+		<p class="indent"><a id="stop" href="javascript:confirm('href');">&lt;a href=&quot;javascript:confirm('href');&quot;&gt;</a></p>
+		<p>&lt;/div&gt;</p>
+	</div>
+	<div class="end-of-rows">
+		<p>&nbsp;</p>
+		<p>div</p>
+		<ul>
+			<li>listener binding :
+			<input type="radio" name="parent-listener-binding" id="parent-add-listener-yes" onclick="change_parent_listener_behavior()" checked><label for="parent-add-listener-yes">addEventListener</label>
+			<input type="radio" name="parent-listener-binding" id="parent-add-listener-no" onclick="change_parent_listener_behavior()"><label for="parent-add-listener-no">onclick</label>
+			<li>event flow :
+			<input type="radio" name="parent-event-flow" id="parent-use-capture-yes" onclick="change_parent_listener_behavior()"><label for="parent-use-capture-yes">capturing</label>
+			<input type="radio" name="parent-event-flow" id="parent-use-capture-no" onclick="change_parent_listener_behavior()" checked><label for="parent-use-capture-no">bubbling</label>
+			<li>stop propagation :
+			<input type="radio" name="parent-stop-propagation" id="parent-stop-propagation-yes" onclick="change_parent_listener_behavior()"><label for="parent-stop-propagation-yes">Yes</label>
+			<input type="radio" name="parent-stop-propagation" id="parent-stop-propagation-no" onclick="change_parent_listener_behavior()" checked><label for="parent-stop-propagation-no">No</label>
+			<li>prevent default :
+			<input type="radio" name="parent-prevent-default" id="parent-prevent-default-yes" onclick="change_parent_listener_behavior()"><label for="parent-prevent-default-yes">Yes</label>
+			<input type="radio" name="parent-prevent-default" id="parent-prevent-default-no" onclick="change_parent_listener_behavior()" checked><label for="parent-prevent-default-no">No</label>
+		</ul>
+		<p>a</p>
+		<ul>
+			<li>listener binding :
+			<input type="radio" name="listener-binding" id="add-listener-yes" onclick="change_listener_behavior()" checked><label for="add-listener-yes">addEventListener</label>
+			<input type="radio" name="listener-binding" id="add-listener-no" onclick="change_listener_behavior()"><label for="add-listener-no">onclick</label>
+			<li>event flow :
+			<input type="radio" name="event-flow" id="use-capture-yes" onclick="change_listener_behavior()"><label for="use-capture-yes">capturing</label>
+			<input type="radio" name="event-flow" id="use-capture-no" onclick="change_listener_behavior()" checked><label for="use-capture-no">bubbling</label>
+			<li>stop propagation :
+			<input type="radio" name="stop-propagation" id="stop-propagation-yes" onclick="change_listener_behavior()"><label for="stop-propagation-yes">Yes</label>
+			<input type="radio" name="stop-propagation" id="stop-propagation-no" onclick="change_listener_behavior()" checked><label for="stop-propagation-no">No</label>
+			<li>prevent default :
+			<input type="radio" name="prevent-default" id="prevent-default-yes" onclick="change_listener_behavior()"><label for="prevent-default-yes">Yes</label>
+			<input type="radio" name="prevent-default" id="prevent-default-no" onclick="change_listener_behavior()" checked><label for="prevent-default-no">No</label>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript">
+var listener = {};
+var listener$capturing = {};
+function bind_event_listener(target, use_addEventListener, stop_propagation, prevent_default, use_capturing) {
+	if (listener[target.tagName]) {
+		target.removeEventListener('click', listener[target.tagName], listener$capturing[target.tagName]);
+		listener[target.tagName] = null;
+	} else if (target.onclick) {
+		target.onclick = null;
+	}
+	if (use_addEventListener) {
+		listener[target.tagName] = function (e) {
+			confirm(target.tagName + ' click');
+			if (stop_propagation) e.stopPropagation();
+			if (prevent_default) e.preventDefault();
+		};
+		listener$capturing[target.tagName] = use_capturing;
+		target.addEventListener('click', listener[target.tagName], listener$capturing[target.tagName]);
+	} else {
+		target.onclick = function (e) {
+			confirm(target.tagName + ' onclick');
+			if (stop_propagation) e.stopPropagation();
+			if (prevent_default) e.preventDefault();
+			//if (prevent_default) return false;
+		};
+	}
+}
+
+function change_listener_behavior() {
+	var target = $('stop');
+	var use_addEventListener = $('add-listener-yes').checked;
+	$('use-capture-no').disabled = ! use_addEventListener;
+	$('use-capture-yes').disabled = ! use_addEventListener;
+	if (! use_addEventListener) $('use-capture-no').checked = true;
+	var use_capturing = $('use-capture-yes').checked;
+	var stop_propagation = $('stop-propagation-yes').checked;
+	var prevent_default = $('prevent-default-yes').checked;
+	bind_event_listener(target, use_addEventListener, stop_propagation, prevent_default, use_capturing);
+}
+
+change_listener_behavior();
+
+function change_parent_listener_behavior() {
+	var div_end = $('end');
+	var use_addEventListener = $('parent-add-listener-yes').checked;
+	$('parent-use-capture-no').disabled = ! use_addEventListener;
+	$('parent-use-capture-yes').disabled = ! use_addEventListener;
+	if (! use_addEventListener) $('parent-use-capture-no').checked = true;
+	var use_capturing = $('parent-use-capture-yes').checked;
+	var stop_propagation = $('parent-stop-propagation-yes').checked;
+	var prevent_default = $('parent-prevent-default-yes').checked;
+	bind_event_listener(div_end, use_addEventListener, stop_propagation, prevent_default, use_capturing);
+}
+
+change_parent_listener_behavior();
+
+</script>
+</body>
+</html>

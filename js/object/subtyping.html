@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>C.prototype = new P()</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+String.prototype.repeat = function(n) {
+	var sb = '';
+	var s = this.slice(0);
+	for (var i = 0; i< n; i++) sb += s;
+	return sb;
+};
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Function.prototype.extends = function (T) {
+	this.prototype = new T();
+};
+
+xprint_code('Function.prototype.extends = ' + Function.prototype.extends);
+
+xprintln("----------");
+
+function F(x) {
+	this.x = x;
+}
+F.prototype = {
+	twice: function() {
+		return this.x.repeat(2);
+	},
+	abbreviate: function() {
+		return this.x.charAt(0);
+	}
+};
+
+xprint_code(F);
+xprint_code('F.prototype.twice = ' + F.prototype.twice);
+xprint_code('F.prototype.abbreviate = ' + F.prototype.abbreviate);
+
+// var f = new F('x');
+// for (var p in f) {
+// 	if (f.hasOwnProperty(p)) {
+// 		confirm(p+'::'+f[p]);
+// 	}
+// }
+// for (var p in F.prototype) {
+// 	if (F.prototype.hasOwnProperty(p)) {
+// 		confirm('F.prototype.'+p+'::'+F.prototype[p]);
+// 	}
+// }
+// confirm('toString::'+f.toString);
+// confirm('valueOf::'+f.valueOf);
+
+function G(x) {
+	this.x = x + x;
+}
+xprint_code(G);
+
+//exec_o_ret('G.prototype = new F();');
+exec_o_ret('G.extends(F);');
+
+xprintln();
+
+exec('var g = new G("me");');
+exec_o_ret('g.twice();');
+exec_o_ret('g.abbreviate();');
+
+// for (var p in g) {
+// 	confirm(p+'::'+g[p]);
+// }
+// confirm('toString::'+g.toString);
+// confirm('valueOf::'+g.valueOf);
+
+xprintln("----------");
+
+function H(x, y) {
+	F.call(this, x + y);
+}
+xprint_code(H);
+
+//exec_o_ret('H.prototype = new F();');
+exec_o_ret('H.extends(F);');
+
+xprintln();
+
+exec('var h = new H("fu", "hu");');
+exec_o_ret('h.twice();');
+exec_o_ret('h.abbreviate();');
+
+// for (var p in h) {
+// 	confirm(p+'::'+h[p]);
+// }
+// confirm('toString::'+h.toString);
+// confirm('valueOf::'+h.valueOf);
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

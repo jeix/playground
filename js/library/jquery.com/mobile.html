@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jQuery Mobile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div data-role="page" id="foo" data-title="Page Foo" data-theme="a">
+	<div data-role="header">
+		<h1>Page Header</h1>
+	</div>
+	<div data-role="content">
+		<h2>Page</h2>
+		<p>Page content goes here.</p>
+		<p><a href="#bar" data-role="button" data-theme="b">Show page "bar"</a></p>
+		<p><a href="#popup"data-role="button" data-rel="dialog" data-transition="pop" data-theme="c">Show page "popup" (as a dialog)</a></p>
+	</div>
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div>
+</div>
+<div data-role="page" id="bar" data-title="Page Bar" data-theme="a">
+	<div data-role="header">
+		<h1>Page Header</h1>
+	</div>
+	<div data-role="content">
+		<h2>Page</h2>
+		<p>Page content goes here.</p>
+		<p><a href="#foo" data-direction="reverse" data-role="button">Back to page "foo"</a></p>
+	</div>
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div>
+</div>
+<div data-role="page" id="popup" data-theme="a">
+	<div data-role="header">
+		<h1>Popup Header</h1>
+	</div>
+	<div data-role="content">
+		<h2>Popup</h2>
+		<p>Popup content goes here.</p>
+		<p><a href="#foo" data-rel="back" data-role="button" data-inline="true" data-icon="back" data-theme="e">Back to page "foo"</a></p>
+	</div>
+	<div data-role="footer">
+		<h4>Popup Footer</h4>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>String#toArray()</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style>
+<script type="text/javascript" src="../sfx/base.js"></script>
+<script type="text/javascript">
+</script><body><script type="text/javascript">
+
+xprintln("--------------------");
+
+console.log(Array.prototype.concat.call("abc", "def", "ghi"));
+	// Ch -> ["abc", "def", "ghi"]
+	// FF -> [(new String("abc")), "def", "ghi"]
+
+String.prototype.toArray = function () {
+	return Array.prototype.concat.apply(this, arguments);
+};
+
+console.log("abc".toArray());
+	// Ch -> [String("abc")]
+	// FF -> [(new String("abc"))]
+console.log("abc".toArray("def"));
+	// Ch -> [String("abc"), "def"]
+	// FF -> [(new String("abc")), "def"]
+console.log("abc".toArray("def", "ghi"));
+	// Ch -> [String("abc"), "def", "ghi"]
+	// FF -> [(new String("abc")), "def", "ghi"]
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

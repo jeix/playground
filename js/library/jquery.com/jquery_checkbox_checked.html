@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+div#log { color:red; }
+</style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  
+<form>
+  <p>
+    <input type="checkbox" name="newsletter" checked="checked" value="Hourly" />
+    <input type="checkbox" name="newsletter" value="Daily" />
+    <input type="checkbox" name="newsletter" value="Weekly" />
+    <input type="checkbox" name="newsletter" checked="checked" value="Monthly" />
+    <input type="checkbox" name="newsletter" value="Yearly" />
+  </p>
+</form>
+<div id="log"></div>
+
+<script>
+function countChecked() {
+	var options_checked = $("input:checked");
+	var n = options_checked.length;
+	var vals = (function collect(elems) {
+		var a = [];
+		var visit = function (elem) {
+			a.push(elem.value);
+		};
+		Array.prototype.forEach.call(elems, visit);
+		return a;
+	})(options_checked);
+	var sb = n + (n <= 1 ? " is" : " are") + " checked!" + "--" + vals.join(',');
+	$("#log").text(sb);
+}
+countChecked();
+$(":checkbox").click(countChecked);
+</script>
+
+</body>
+</html>

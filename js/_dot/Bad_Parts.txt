@@ -1,0 +1,61 @@
+
+Bad Parts
+@ http://oreilly.com/javascript/excerpts/javascript-good-parts/bad-parts.html
+
+----------------------------------------
+==
+
+== vs. ===
+----------------------------------------
+with Statement
+
+with Statement frustrates the lexical binding of variable names.
+----------------------------------------
+eval()
+
+avoid
+	eval function
+	Function constructor
+	setTimeout and setInterval functions that take string arguments
+----------------------------------------
+continue Statement
+
+continue statement jumps to the top of the loop.
+----------------------------------------
+switch Fall Through
+
+----------------------------------------
+Block-less Statements
+
+----------------------------------------
+++ --
+
+----------------------------------------
+Bitwise Operators
+
+In most languages, these operators are very close to the hardware and very fast. In JavaScript, they are very far from the hardware and very slow.
+----------------------------------------
+The function Statement Versus the function Expression
+
+----------------------------------------
+Typed Wrappers
+
+Don't use new Boolean or new Number or new String -- completely unnecessary and occasionally confusing.
+
+Also avoid new Object and new Array. Use {} and [] instead.
+----------------------------------------
+new
+
+JavaScript's new operator creates a new object that inherits from the operand's prototype member, and then calls the operand, binding the new object to this.
+
+If you forget to use the new operator, you instead get an ordinary function call, and this is bound to the global object instead of to a new object.
+
+By convention, functions that are intended to be used with new should be given names with initial capital letters, and names with initial capital letters should be used only with constructor functions that take the new prefix.
+----------------------------------------
+void
+
+void is an operator that takes an operand and returns undefined.
+
+<a href="javascript:void(0)" onclick="...">click me</a>
+<a href="javascript:" onclick="...">click me</a>
+----------------------------------------

@@ -1,0 +1,213 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+div.row { border-top: 1px solid #000;
+cursor: pointer; }
+div#stop { border-bottom: 1px solid #000; }
+p { -webkit-margin-before: 0em;
+-webkit-margin-after: 0em; }
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		body.style.fontFamily = '"Courier New", Monospace';
+		body.style.fontSize = '9pt';
+		body.style.backgroundColor = '#c0c0c0';
+		body.style.color = '#000';
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;" custom_attribute>
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+////////////////////////////////////////
+// v1
+
+var X = {
+	expect: function (exp) {
+		function TestCase (_exp) {
+			this.expected = _exp;
+		}
+		TestCase.prototype = {
+			expected: undefined,
+			negative: false,
+			not: function () {
+				this.negative = ! this.negative;
+				return this;
+			},
+			to_equal: function (act) {
+				var ret = this.expected == act;
+				if (this.negative) ret = ! ret;
+				return ret;
+			}
+		};
+		var _case = new TestCase(exp);
+		return _case;
+	}
+};
+
+xprintln(X.expect(4).to_equal("4"));
+xprintln(X.expect(4).not().to_equal("4"));
+xprintln(X.expect(4).not().not().to_equal("4")); // Don't do this!
+
+xprintln("----------");
+
+////////////////////////////////////////
+// v2
+
+var X = {
+	expect: function (exp, not) {
+		function TestCase (_exp, _not) {
+			this.expected = _exp;
+			if (_not) this.negative = true;
+		}
+		TestCase.prototype = {
+			expected: undefined,
+			negative: false,
+			to_equal: function (act) {
+				var ret = this.expected == act;
+				if (this.negative) ret = ! ret;
+				return ret;
+			}
+		};
+		var _case = new TestCase(exp);
+		_case.not = new TestCase(exp, true);
+		return _case;
+	}
+};
+
+xprintln(X.expect(4).to_equal("4"));
+xprintln(X.expect(4).not.to_equal("4"));
+
+xprintln("----------");
+
+////////////////////////////////////////
+// v3
+
+var X = {
+	expect: function (exp) {
+		function TestCase (_exp, _not) {
+			this.expected = _exp;
+			if (_not) this.negative = true;
+		}
+		TestCase.prototype = {
+			expected: undefined,
+			negative: false,
+			nay: function () {
+				this.negative = ! this.negative;
+				if (this.not && this.negative == this.not.negative) { // avoid cycling
+					this.not.nay();
+				}
+				return this;
+			},
+			to_equal: function (act) {
+				var ret = this.expected == act;
+				if (this.negative) ret = ! ret;
+				return ret;
+			}
+		};
+		var _case = new TestCase(exp);
+		_case.not = new TestCase(exp, true);
+		_case.not.not = _case; // cycling
+		return _case;
+	}
+};
+
+xprintln(X.expect(4).to_equal("4"));
+xprintln(X.expect(4).not.to_equal("4"));
+xprintln(X.expect(4).nay().to_equal("4"));
+
+// Don't do these!
+xprintln(X.expect(4).not.not.to_equal("4"));
+xprintln(X.expect(4).not.nay().to_equal("4"));
+xprintln(X.expect(4).nay().nay().to_equal("4"));
+xprintln(X.expect(4).nay().not.to_equal("4"));
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

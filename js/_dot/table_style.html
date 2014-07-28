@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>Type, Casting, Equality</title><style type="text/css">
+table { empty-cells: show; }
+table, td { border: 1px solid gray; }
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><body><script type="text/javascript">
+
+</script></head><body>
+<table id="tbl">
+<tr><td>onw</td><td>two</td></tr>
+<tr><td>three</td><td></td></tr>
+</table>
+border-collapse :
+<input type="radio" name="border-collapse" id="bcs" onclick="toggle_border_collapse('separate')" checked><label for="bcs">separate</label>
+<input type="radio" name="border-collapse" id="bcc" onclick="toggle_border_collapse('collapse')"><label for="bcc">collapse</label>
+<br>
+border-spacing :
+<input type="radio" name="border-spacing" id="bs2" onclick="toggle_border_spacing('2px')" checked><label for="bs2">2px</label>
+<input type="radio" name="border-spacing" id="bs10" onclick="toggle_border_spacing('10px')"><label for="bs10">10px</label>
+<br>
+empty-cells :
+<input type="radio" name="empty-cells" id="ecs" onclick="toggle_empty_cells('show')" checked><label for="ecs">show</label>
+<input type="radio" name="empty-cells" id="ech" onclick="toggle_empty_cells('hide')"><label for="ech">hide</label>
+<br>
+<table id="tbl2" style="width:10em">
+<tr><td style="width:2em">loooong</td><td>two</td></tr>
+<tr><td style="width:2em">three</td><td></td></tr>
+</table>
+table-layout :
+<input type="radio" name="table-layout" id="tla" onclick="toggle_table_layout('auto')" checked><label for="tla">auto</label>
+<input type="radio" name="table-layout" id="tlf" onclick="toggle_table_layout('fixed')"><label for="tlf">fixed</label>
+<br>
+
+<script type="text/javascript">
+function toggle_border_collapse(val) {
+	$('tbl').style.borderCollapse = val;
+}
+function toggle_border_spacing(val) {
+	$('tbl').style.borderSpacing = val;
+}
+function toggle_empty_cells(val) {
+	$('tbl').style.emptyCells = val;
+}
+function toggle_table_layout(val) {
+	$('tbl2').style.tableLayout = val;
+}
+
+</script></body></html>

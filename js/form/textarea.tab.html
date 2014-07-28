@@ -1,0 +1,113 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style>
+<script type="text/javascript" src="../simple.util.js"></script>
+<script type="text/javascript">
+// SCRIPT_HERE
+var $ = function(id) { return document.getElementById(id); };
+
+var led = {
+	TAB: '*',
+	NL: '\n'
+};
+
+function process_keydown(evt) {
+	evt = evt || window.event;
+	var key = evt.which || evt.keyCode;
+	if (key == 9) {
+		var elem = evt.target || evt.srcElement;
+		var txt = $('note').value;
+		var bosel = elem.selectionStart;
+		var eosel = elem.selectionEnd;
+		xprintln($('note').selectionStart + '::' + $('note').selectionEnd);
+		
+		if (evt.shiftKey) {
+			var bol = txt.substring(0, bosel).lastIndexOf(led.NL) + 1;
+			var old_bol = bol;
+			var new_txt = txt.substring(0, bol);
+			while (bol < eosel) {
+				if (txt.charAt(bol) == led.TAB) {
+					bol = bol + 1;
+				}
+				old_bol = bol;
+				bol = txt.indexOf(led.NL, old_bol) + 1;
+				if (bol == 0) {
+					bol = old_bol;
+					break;
+				}
+				new_txt = new_txt + txt.substring(old_bol, bol);
+			}
+			new_txt = new_txt + txt.substring(bol);
+			$('note').value = new_txt;
+			//if (txt.charAt(txt.length-1) == led.TAB) {
+			//	$('note').value = txt.substring(0, txt.length-1);
+			//}
+		} else {
+			var bol = txt.substring(0, bosel).lastIndexOf(led.NL) + 1;
+			xprintln('bol='+bol);
+			var old_bol = bol;
+			var new_txt = txt.substring(0, bol);
+			if (bosel == eosel && bol == bosel) {
+				new_txt = new_txt + led.TAB;
+			}
+			while (bol < eosel) {
+				new_txt = new_txt + led.TAB;
+				old_bol = bol;
+				bol = txt.indexOf(led.NL, old_bol) + 1;
+				if (bol == 0) {
+					bol = old_bol;
+					break;
+				}
+				new_txt = new_txt + txt.substring(old_bol, bol);
+			}
+			new_txt = new_txt + txt.substring(bol);
+			$('note').value = new_txt;
+			//$('note').value = txt + led.TAB;
+		}
+		return false;
+	}
+	if (key == 13) {
+		var elem = evt.target || evt.srcElement;
+		var txt = $('note').value;
+		var bosel = elem.selectionStart;
+		var eosel = elem.selectionEnd;
+		xprintln($('note').selectionStart + '::' + $('note').selectionEnd);
+		if (bosel == eosel) {
+			var new_txt = txt.substring(0, bosel) + led.NL;
+			var bol = txt.substring(0, bosel).lastIndexOf(led.NL) + 1;
+			xprintln('bol='+bol);
+			while (txt.charAt(bol) == led.TAB) {
+				bol = bol + 1;
+				new_txt = new_txt + led.TAB;
+			}
+			new_txt = new_txt + txt.substring(bosel);
+			$('note').value = new_txt;
+			return false;
+		}
+	}
+}
+
+onload = function() {
+	var elem = $('note');
+	elem.onkeydown = process_keydown;
+};
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:400px;" custom_attribute>
+DIV
+</div>
+<form>
+<textarea id="note" rows="10" cols="40"></textarea>
+</form>
+</body>
+</html>

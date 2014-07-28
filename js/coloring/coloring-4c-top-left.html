@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Coloring</title>
+<style type="text/css">
+
+html {
+	/* support full height */
+	height: 100%;
+}
+body {
+	background-color: #000;
+	/* support full height */
+	margin: 0; padding; 0; height: 100%;
+}
+div#root {
+	border-left: 1px dotted gray;
+	border-right: 1px dotted gray;
+	width: 80%;
+	/* center */
+	margin: auto;
+	/* full height */
+	height: auto !important;
+	min-height: 100%;
+	height: 100%;
+	/* support bottom right */
+	position: relative;
+}
+div#wrapper {
+	border: 1px dotted gray;
+	margin: 5px;
+	/* bottom right */
+	position: absolute;
+	top: 0; left: 0;
+}
+div#cnv { width: 50px; height: 50px; }
+
+</style><script type="text/javascript">
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+var Hex = {
+	charmap: ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'],
+	hex: function (decimal) {
+		var remainder = decimal % 16;
+		var quotient = (decimal - remainder) / 16;
+		return '0x' + this.charmap[quotient] + this.charmap[remainder];
+	}
+};
+
+var Color = {
+	r: 0,
+	g: 0,
+	b: 0,
+	color: function () {
+		return '#' + Hex.hex(this.r).substr(2) + Hex.hex(this.g).substr(2) + Hex.hex(this.b).substr(2);
+	},
+	delta: parseInt(0x05), // 0x11, 0x05, 0x01
+	max: 255,
+	min: 0,
+	change: function (which, how) {
+		if (how == '+') {
+			this[which] += this.delta;
+			if (this[which] > this.max) this[which] = this.max;
+		} else if (how == '-') {
+			this[which] -= this.delta;
+			if (this[which] < this.min) this[which] = this.min;
+		}
+	},
+	mode: undefined,
+	set_mode: function (name) {
+		this.mode = this[name];
+	},
+	init: function () {
+		this.random_mode();
+	},
+	// single
+	rd: function () {
+		this.change('r','-');
+		if (this.r == 0) this.random_mode();
+	},
+	gd: function () {
+		this.change('g','-');
+		if (this.g == 0) this.random_mode();
+	},
+	bd: function () {
+		this.change('b','-');
+		if (this.b == 0) this.random_mode();
+	},
+	ri: function () {
+		this.change('r','+');
+		if (this.r == 255) this.random_mode();
+	},
+	gi: function () {
+		this.change('g','+');
+		if (this.g == 255) this.random_mode();
+	},
+	bi: function () {
+		this.change('b','+');
+		if (this.b == 255) this.random_mode();
+	},
+	// composite
+	rdgd: function () {
+		this.change('r','-');
+		this.change('g','-');
+		if (this.r == 0 & this.g == 0) this.random_mode();
+	},
+	gdbd: function () {
+		this.change('g','-');
+		this.change('b','-');
+		if (this.g == 0 & this.b == 0) this.random_mode();
+	},
+	rdbd: function () {
+		this.change('r','-');
+		this.change('b','-');
+		if (this.r == 0 & this.b == 0) this.random_mode();
+	},
+	rigi: function () {
+		this.change('r','+');
+		this.change('g','+');
+		if (this.r == 255 & this.g == 255) this.random_mode();
+	},
+	gibi: function () {
+		this.change('g','+');
+		this.change('b','+');
+		if (this.g == 255 & this.b == 255) this.random_mode();
+	},
+	ribi: function () {
+		this.change('r','+');
+		this.change('b','+');
+		if (this.r == 255 & this.b == 255) this.random_mode();
+	},
+	// hybrid
+	rdgi: function () {
+		this.change('r','-');
+		this.change('g','+');
+		if (this.r == 0 & this.g == 255) this.random_mode();
+	},
+	rdbi: function () {
+		this.change('r','-');
+		this.change('b','+');
+		if (this.r == 0 & this.b == 255) this.random_mode();
+	},
+	rigd: function () {
+		this.change('r','+');
+		this.change('g','-');
+		if (this.r == 255 & this.g == 0) this.random_mode();
+	},
+	ribd: function () {
+		this.change('r','+');
+		this.change('b','-');
+		if (this.r == 255 & this.b == 0) this.random_mode();
+	},
+	gibd: function () {
+		this.change('g','+');
+		this.change('b','-');
+		if (this.g == 255 & this.b == 0) this.random_mode();
+	},
+	gdbi: function () {
+		this.change('g','-');
+		this.change('b','+');
+		if (this.g == 0 & this.b == 255) this.random_mode();
+	},
+	// asymmetric
+	rdgibi: function () {
+		this.change('r','-');
+		this.change('g','+');
+		this.change('b','+');
+		if (this.r == 0 && this.g == 255 && this.b == 255) this.random_mode();
+	},
+	rigdbi: function () {
+		this.change('r','+');
+		this.change('g','-');
+		this.change('b','+');
+		if (this.r == 255 && this.g == 0 && this.b == 255) this.random_mode();
+	},
+	rigibd: function () {
+		this.change('r','+');
+		this.change('g','+');
+		this.change('b','-');
+		if (this.r == 255 && this.g == 255 && this.b == 0) this.random_mode();
+	},
+	rigdbd: function () {
+		this.change('r','+');
+		this.change('g','-');
+		this.change('b','-');
+		if (this.r == 255 && this.g == 0 && this.b == 0) this.random_mode();
+	},
+	rdgibd: function () {
+		this.change('r','-');
+		this.change('g','+');
+		this.change('b','-');
+		if (this.r == 0 && this.g == 255 && this.b == 0) this.random_mode();
+	},
+	rdgdbi: function () {
+		this.change('r','-');
+		this.change('g','-');
+		this.change('b','+');
+		if (this.r == 0 && this.g == 0 && this.b == 255) this.random_mode();
+	},
+	// ___ -> rgb
+	rigibi: function () {
+		this.change('r','+');
+		this.change('g','+');
+		this.change('b','+');
+		if (this.r == 255 && this.g == 255 && this.b == 255) this.random_mode();
+	},
+	// rgb -> ___
+	rdgdbd: function () {
+		this.change('r','-');
+		this.change('g','-');
+		this.change('b','-');
+		if (this.r == 0 && this.g == 0 && this.b == 0) this.random_mode();
+	},
+	// random mode (FSM)
+	random_mode: function () {
+		var modes = [
+			[
+				[
+					//000
+					['ri','gi','bi','rigi','gibi','ribi'],
+					//00f
+					['ri','gi','ribd','gibd','rigibd']
+				],
+				[
+					//0f0
+					['ri','bi','rigd','gdbi','rigdbi'],
+					//0ff
+					['gd','bd','rigd','ribd','rigdbd']
+				]
+			],
+			[
+				[
+					//f00
+					['gi','bi','rdgi','rdbi','rdgibi'],
+					//f0f
+					['rd','bd','rdgi','gibd','rdgibd']
+				],
+				[
+					//ff0
+					['rd','gd','rdbi','gdbi','rdgdbi'],
+					//fff
+					['rd','gd','bd','rdgd','gdbd','rdbd']
+				]
+			]
+		];
+		modes = modes[this.r==0?0:1][this.g==0?0:1][this.b==0?0:1];
+		var i = Math.floor((Math.random() * modes.length) + 1);
+		var mode = modes[i-1];
+		this.set_mode(modes[i-1]);
+	}
+};
+Color.init();
+
+var interval = 50;
+
+function coloring() {
+	Color.mode();
+	bgc(Color.color());
+	window.setTimeout(coloring, interval);
+}
+
+function bgc(c) {
+	$('cnv').style.backgroundColor = c;
+	//document.body.style.backgroundColor = c;
+}
+
+onload = function () {
+	window.setTimeout(coloring, interval);
+};
+
+</script>
+</head>
+<body>
+<div id="root">
+<div id="wrapper">
+<div id="cnv"></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,328 @@
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+
+$(selector).action()
+
+selector
+	$(this)
+	$("p")
+	$("p.intro")
+	$("p#intro")
+	$("p#intro:first")
+	$(".intro")
+	$("#intro")
+	$("ul li:first")
+	$("[href]")
+	$("[href='#']")
+	$("[href!='#']")
+	$("[href$='.jpg']")
+
+action
+	$(this).hide()
+	$(this).parents(".ex").hide("slow")
+	$("p").show()
+	$(".panel").slideToggle("slow")
+	$("div").fadeTo("slow",0.25)
+	$("div").animate({height:300},"slow")
+	$("div").animate({left:"100px"},"slow")
+	$("div").animate({fontSize:"3em"},"slow")
+
+jqo.length
+jqo.get(0)
+jqo[0]
+
+var jq = jQuery.noConflict();
+
+$(document).ready(function)
+
+Effects
+	$(selector).hide(speed,callback)
+	$(selector).show(speed,callback)
+	$(selector).toggle(speed,callback)
+	$(selector).slideDown(speed,callback)
+	$(selector).slideUp(speed,callback)
+	$(selector).slideToggle(speed,callback)
+	$(selector).fadeIn(speed,callback)
+	$(selector).fadeOut(speed,callback)
+	$(selector).fadeTo(speed,opacity,callback)
+	$(selector).animate({params},[duration],[easing],[callback])
+
+HTML Manipulation
+	$(selector).html(content)
+	$(selector).append(content)
+	$(selector).prepend(content)
+	$(selector).after(content)
+	$(selector).before(content)
+
+CSS Manipulation
+	$(selector).css(name)
+	$(selector).css(name,value)
+	$(selector).css({properties})
+	$(selector).height(value)
+	$(selector).width(value)
+
+AJAX
+$(selector).load(url,data,callback)
+$.ajax(options)
+
+Selectors
+		*
+		#id
+		.class
+		element
+		.class.class
+		:not(selector)
+		parent > child
+		ancestor descendant
+		selector1, selector2, ...
+		prev + next
+		prev ~ siblings
+	attribute
+		[attribute]
+		[attribute=value]
+		[attribute!=value]
+		[attribute|=value]		// value, value-* NOT value*
+		[attribute*=value]		// *value*
+		[attribute~=value]		// value *, * value, * value *
+		[attribute^=value]		// value*
+		[attribute$=value]		// *value
+		[attributeFilter1][attributeFilter2][...]		// match all of the specified attribute filters
+	position
+		:first
+		:last
+		:even
+		:odd
+		:eq(ix)
+		:gt(ix)
+		:lt(ix)
+		:first-child
+		:last-child
+		:nth-child(ix/even/odd/equation)
+		:only-child
+		:parent					// is parent?
+	status
+		:animated
+		:contains(text)
+		:empty
+		:has(selector)
+		:hidden
+		:visible
+		:enabled
+		:disabled
+		:focus
+		:selected
+		:checked
+	h1~h6
+		:header		// <h1> ... </h6>
+	input
+		:input		// <input>, <textarea>, <select>, <button>
+		:text		// <input type="text">
+		:password	// <input type="password">
+		:radio		// <input type="radio">
+		:checkbox	// <input type="checkbox">
+		:submit		// <input type="reset">, <button type="submit">
+		:reset		// <input type="reset">
+		:button		// <button>, <input type="button">
+		:image		// <input type="image">
+		:hidden		// <input type="hidden">
+		:file		// <input type="file">
+
+Events
+	triggering					binding
+									$(selector).bind(event,data,function)
+									$(selector).bind({event:function, event:function, ...})
+									$(selector).unbind(event,function)
+									$(selector).unbind(eventObj)
+		$(selector).blur()			$(selector).blur(function)
+		$(selector).change()		$(selector).change(function)
+		$(selector).click()			$(selector).click(function)
+		$(selector).dblclick()		$(selector).dblclick(function)
+									$(selector).delegate(childSelector,event,data,function)
+									$(selector).undelegate(selector,event,function)
+									$(selector).die(event,function)
+		$(selector).error()			$(selector).error(function)
+		$(selector).focus()			$(selector).focus(function)
+									$(selector).focusin(function)
+									$(selector).focusout(function)
+									$(selector).hover(inFunction,outFunction)
+		$(selector).keydown()		$(selector).keydown(function)
+		$(selector).keypress()		$(selector).keypress(function)
+		$(selector).keyup()			$(selector).keyup(function)
+									$(selector).live(event,data,function)	# has to do with "event bubbling"
+									$(selector).load(function)
+									$(selector).unload(function)
+		$(selector).mousedown()		$(selector).mousedown(function)
+		$(selector).mouseenter()	$(selector).mouseenter(function)
+		$(selector).mouseleave()	$(selector).mouseleave(function)
+		$(selector).mousemove()		$(selector).mousemove(function)
+		$(selector).mouseout()		$(selector).mouseout(function)
+		$(selector).mouseover()		$(selector).mouseover(function)
+		$(selector).mouseup()		$(selector).mouseup(function)
+									$(selector).one(event,data,function)
+									$(document).ready(function)
+									$().ready(function)
+									$(function)
+		$(selector).resize()		$(selector).resize(function)
+		$(selector).scroll()		$(selector).scroll(function)
+		$(selector).select()		$(selector).select(function)
+		$(selector).submit()		$(selector).submit(function)
+									$(selector).toggle(function(),function(),function(),...)
+									$(selector).toggle(speed,callback)
+									$(selector).toggle(switch)
+		$(selector).trigger(event,[param1,param2,...])
+		$(selector).trigger(eventObj)
+		$(selector).triggerHandler(event,[param1,param2,...])
+	
+	event
+		event.currentTarget
+		event.data
+		event.isDefaultPrevented()
+		event.isImmediatePropagationStopped()
+		event.isPropagationStopped()
+		event.pageX
+		event.pageY
+		event.preventDefault()
+		event.relatedTarget
+		event.result
+		event.stopImmediatePropagation()
+		event.stopPropagation()
+		event.target
+		event.timeStamp
+		event.type
+		event.which
+
+Effects
+	animate({styles},speed,easing,callback)
+	animate({styles},{options})
+	
+	fadeIn
+	fadeOut
+	fadeTo
+	fadeToggle
+	
+	hide
+	show
+	toggle
+	
+	slideDown
+	slideUp
+	slideToggle
+	
+	stop
+	clearQueue(n="fx")
+	delay()
+	dequeue()
+	queue()
+
+HTML
+	addClass(cls cls)
+	addClass(f) -- function(ix, old_cls)
+	hasClass(cls)
+	removeClass(cls)
+	removeClass(f) -- function(ix, old_cls)
+	toggleClass(cls)
+	toggleClass(cls, add_or_remove)
+	toggleClass(f, add_or_remove) -- function(ix, curr_cls)
+	
+	attr(n)
+	attr(n, v)
+	attr(f) -- function(ix, old_v)
+	attr(n_v_pairs)
+	removeAttr(n)
+
+	prop(n)
+	prop(n, v)
+	prop(f) -- function(ix, old_v)
+	prop(n_v_pairs)
+	removeProp(n)
+	
+	html()
+	html(t)
+	html(f) -- function(ix, old_t)
+	replaceWith(t)
+	replaceWith(f)
+	text()
+	text(t)
+	text(f) -- function(ix, old_t)
+	val()
+	val(v)
+	val(f) -- function(ix, curr_v)
+	data(n)
+	data(n, v)
+	data(f) -- function(ix, old_v)
+	data(n_v_pairs)
+	removeData(n)
+	
+	after(t)
+	after(f) -- function(ix)
+	before(t)
+	before(f) -- function(ix)
+	
+	append(t)
+	append(f) -- function(ix, curr_html)
+	prepend(t)
+	prepend(f) -- function(ix, curr_html)
+	
+	$(t).insertAfter(selector)
+	$(t).insertBefore(selector)
+	$(t).appendTo(selector)
+	$(t).prependTo(selector)
+	$(t).replaceAll(selector)
+	
+	detach()
+	remove()
+	empty()
+	
+	wrap(elem)
+	wrap(f)
+	wrapAll(elem)
+	wrapInner(elem)
+	wrapInner(f)
+	unwrap()
+	
+	clone(include_event_handlers=false)
+
+CSS
+	css(n)
+	css(n, v)
+	css(f) -- function(ix, old_v)
+	css(n_v_pairs)
+	
+	height()
+	height(v)
+	height(f) -- function(ix, old_v)
+	innerHeight
+	outerHeight
+	width()
+	width(v)
+	width(f) -- function(ix, old_v)
+	innerWidth
+	outerWidth
+	offset()
+	offset(v) -- {top:y, left:x}
+	offset(f) -- function(ix, old_v)
+	position()
+	scrollLeft()
+	scrollLeft(x)
+	scrollLeft()
+	scrollLeft(y)
+	
+	offsetParent()
+
+AJAX
+
+Misc
+	data(n)
+	data(n, v)
+	data(n_v_pairs)
+	removeData(n)
+	
+	each(f) -- function(ix, elem)
+	get(ix)
+	index()
+	index(elem)
+	size()
+	toArray()
+	
+	$.noConflict()
+	$.param(obj)

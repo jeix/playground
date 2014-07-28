@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+/* STYLE_HERE */
+span { border: 2px dotted #888; }
+.apple { color: #f00; }
+.banana { background-color: #ff0; }
+.orange { border: 2px solid #ffa500; }
+</style>
+<script type="text/javascript" src="simple.util.js"></script>
+<script type="text/javascript">
+// SCRIPT_HERE
+var $ = function(id) { return document.getElementById(id); };
+
+function add_attribute(elem, attr_name, attr_value) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			elem.setAttribute(attr_name, attr_value);
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].setAttribute(attr_name, attr_value);
+			}
+		}
+	}
+}
+function remove_attribute(elem, attr_name) {
+	if (elem != undefined) {
+		if (elem.length == undefined) {
+			elem.removeAttribute(attr_name);
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].removeAttribute(attr_name);
+			}
+		}
+	}
+}
+
+function test_add_o_remove_attribute() {
+	var elem = $('main');
+	
+	xprintln('[' + elem.getAttribute('apple') + ']'); // => [null]
+	remove_attribute(elem, 'apple');
+	xprintln('[' + elem.getAttribute('apple') + ']'); // => [null]
+	add_attribute(elem, 'apple', '');
+	xprintln('[' + elem.getAttribute('apple') + ']'); // => []
+	remove_attribute(elem, 'apple');
+	xprintln('[' + elem.getAttribute('apple') + ']'); // => [null]
+	
+	xprintln('[' + elem.getAttribute('banana') + ']'); // => []
+	remove_attribute(elem, 'banana');
+	xprintln('[' + elem.getAttribute('banana') + ']'); // => [null]
+	add_attribute(elem, 'banana', null);
+	xprintln('[' + elem.getAttribute('banana') + ']'); // => [] FF, [null] Chrome, [null] IE
+	xprintln('[' + typeof elem.getAttribute('banana') + ']'); // => [string] FF, [string] Chrome, [object] IE
+	add_attribute(elem, 'banana', undefined);
+	xprintln('[' + elem.getAttribute('banana') + ']'); // => [undefined]
+	xprintln('[' + typeof elem.getAttribute('banana') + ']'); // => [string] FF, [string] Chrome, [undefined] IE
+	remove_attribute(elem, 'banana');
+	xprintln('[' + elem.getAttribute('banana') + ']'); // => [null]
+	xprintln('[' + typeof elem.getAttribute('banana') + ']'); // => [object]
+	
+	xprintln('[' + elem.getAttribute('orange') + ']'); // => [4 box]
+	remove_attribute(elem, 'orange');
+	xprintln('[' + elem.getAttribute('orange') + ']'); // => [null]
+	add_attribute(elem, 'orange', '3 box');
+	xprintln('[' + elem.getAttribute('orange') + ']'); // => [3 box]
+	remove_attribute(elem, 'orange');
+	xprintln('[' + elem.getAttribute('orange') + ']'); // => [null]
+}
+
+onload = function() {
+	test_add_o_remove_attribute();
+};
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:400px;" banana orange="4 box">
+DIV
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+
+
+Page
+	<div data-role="page">
+
+Page Title
+	@data-title
+
+Link
+	Without Ajax (refresh the page)
+		external domain
+		@rel="external"
+		@data-ajax="false"
+		@target
+	"Back" button link
+		@data-rel="back"
+	reverse transition
+		@data-direction="reverse"
+	Dialog link
+		@data-rel="dialog"
+	@data-url
+
+Page transition
+	@data-transition
+		slide, slideup, slidedown, pop, fade, flip
+
+Dialog
+	Close
+		@data-rel="back"
+		dialog('close')
+	close button text
+		$.mobile.dialog.prototype.options.closeBtnText
+		@data-close-btn-text
+		
+Prefetch page
+	@data-prefetch
+	$.mobile.loadPage()
+
+Caching page
+	@data-dom-cache="true"
+	page({domCache: true})
+
+
+
+data-role
+	page
+	header
+	content
+	footer
+	button
+data-icon
+	back
+data-inline
+	true
+data-theme
+	a
+data-transition
+	pop
+data-direction
+	reverse
+data-ajax
+	false
+data-url
+
+
+
+
+
+
+

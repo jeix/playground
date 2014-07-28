@@ -1,0 +1,12 @@
+<script type="text/javascript">
+function do_escape() {
+	document.getElementById("t").value = escape(document.getElementById("s").value);
+}
+function do_unescape() {
+	document.getElementById("s").value = unescape(document.getElementById("t").value);
+}
+</script>
+<textarea id="s"></textarea>
+<button onclick="do_escape()">escape</button>
+<button onclick="do_unescape()">unescape</button>
+<textarea id="t"></textarea>

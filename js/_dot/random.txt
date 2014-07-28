@@ -1,0 +1,28 @@
+
+////////////////////
+// ·£´ý ¹üÀ§
+
+> (function () {
+    var min = 1, max = 0;
+    for (var i = 0; i < 1000; i++) {
+      var f = Math.random() * 8;
+      if (min > f) min = f;
+      if (max < f) max = f;
+    }
+    return {min:min, max:max};
+  })();
+  Object {min: 0.009102148935198784, max: 7.997924288734794}
+
+////////////////////
+// ·£´ý Á¤¼öûù
+
+> (function () {
+    var a = [];
+    for (var i = 0; i < 1000; i++) {
+      var n = (Math.random() * 8) << 0;
+      if (a[n]) a[n]++;
+      else a[n] = 1;
+    }
+    return a;
+  })();
+  [137, 121, 136, 109, 107, 133, 120, 137]

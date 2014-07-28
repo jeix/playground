@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Map</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style>
+<script type="text/javascript" src="../sfx/base.js"></script>
+<script type="text/javascript">
+</script><body><script type="text/javascript">
+
+xprintln("--------------------");
+xprintln("// Map supported with only FF 12+");
+
+var a_map = new Map();
+
+a_map.set("string", "string");
+a_map.set(NaN, "not a number");
+a_map.set(0, "positive zero");
+a_map.set(-0, "negative zero");
+
+console.log(a_map.get(Number("foo"))); // -> not a number
+
+console.log(0 === -0); // -> true
+console.log(a_map.get(0)); // -> positive zero
+console.log(a_map.get(-0)); // -> negative zero
+
+var k = "string";
+console.log(a_map.get(k)); // -> string
+if (a_map.has(k)) {
+	a_map.delete(k);
+}
+console.log(a_map.get(k)); // -> undefined
+
+//console.log(a_map.count()); // -> 
+
+xprintln("--------------------");
+xprintln("// Set supported with only FF 12+");
+
+var a_set = new Set();
+
+a_set.add("string");
+a_set.add(NaN);
+a_set.add(0);
+a_set.add(-0);
+
+var v = "string";
+console.log(a_set.has(v)); // true
+if (a_set.has(v)) {
+	a_set.delete(v);
+}
+console.log(a_set.has(v)); // false
+
+//console.log(a_set.count()); // -> 
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

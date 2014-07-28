@@ -1,0 +1,150 @@
+<body><style type="text/css">
+body {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript">
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+function function_definition() {
+	var f;
+	
+	function func1() {}
+	xprintln('function func1() {}');
+	xprintln('func1 => ' + func1); // -> function func1() { }
+	f = func1;
+	xprintln('f = func1;');
+	xprintln('f => ' + f); // -> function func1() { }
+	
+	xprintln('');
+	
+	f = function func2() {};
+	xprintln('f = function func2() {};');
+	xprintln('f => ' + f); // -> function func2() { }
+	//xprintln('func2 => ' + func2); // Error: func2 is not defined
+	xprintln('func2 is not defined');
+	
+	xprintln('');
+	
+	f = function() {};
+	xprintln('f = function() {};');
+	xprintln('f => ' + f); // -> function () { }
+	
+	xprintln('');
+	
+	xprintln('new Function() => ' + new Function()); // -> function anonymous() { }
+	xprintln('Function() => ' + Function()); // -> function anonymous() { }
+}
+function function_arguments() {
+	var v;
+	
+	// f.arguments is deprecated
+	xprintln('// f.arguments is deprecated');
+	
+	xprintln('');
+	
+	// arguments (in f)
+	xprintln('// arguments (in f)');
+	
+	xprintln('arguments instanceof Object ==> ' + (arguments instanceof Object)); // -> true
+	xprintln('arguments instanceof Array ==> ' + (arguments instanceof Array)); // -> false
+	xprintln('typeof arguments ==> ' + (typeof arguments)); // -> object
+	
+	xprintln('');
+	
+	xprintln('arguments.callee == f ==> ' + (arguments.callee == function_arguments)); // -> true
+	
+	xprintln('');
+	
+	xprintln('arguments.length ==> ' + arguments.length); // -> 3
+}
+function function_length(p1, p2, p3) {
+	// the number of arguments expected by the function
+	xprintln('// the number of arguments expected by the function');
+	xprintln('f.length ==> ' + function_length.length); // -> 3
+}
+function function_constructor() {
+	// f.constructor == Function
+	xprintln('// f.constructor == Function');
+	xprintln('f.constructor == Function ==> ' + (function_constructor.constructor == Function)); // -> true
+}
+function function_recursion() {
+	var cnt = 0;
+	var rf = function recursion() {
+		cnt++;
+		xprintln('count=' + cnt);
+		if (1 == cnt) recursion(); // the function's name
+		if (2 == cnt) arguments.callee(); // arguments.callee
+		if (3 == cnt) rf(); //an in-scope variable that refers to the function
+	};
+	rf();
+}
+function function_nested() {
+	var v;
+	
+	function add_squares(a, b) {
+		function square(x) {
+			return x * x;
+		};
+		return square(a) + square(b);
+	};
+	v = add_squares(3,4); // -> 25
+	xprintln(v);
+	//xprintln(square(3)); // Uncaught ReferenceError: square is not defined
+	
+	function outside(x) {
+		function inside(y) {
+			return x + '.' + y;
+		};
+		return inside;
+	};
+	v = outside(3)(5); // -> 3.5
+	xprintln(v);
+	//xprintln(inside(3)); // Uncaught ReferenceError: inside is not defined
+}
+
+function MyException(msg) { this.msg = msg; }
+MyException.prototype.toString = function() { return 'MyException: "' + this.msg + '"'; }
+function test_exception() {
+	try {
+		throw new MyException('testing exception');
+	} catch (e) {
+		xprintln(e.toString()); // -> MyException: "testing exception"
+		return;
+	} finally {
+		xprintln('finally'); // -> finally
+	}
+	xprintln('post try'); // not executed
+}
+
+onload = function() {
+	xprintln('----------');
+	function_definition();
+	xprintln('----------');
+	function_arguments(1, 2, 3);
+	xprintln('----------');
+	function_length();
+	xprintln('----------');
+	function_constructor();
+	xprintln('----------');
+	function_recursion();
+	xprintln('----------');
+	function_nested();
+	xprintln('----------');
+	test_exception();
+	xprintln('----------');
+	
+	//xprintln(add_squares(3,4)); // Uncaught ReferenceError: add_squares is not defined
+	//xprintln(outside(3)(5)); // Uncaught ReferenceError: outside is not defined
+};
+
+</script>

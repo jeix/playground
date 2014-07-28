@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style>
+<script type="text/javascript" src="../sfx/base.js"></script>
+<script type="text/javascript">
+</script><body><script type="text/javascript">
+
+function Profiler() {};
+Profiler.prototype.reset = function () { this.s = 0; this.t = 0; };
+Profiler.prototype.start = function () { this.s = new Date().getTime(); };
+Profiler.prototype.stop = function () { this.t = new Date().getTime(); };
+Profiler.prototype.report = function () { console.log(this.t - this.s); };
+
+//*
+function xprintln() {}
+//*/
+
+xprintln("--------------------");
+
+// already all of elements known
+
+//*
+var profiler = new Profiler();
+profiler.start();
+for (var i = 0; i < 200000; i++) {
+//*/
+
+var a = ["abc"];
+xprintln(JSON.stringify(a));
+a = ["abc", "def"];
+xprintln(JSON.stringify(a));
+a = ["abc", "def", "ghi"];
+xprintln(JSON.stringify(a));
+
+//*
+}
+profiler.stop();
+profiler.report();
+//*/
+
+xprintln("----------");
+
+// element become known one by one
+
+//*
+var profiler = new Profiler();
+profiler.start();
+for (var i = 0; i < 200000; i++) {
+//*/
+
+var a = ["abc"];
+xprintln(JSON.stringify(a));
+a = ["abc"];
+a.push("def");
+xprintln(JSON.stringify(a));
+a = ["abc"];
+a.push("def");
+a.push("ghi");
+xprintln(JSON.stringify(a));
+
+//*
+}
+profiler.stop();
+profiler.report();
+//*/
+
+xprintln("----------");
+
+// array.concat() makes new []
+// anyway prefer [] to Array.prototype.concat.call()
+
+//*
+profiler.reset();
+profiler.start();
+for (var i = 0; i < 200000; i++) {
+//*/
+
+xprintln(JSON.stringify(Array.prototype.concat.call("abc")));
+xprintln(JSON.stringify(Array.prototype.concat.call("abc", "def")));
+xprintln(JSON.stringify(Array.prototype.concat.call("abc", "def", "ghi")));
+
+//*
+}
+profiler.stop();
+profiler.report();
+//*/
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

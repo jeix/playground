@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title></title><style type="text/css">
+
+</style><script type="text/javascript" src="sfx/base.js">
+</script><script type="text/javascript" src="sfx/exec.js">
+</script><body><script type="text/javascript">
+
+</script></head><body>
+<script type="text/javascript">
+////////////////////////////////////////
+var x = 42;
+var o = {
+	getX: function() { return this.x; },
+	x: 17
+};
+
+xprintln(o.getX()); // -> 17
+
+var getX = o.getX;
+xprintln(getX()); // -> 42
+
+var boundGetX = getX.bind(o);
+xprintln(boundGetX()); // -> 17
+////////////////////
+function List() {
+	var a = [];
+	for (var i = 0; i < arguments.length; i++) {
+		a.push(arguments[i]);
+	}
+	return a;
+}
+
+var list1 = List(1, 2, 3); // [1,2,3]
+xprintln(list1);
+
+var LeadingZeroList = List.bind(null, 0);
+
+var list2 = LeadingZeroList(); // [0]
+xprintln(list2);
+var list3 = LeadingZeroList(1); // [0,1]
+xprintln(list3);
+var list4 = LeadingZeroList(1, 2); // [0,1,2];
+xprintln(list4);
+////////////////////
+function Point(x, y) {
+	this.x = x;
+	this.y = y;
+}
+Point.prototype.toString = function() { return this.x + "," + this.y; };
+
+xprintln(new Point(1, 2)); // -> 1,2
+
+var thisObj = {};
+var YAxisPoint = Point.bind(thisObj, 0);
+
+xprintln(new YAxisPoint(5)); // thisObj is ignored // -> 0,5
+xprintln(new YAxisPoint(17, 42)); // thisObj is ignored // -> 0,17
+
+xprintln(new YAxisPoint(17) instanceof Point); // -> true
+xprintln(new YAxisPoint(17) instanceof YAxisPoint); // -> true (FF4 not Ch7)
+xprintln(new Point(17, 42) instanceof YAxisPoint); // -> true (FF4 not Ch7)
+
+YAxisPoint(13);
+xprintln(thisObj.x + "," + thisObj.y); // -> 0,13
+////////////////////
+if (! Function.prototype.construct) {
+	Function.prototype.construct = function(args) {
+		var boundArgs = Array.prototype.concat.apply([null], args);
+		var boundFun = this.bind.apply(this, boundArgs);
+		return new boundFun();
+	};
+}
+
+var p1 = [2, 4];
+xprintln(Point.construct(p1)); // -> 2,4
+////////////////////////////////////////
+</script></body><html>

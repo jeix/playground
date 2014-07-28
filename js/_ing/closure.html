@@ -1,0 +1,135 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript">
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+@ https://developer.mozilla.org/en/JavaScript/Guide/Closures
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+function init() {
+	var name = "Mozilla";
+	function displayName() {
+		xprintln(name);
+	}
+	displayName();
+}
+init(); // -> Mozilla
+
+xprintln("----------");
+
+function makeFunc() {
+	var name = "Mozilla";
+	function displayName() {
+		xprintln(name);
+	}
+	return displayName;
+}
+
+var myFunc = makeFunc();
+myFunc(); // -> Mozilla
+
+xprintln("----------");
+
+function makeAdder(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+var add5 = makeAdder(5);
+var add10 = makeAdder(10);
+
+xprintln(add5(2)); // -> 7
+xprintln(add10(2)); // -> 12
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+var Counter = (function() {
+	var privateCounter = 0;
+	function changeBy(val) {
+		privateCounter += val;
+	}
+	return {
+		increment: function() {
+			changeBy(1);
+		},
+		decrement: function() {
+			changeBy(-1);
+		},
+		value: function() {
+			return privateCounter;
+		}
+	};
+})();
+
+xprintln(Counter.value()); // -> 0
+Counter.increment();
+Counter.increment();
+xprintln(Counter.value()); // -> 2
+Counter.decrement();
+xprintln(Counter.value()); // -> 1
+
+xprintln("----------");
+
+var CounterFactory = function(count) {
+	var private_count = count;
+	function changeBy(val) {
+		private_count += val;
+	}
+	return {
+		increment: function(delta) {
+			changeBy(delta);
+		},
+		decrement: function(delta) {
+			changeBy(0 - delta);
+		},
+		value: function() {
+			return private_count;
+		}
+	};
+};
+var Counter = CounterFactory(5);
+
+xprintln(Counter.value()); // -> 5
+Counter.increment(2);
+Counter.increment(1);
+xprintln(Counter.value()); // -> 8
+Counter.decrement(1);
+xprintln(Counter.value()); // -> 7
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

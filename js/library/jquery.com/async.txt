@@ -1,0 +1,54 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// Deferred Object
+
+$.Deferred()
+$.when(deferreds)
+$.ajax(...)
+jqo.promise()
+
+then(doneCallbacks, failCallbacks[, progressCallbacks])
+
+done(doneCallbacks, ...)
+fail(failCallbacks, ...)
+always(alwaysCallbacks, ...)
+
+progress(progressCallbacks)
+
+state()
+	"pending", "resolved", "rejected"
+
+resolve(args)					# doneCallbacks
+resolveWith(context[, args])	# doneCallbacks
+
+reject(args)					# failCallbacks
+rejectWith(context[, args])		# failCallbacks
+
+notify(args)					# progressCallbacks
+notifyWith(context[, args])		# progressCallbacks
+
+promise(target)
+
+pipe(doneFilter[, failFilter[, progressFilter]])
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Callbacks Object
+
+$.Callbacks(flags)
+	"once", "memory", "unique", "stopOnFalse"
+
+add(callbacks)
+remove()
+empty()
+
+disable()
+lock()
+
+has(callback)
+locked()
+
+fire(args)
+fireWith(context[, args])
+
+fired()

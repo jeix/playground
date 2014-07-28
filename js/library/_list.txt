@@ -1,0 +1,14 @@
+
+jQuery
+@ http://jquery.com/
+
+Backbone.js
+@ http://backbonejs.org/
+Underscore.js
+@ http://underscorejs.org/
+
+Spine, JavaScript MVC Framework
+@ http://spinejs.com/
+
+RequireJS, a JavaScript Module Loader
+@ http://requirejs.org/

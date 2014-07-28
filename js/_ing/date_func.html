@@ -1,0 +1,104 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;" custom_attribute>
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Date.value_of = function (s) { // yyyy-mm-dd
+	return new Date(s.substr(0,4), parseInt(s.substr(5,2),10)-1, parseInt(s.substr(8,2),10));
+};
+Date.prototype.to_string = function () { // yyyy-mm-dd
+	var yyyy = this.getFullYear();
+	var mm = this.getMonth() + 1;
+	if (mm < 10) {
+		mm = "0" + mm;
+	}
+	var dd = this.getDate();
+	if (dd < 10) {
+		dd = "0" + dd;
+	}
+	return yyyy+"-"+mm+"-"+dd;
+};
+Date.prototype.add_year = function (delta) {
+	this.setFullYear(this.getFullYear() + delta);
+	return this;
+};
+Date.prototype.add_month = function (delta) {
+	this.setMonth(this.getMonth() + delta);
+	return this;
+};
+Date.prototype.add_date = function (delta) {
+	this.setDate(this.getDate() + delta);
+	return this;
+};
+
+var s = "2011-04-01";
+xprintln(Date.value_of(s).add_date(-1).to_string()); // -> 2011-03-31
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

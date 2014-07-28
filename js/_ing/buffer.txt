@@ -1,0 +1,48 @@
+
+
+cache
+.	caching data
+.	caching program
+
+e.g. HTML5 application caching and offline storage
+
+====
+
+HTML5
+
+o Application Caching
+o Offline Storage
+.	Web Storage (Local Storage, DOM Storage) -- localStorage, sessionStorage -- only synchronous
+.	Web SQL Database (SQL Storage)
+.	IndexedDB
+.	File Storage
+
+o Web Sockets
+
+o Web Workers
+.	SharedWorkers
+
+o Audio
+
+o Web Databases
+
+transaction() -- rw -- lock the entire database
+readTransaction()
+
+
+====
+
+o XHR
+
+[@ https://developer.mozilla.org/en/using_xmlhttprequest => Using XMLHttpRequest @]
+
+Extracting binary resources
+.	download regular binary files with standard XMLHttpRequest calls
+.	override the MIME type:
+.		req.overrideMimeType('text/plain; charset=x-user-defined');
+
+image.src = "data:image/jpg;base64," + base64data
+
+Storing big data
+.	favour asynchronous mode
+

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>context substitution</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Object.prototype.run = function (f) {
+	f.apply(this, Array.prototype.slice.call(arguments, 1));
+};
+
+xprint_code('Object.prototype.run = ' + Object.prototype.run);
+
+xprintln("----------");
+
+var Fx = {
+	add: function(o) {
+		this.v += o.v;
+	},
+	sub: function(o) {
+		this.v -= o.v;
+	}
+};
+
+var def = [
+	'var Fx = {',
+	'	add: function(o) {',
+	'		this.v += o.v;',
+	'	},',
+	'	sub: function(o) {',
+	'		this.v -= o.v;',
+	'	}',
+	'};'
+];
+xprint_code(def.join('\n'));
+
+var Gx = {
+	mul: function(o) {
+		this.v *= o.v;
+	},
+	div: function(o) {
+		this.v /= o.v;
+	}
+};
+
+var def = [
+	'var Gx = {',
+	'	mul: function(o) {',
+	'		this.v *= o.v;',
+	'	},',
+	'	div: function(o) {',
+	'		this.v /= o.v;',
+	'	}',
+	'};'
+];
+xprint_code(def.join('\n'));
+
+xprintln("----------");
+
+exec('var f = {v:4};');
+exec('var g = {v:8};');
+exec_o_ret('g.run(Fx.add, f);');
+exec_o_ret('g.v') // -> 12
+exec_o_ret('g.run(Fx.sub, f);');
+exec_o_ret('g.v') // -> 8
+exec_o_ret('g.run(Gx.mul, f);');
+exec_o_ret('g.v') // -> 32
+exec_o_ret('g.run(Gx.div, f);');
+exec_o_ret('g.v') // -> 8
+
+xprintln("--------------------");
+
+if (! Function.prototype.bind) { // pre 1.8.5
+	xprintln('pre 1.8.5');
+	Function.prototype.bind = function (obj) {
+		var slice = [].slice;
+		var args = slice.call(arguments, 1);
+		var self = this;
+		var nop = function () {};
+		var bound = function () {
+			return self.apply(this instanceof nop ? this : (obj || {}),
+							args.concat(slice.call(arguments))
+					);
+		};
+		nop.prototype = self.prototype;
+		bound.prototype = new nop();
+		return bound;
+	};
+}
+
+xprint_code('Function.prototype.bind = ' + Function.prototype.bind);
+
+xprintln("----------");
+
+exec('g.add = Fx.add.bind(g);');
+exec_o_ret('g.add(f);');
+exec_o_ret('g.v'); // -> 12
+exec('g.sub = Fx.sub.bind(g);');
+exec_o_ret('g.sub(f);');
+exec_o_ret('g.v'); // -> 8
+exec('g.mul = Gx.mul.bind(g);');
+exec_o_ret('g.mul(f);');
+exec_o_ret('g.v'); // -> 32
+exec('g.div = Gx.div.bind(g);');
+exec_o_ret('g.div(f);');
+exec_o_ret('g.v'); // -> 8
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

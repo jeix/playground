@@ -1,0 +1,70 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+var $N = function(name) { return document.getElementsByName(name); };
+var $T = function(tag) { return document.getElementsByTagName(tag); };
+
+function xprint(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+}
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	if (s) body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+</script><script type="text/javascript" src="string.js"></script><body><script type="text/javascript">
+//*
+var str = "Cat +캥거루";
+xprintln('str="' + str + '"');
+xprintln('str.length=' + str.length);
+xprintln('byte length=' + str.length_in_bytes());
+
+var table = document.createElement('table');
+table.border = "1";
+document.body.appendChild(table);
+var row, cell;
+row = table.insertRow(table.rows.length);
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = 'i';
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = 'charAt(i)';
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = 'encodeURI(charAt(i)';
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = 'escape(charAt(i)';
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = 'charCodeAt(i)';
+var len = str.length;
+for (i=0;i<len;i++) {
+	row = table.insertRow(table.rows.length);
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = i;
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = str.charAt(i);
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = encodeURI(str.charAt(i));
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = escape(str.charAt(i));
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = str.charCodeAt(i);
+}
+//*/
+/*
+var str = "Cat +캥거루";
+document.write('str=[' + str + ']<br>\n');
+document.write('[charAt(i)][escape(charAt(i))][charCodeAt(i)]<br>\n');
+var len = str.length;
+for (i=0;i<len;i++) {
+	chr = str.charAt(i);
+	document.write('[' + chr + '][' + escape(chr) + '][' + str.charCodeAt(i) + ']<br>\n');
+}
+document.write('str.length=' + str.length + '<br>\n');
+document.write('real length=' + str.length_in_bytes() + '<br>\n');
+document.close();
+//*/
+</script></body>

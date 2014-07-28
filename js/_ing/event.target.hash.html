@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title></title><style type="text/css">
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><body><script type="text/javascript">
+
+var add_event = (function() {
+	if (document.addEventListener) {
+		return function(elem, type, func) {
+			if (elem) {
+				if (elem.nodeName || elem == window) {
+					elem.addEventListener(type, func, false);
+				} else if (elem.length) {
+					for (var i = 0; i < elem.length; i++) {
+						add_event(elem[i], type, func);
+					}
+				}
+			}
+		};
+	} else {
+		return function(elem, type, func) {
+			if (elem) {
+				if (elem.nodeName || elem == window) {
+					elem.attachEvent('on' + type, function () { return func.call(elem, window.event); });
+				} else if (elem.length) {
+					for (var i = 0; i < elem.length; i++) {
+						add_event(elem[i], type, func);
+					}
+				}
+			}
+		};
+	}
+})();
+
+(function() {
+	add_event(window, 'click', function(event) {
+		if (event.target.hash) {
+			xprintln(event.target.hash.substr(1) + " clicked");
+		}
+	});
+})();
+
+</script></head><body>
+<a href="#foo">foo</a>
+<a href="#bar">bar</a>
+<br/>
+<script type="text/javascript">
+
+</script></body><html>

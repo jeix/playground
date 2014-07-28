@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>include/extend</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Object.prototype.remove_functions = function (names) {
+	for (var i = 0; i < names.length; i++) {
+		delete this[names[i]];
+	}
+};
+
+Object.prototype.introduce = function (f) {
+	if (f && f instanceof Function) {
+		this[f.name] = function () {
+			return f.apply(this, arguments);
+		};
+	}
+};
+
+xprint_code('Object.prototype.introduce = ' + Object.prototype.introduce);
+
+xprintln("----------");
+
+function plus(x, y) {
+	return x + y;
+}
+function minus(x, y) {
+	return x - y;
+}
+
+xprint_code(plus);
+xprint_code(minus);
+
+exec('var foo = {};');
+if (foo.plus == undefined) exec_o_ret('foo.introduce(plus);');
+if (foo.minus == undefined) exec_o_ret('foo.introduce(minus);');
+
+exec_o_ret('foo.plus(3, 4);'); // -> 7
+exec_o_ret('foo.minus(5, 2);'); // -> 3
+
+xprintln("--------------------");
+
+Object.$include = function(from, to) {
+	for (var k in from) {
+		if (from.hasOwnProperty(k)) {
+			to[k] = from[k];
+		}
+	}
+};
+
+Object.prototype.includes = function (o) {
+	Object.$include(o, this.prototype);
+}
+Object.prototype.extends = function (o) {
+	Object.$include(o, this);
+}
+
+xprint_code('Object.prototype.includes = ' + Object.prototype.includes);
+xprint_code('Object.prototype.extends = ' + Object.prototype.extends);
+
+xprintln("----------");
+
+function Foo() {}
+
+xprint_code(Foo);
+
+// add instance methods
+xprintln('// add instance methods');
+if (Foo.prototype.plus == undefined) exec_o_ret('Foo.includes({plus:plus});'); // Foo.prototype.plus = plus;
+if (Foo.prototype.minus == undefined) exec_o_ret('Foo.includes({minus:minus});'); // Foo.prototype.minus = minus;
+
+exec('var foo = new Foo();');
+exec_o_ret('foo.plus(3, 4);'); // -> 7
+exec_o_ret('foo.minus(5, 2);'); // -> 3
+
+xprintln("----------");
+
+// add class methods
+xprintln('// add class methods');
+if (Foo.plus == undefined) exec_o_ret('Foo.extends({plus:plus});');
+if (Foo.minus == undefined) exec_o_ret('Foo.extends({minus:minus});');
+
+exec_o_ret('Foo.plus(3, 4);'); // -> 7
+exec_o_ret('Foo.minus(5, 2);'); // -> 3
+
+xprintln("----------");
+
+exec('var foo = {};');
+if (foo.plus == undefined) exec_o_ret('foo.extends({plus:plus});'); // foo.plus = plus;
+if (foo.minus == undefined) exec_o_ret('foo.extends({minus:minus});'); // fpp.minus = minus;
+exec_o_ret('foo.plus(3, 4);'); // -> 7
+exec_o_ret('foo.minus(5, 2);'); // -> 3
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

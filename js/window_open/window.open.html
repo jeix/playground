@@ -1,0 +1,148 @@
+<body><script type="text/javascript">
+String.prototype.ltrim = function() {
+	return this.replace(/^\s+/, '');
+}
+String.prototype.rtrim = function() {
+	return this.replace(/\s+$/, '');
+}
+String.prototype.trim = function() {
+	return this.ltrim().rtrim();
+}
+</script><form name="f">
+<input type="radio" name="win_name" value="_blank" checked>_blank
+<input type="radio" name="win_name" value="_parent">_parent
+<input type="radio" name="win_name" value="_self">_self
+<input type="radio" name="win_name" value="_top">_top
+<input type="radio" name="win_name" value="name">
+<input type="text" name="win_name_typed" size="8" value="type_name_of_window"><br>
+channelmode (IE only)
+<input type="radio" name="channelmode" value="yes" checked>yes
+<input type="radio" name="channelmode" value="no">no<br>
+directories (IE only)
+<input type="radio" name="directories" value="yes" checked>yes
+<input type="radio" name="directories" value="no">no<br>
+fullscreen (IE only)
+<input type="radio" name="fullscreen" value="yes" checked>yes
+<input type="radio" name="fullscreen" value="no">no<br>
+(A window in full-screen mode must also be in theater mode.)<br>
+height (>= 100)
+<input type="text" name="height" size="4" value=""><br>
+left
+<input type="text" name="left" size="4" value=""><br>
+location
+<input type="radio" name="location" value="yes" checked>yes
+<input type="radio" name="location" value="no">no<br>
+menubar
+<input type="radio" name="menubar" value="yes" checked>yes
+<input type="radio" name="menubar" value="no">no<br>
+(Chrome open not popup but new tab if menubar and status is yes)<br>
+resizable
+<input type="radio" name="resizable" value="yes" checked>yes
+<input type="radio" name="resizable" value="no">no<br>
+(resizable not works with Chrome)<br>
+scrollbars
+<input type="radio" name="scrollbars" value="yes" checked>yes
+<input type="radio" name="scrollbars" value="no">no<br>
+status
+<input type="radio" name="status" value="yes" checked>yes
+<input type="radio" name="status" value="no">no<br>
+(Chrome opens not popup but new tab if menubar and status is yes)<br>
+(if Chrome opens popup, not shows status, although status is yes)<br>
+titlebar
+<input type="radio" name="titlebar" value="yes" checked>yes
+<input type="radio" name="titlebar" value="no">no<br>
+(Ignored unless the calling application is an HTML Application or a trusted dialog box.)<br>
+toolbar
+<input type="radio" name="toolbar" value="yes" checked>yes
+<input type="radio" name="toolbar" value="no">no<br>
+top (IE only)
+<input type="text" name="top" size="4" value=""><br>
+width (>= 100)
+<input type="text" name="width" size="4" value=""><br>
+<input type="button" value="open" onclick="open_it()"><br>
+<span id="open_script"></span>
+</form><script type="text/javascript">
+
+function radio_value(radios) {
+	for (var i = 0; i < radios.length; i++) {
+		if (radios[i].checked) return radios[i].value;
+	}
+	return null;
+}
+
+function open_it() {
+	var f = document.f;
+	var name = radio_value(f.win_name);
+	if (name == 'name') name = f.win_name_typed.value.trim();
+	if (name == '') {
+		f.win_name_typed.focus();
+		return;
+	}
+	var props = [];
+	if (document.all) {
+		props.push('channelmode=' + radio_value(f.channelmode));
+		props.push('directories=' + radio_value(f.directories));
+		props.push('fullscreen=' + radio_value(f.fullscreen));
+	}
+	if (! isNaN(f.height.value) && Number(f.height.value) >= 100) {
+		props.push('height=' + Number(f.height.value));
+	} else {
+		f.height.focus();
+		return;
+	}
+	if (f.left.value.trim() != "") {
+		if (! isNaN(f.left.value)) {
+			props.push('left=' + Number(f.left.value));
+		} else {
+			f.left.focus();
+			return;
+		}
+	}
+	props.push('location=' + radio_value(f.location));
+	props.push('menubar=' + radio_value(f.menubar));
+	props.push('resizable=' + radio_value(f.resizable));
+	props.push('scrollbars=' + radio_value(f.scrollbars));
+	props.push('status=' + radio_value(f.status));
+	props.push('titlebar=' + radio_value(f.titlebar));
+	props.push('toolbar=' + radio_value(f.toolbar));
+	if (document.all) {
+		if (f.left.value.trim() != "") {
+			if (! isNaN(f.top.value)) {
+				props.push('top=' + Number(f.top.value));
+			} else {
+				f.top.focus();
+				return;
+			}
+		}
+	}
+	if (! isNaN(f.width.value) && Number(f.width.value) >= 100) {
+		props.push('width=' + Number(f.width.value));
+	} else {
+		f.width.focus();
+		return;
+	}
+	document.getElementById('open_script').innerHTML = 
+		"window.open(url, '" + name + ", '" + props.join(",") + "');";
+	window.open("about:blank", name, props.join(","));
+}
+
+/*
+window.alert(message)
+window.blur() -- FF, IE, Safari NOT Chromw, Opera
+window.clearInterval(id_of_setinterval)
+window.clearTimeout(id_of_settimeout)
+window.close()
+window.confirm(message) -- return true/false
+window.moveBy(x,y)
+window.moveTo(x,y)
+window.open(URL,name,specs,replace)
+window.print()
+window.prompt(msg[,defaultText]) -- IE not optional
+window.resizeBy(width,height) -- FF, IE, Safari NOT Chromw, Opera
+window.resizeTo(width,height)
+window.scrollBy(xnum,ynum)
+window.scrollTo(xpos,ypos)
+window.setInterval(code,millisec[,lang])
+window.setTimeout(code,millisec[,lang])
+//*/
+</script></body>

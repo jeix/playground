@@ -1,0 +1,16 @@
+// Version 1:
+var responseCache = {};
+function generateNextIDForANewResponseCacheItem() {...}
+function deleteResponseCacheItemsThatDoNotEqual(value) {...}
+
+// Version 2:
+function ResponseCache() {
+  this.data = {};
+}
+ResponseCache.prototype = {
+  genNextID: function() {...},
+  remove: function(optionalFnCheck) {...}
+};
+
+from section <<Using long names and being overly specific>> of <<JS adolescence>>
+@ http://james.padolsey.com/javascript/js-adolescence/

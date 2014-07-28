@@ -1,0 +1,54 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+table { empty-cells: show; }
+table, td { border: 1px solid gray; }
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+//String.prototype.mixin({
+String.includes({
+	seek_and_substring: function(seek, subs) {
+		var xpos = this.indexOf(seek);
+		if (xpos >= 0) {
+			if (subs == undefined) subs = '';
+			return this.substring(0, xpos) + subs + this.substring(xpos + seek.length);
+		}
+		return this;
+	},
+	seek_and_substring_all: function(seek, subs) {
+		if (subs == undefined) subs = '';
+		var sb = '';
+		var offset = 0;
+		var pos = this.indexOf(seek, offset);
+		while (pos >= 0) {
+			sb += this.substring(offset, pos);
+			sb += subs;
+			offset = pos + seek.length;
+			pos = this.indexOf(seek, offset);
+		}
+		sb += this.substring(offset);
+		return sb;
+	},
+	split_and_join: function(seek, subs) {
+		if (subs == undefined) subs = '';
+		return this.split(seek).join(subs);
+	},
+	replace_all: function(seek, subs) {
+		if (subs == undefined) subs = '';
+		var s = this;
+		while (s.indexOf(seek) >= 0) {
+			s = s.replace(seek, subs);
+		}
+		return s;
+	}
+});
+</script><body><script type="text/javascript">
+
+exec('s = "214357457SEP8412390709SEP46137829649SEP857409328"');
+exec_o_ret('s.seek_and_substring("SEP", "PES")');
+exec_o_ret('s.seek_and_substring_all("SEP", "PES")');
+exec_o_ret('s.split_and_join("SEP", "PES")');
+exec_o_ret('s.replace_all("SEP", "PES")');
+exec_o_ret('s.replace(/SEP/g, "PES")');
+
+</script></body>

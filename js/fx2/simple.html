@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>simple test</title>
+<style type="text/css">
+
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+
+.rw { border: 1px solid gray; }
+.ro { border: 1px dotted gray; }
+.rad { background-color: red; }
+
+span { border: 2px dotted #888; }
+.apple { color: #f00; }
+.banana { background-color: #ff0; }
+.orange { border: 2px solid #ffa500; }
+
+</style><script type="text/javascript" src="simple.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+<input type="checkbox" id="chk4txt" checked />
+<input type="text" id="txt" class="rw"><br>
+<input type="checkbox" id="chk4chk" />
+<input type="checkbox" id="chk4sel" checked />
+<select id="sel" class="rw"></select>
+<span id="sel_index"></span><br>
+<input type="checkbox" id="chk4rad" checked />
+<input type="radio" name="radio" value="1">
+<input type="radio" name="radio" value="2">
+<input type="radio" name="radio" value="3">
+<span id="rad_value"></span><br>
+number: <input type="text" id="ntxt" class="rw" style="ime-mode:disabled;width:120px;"><br>
+date: <input type="text" id="dtxt" class="rw" style="ime-mode:disabled;width:100px;"><br>
+time: <input type="text" id="ttxt" class="rw" style="ime-mode:disabled;width:40px;"><br>
+</div>
+<script type="text/javascript">
+
+var txt = fx('#txt');
+
+fx('#chk4txt').bind({
+	onclick: function () { this.checked ? txt.enable() : txt.disable(); }
+});
+
+var sel = fx('#sel').bind({
+	onchange: function () { $('sel_index').innerHTML = this.value + "@" + this.selectedIndex; }
+}).append_option('1', '고구마'
+).append_option('2', '고등어'
+).append_option('3', '고사리');
+if (sel.has_option('3')) {
+	sel.change_option('3'); // does not call onchange
+	//sel.dom().onchange();
+}
+
+var chk4sel = fx('#chk4sel').bind({
+	onclick: function () { this.checked ? sel.enable() : sel.disable(); }
+}).click();
+
+fx('#chk4chk').bind({
+	onclick: function () { this.checked ? chk4sel.enable() : chk4sel.disable(); }
+}).click();
+
+var radios = fx('[name=radio]').each('bind', { // {name:'radio',klass:'radio',tag:'input'}
+	onclick: function () {
+		radios.each('remove_class', 'rad');
+		this.add_class('rad');
+		$('rad_value').innerHTML = this.name + "=" + this.value;
+	}
+});
+radios.dom()[2].click();
+
+fx('#chk4rad').bind({
+	onclick: function () { this.checked ? radios.each('enable') : radios.each('disable'); }
+});
+
+fx('#ntxt').formatter('number');
+fx('#dtxt').formatter('date', 'yyyy-mm-dd');
+fx('#ttxt').formatter('time', 'hh:mm');
+
+</script>
+</body>
+</html>

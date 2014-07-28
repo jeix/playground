@@ -1,0 +1,72 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Custom Exception & Event</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+#msgbuf { border-bottom: 1px dotted #808080; }
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:800px;">
+<button id="trigger" type="button">Process</button>
+<span id="msgbuf"></span>
+</div>
+<script type="text/javascript">
+
+function CustomException(msg) {
+	this.msg = msg;
+}
+CustomException.prototype.toString = function() { return "Exception: " + this.msg; }
+
+function handle_CustomException(ex) {
+	var evt = new CustomEvent(CustomEvent.TYPE_FAIL, ex);
+	this.dispatchEvent(evt);
+}
+
+function CustomEvent(type, val) {
+	var evt = document.createEvent("Event");
+	evt.val = val;
+	var bubbles = true;
+	var cancelable = true;
+	evt.initEvent(type, bubbles, cancelable);
+	return evt;
+}
+CustomEvent.TYPE_FAIL = "fail";
+
+document.addEventListener(CustomEvent.TYPE_FAIL, function (evt) {
+	$("msgbuf").innerHTML = evt.val;
+}, false);
+
+$("trigger").addEventListener("click", function (evt) {
+	try {
+		if (Math.floor(Math.random() * 10) < 5) {
+			throw new CustomException("fail to process");
+		}
+		$("msgbuf").innerHTML = "done";
+	} catch (ex) {
+		if (ex instanceof CustomException) {
+			handle_CustomException.call(this, ex);
+		}
+	} finally {
+		//
+	}
+}, false);
+
+</script>
+</body>
+</html>

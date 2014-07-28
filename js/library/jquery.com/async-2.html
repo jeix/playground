@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+<script>
+
+(function () {
+	
+	function act1(data) {
+		console.log('act1');
+		var c = data.a + data.b;
+		console.log(c);
+	}
+	
+	function act2(data) {
+		console.log('act2');
+		var c = data.a - data.b;
+		console.log(c);
+	}
+	
+	function act3(data) {
+		console.log('act3');
+		var c = data.a * data.b;
+		console.log(c);
+	}
+	
+	function act4(data) {
+		console.log('act4');
+		var c = data.a / data.b;
+		console.log(c);
+	}
+	
+	var dfd = $.Deferred();
+	var prms = dfd.promise();
+	
+	var obj = { a: 6, b: 2 };
+	
+	console.log('==========');
+	
+	dfd.resolve(obj);
+	prms.done(act1).done(act2).done(act3).done(act4);
+	
+	console.log('----------');
+	
+	$.when(obj).done(act1).done(act2).done(act3).done(act4);
+	
+})();
+
+</script>
+
+<script>
+
+(function () {
+	
+	function act1(data) {
+		console.log('act1');
+		var c = data.a + data.b;
+		console.log(c);
+		return data;
+	}
+	
+	function act2(data) {
+		console.log('act2');
+		var c = data.a - data.b;
+		console.log(c);
+		return data;
+	}
+	
+	function act3(data) {
+		console.log('act3');
+		var c = data.a * data.b;
+		console.log(c);
+		return data;
+	}
+	
+	function act4(data) {
+		console.log('act4');
+		var c = data.a / data.b;
+		console.log(c);
+		return data;
+	}
+	
+	var dfd = $.Deferred();
+	var prms = dfd.promise();
+	
+	var obj = { a: 6, b: 2 };
+	
+	console.log('==========');
+	
+	dfd.resolve(obj);
+	prms.then(act1).then(act2).then(act3).then(act4);
+	
+	console.log('----------');
+	
+	$.when(obj).then(act1).then(act2).then(act3).then(act4);
+	
+})();
+
+</script>
+
+<script>
+
+(function () {
+	
+	function act0(data) {
+		console.log('act0');
+		var dfd = $.Deferred();
+		dfd.resolve(data);
+		dfd.promise().then(act1);
+	}
+	
+	function act1(data) {
+		console.log('act1');
+		var dfd = $.Deferred();
+		var prms = dfd.promise();
+		var c = data.a + data.b;
+		if (c < 10) {
+			data.c = c;
+			dfd.resolve(data);
+		} else {
+			dfd.reject(data);
+		}
+		
+		dfd.promise().then(act2, actf);
+	}
+	
+	function act2(data) {
+		console.log('act2');
+		var dfd = $.Deferred();
+		var prms = dfd.promise();
+		var d = data.c - data.b;
+		if (d > 0) {
+			data.d = d;
+			dfd.resolve(data);
+		} else {
+			dfd.reject(data);
+		}
+		
+		dfd.promise().then(actd, actf);
+	}
+	
+	function actd(data) {
+		console.log('actd: ' + data.c + ',' + data.d);
+	}
+	
+	function actf(data) {
+		console.log('actf: ' + data.c + ',' + data.d);
+	}
+	
+	var obj;
+	
+	console.log('==========');
+	
+	obj = { a: 1, b: 2 };
+	act0(obj);
+	
+	console.log('----------');
+	
+	obj = { a: 0, b: 2 };
+	act0(obj);
+	
+	console.log('----------');
+	
+	obj = { a: 10, b: 2 };
+	act0(obj);
+	
+})();
+
+</script>

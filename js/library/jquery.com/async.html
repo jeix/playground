@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+
+div.fade {
+  height: 50px; width: 50px;
+  float: left; margin-right: 10px;
+  display: none; background-color: #090;
+}
+
+</style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+<button id="jQuery-Deferred">jQuery.Deferred()</button>
+<button id="-promise">.promise()</button>
+<button id="deferred-promise">deferred.promise()</button>
+<button id="jQuery-when">jQuery.when()</button>
+<button id="deferred-pipe">deferred.pipe()</button>
+<button id="jQuery-ajax">jQuery.ajax()</button>
+
+<div class="fade"></div>
+<div class="fade"></div>
+<div class="fade"></div>
+<div class="fade"></div>
+
+<div></div>
+
+<button id="jQuery-Callbacks">jQuery.Callbacks()</button>
+<button id="callbacks-once">fire once</button>
+<button id="callbacks-memory">memory fired per callback</button>
+<button id="callbacks-unique">unique callback set</button>
+<button id="callbacks-stopOnFalse">stop-on-false</button>
+<button id="callbacks-unique-memory">unique memory</button>
+<button id="pub-sub">pub/sub</button>
+<button id="deferred-pub-sub">$.Deferred and pub/sub</button>
+
+<script>
+
+function log(s) {
+	console.log(s);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Deferred Object
+
+////////////////////////////////////////
+// $.Deferred()
+
+function f1() { log("f1"); }
+function f2() { log("f2"); }
+function f3(data) { log("f3 with " + data); }
+
+var defer = $.Deferred();
+defer.done([f1,f2], f3, [f2,f1])
+	.done(function (data) { log("af1 with " + data); });
+
+$("button#jQuery-Deferred").bind("click", function () {
+	defer.resolve("123");
+});
+
+////////////////////////////////////////
+// .promise()
+
+$("button#-promise").bind("click", function () {
+	log("started...");
+	$("div.fade").each(function (i) {
+		$(this).fadeIn().fadeOut(1000*(i+1));
+	});
+	$("div.fade").promise().done(function () {
+		log("finished!");
+	});
+});
+
+////////////////////////////////////////
+// deferred.promise(target)
+
+$("button#deferred-promise").bind("click", function () {
+	var obj = {
+		hello: function (name) {
+			log("Hello " + name);
+		}
+	};
+	
+	var defer = $.Deferred();
+	defer.promise(obj); // now obj is a promise
+	defer.resolve("John");
+	
+	obj.done(function (name) {
+		obj.hello(name);
+	}).hello("Karl");
+});
+
+////////////////////////////////////////
+// $.when(deferreds)
+
+function async_event() {
+	var defer = $.Deferred();
+	
+	setTimeout(function () {
+		defer.resolve("hurray");
+	}, 400+Math.random()*2000);
+	
+	setTimeout(function () {
+		defer.reject("sorry");
+	}, 400+Math.random()*2000);
+	
+	setTimeout(function working() {
+		if (defer.state() === "pending") {
+			defer.notify("working...");
+			setTimeout(working, 500);
+		}
+	}, 1);
+	
+	return defer.promise();
+}
+
+$("button#jQuery-when").bind("click", function () {
+	$.when(async_event()).then(function (status) {
+		log(status + ", done");
+	}, function (status) {
+		log(status + ", fail");
+	}, function (status) {
+		log(status + ", progress");
+	});
+})
+
+////////////////////////////////////////
+// deferred.pipe(...)
+
+function x2(v) { return v * 2; }
+function x3(v) { return v * 3; }
+
+$("button#deferred-pipe").bind("click", function () {
+	var defer = $.Deferred();
+	var chained = defer.pipe(x2).pipe(x3);
+	
+	chained.done(function (data) { log(data); });
+
+	defer.resolve(5);
+});
+
+////////////////////////////////////////
+// $.ajax(...)
+
+$("button#jQuery-ajax").bind("click", function () {
+	var buf = '' +
+	'var request = $.ajax(url, {dataType: "json"});\n' +
+	'var chained = request.pipe(function (data) {\n' +
+	'  return $.ajax(url2, {data: {user:data.user_id}});\n' +
+	'});\n' +
+	'chained.done(function (data) { ... });';
+	
+	log(buf);
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Callbacks Object
+
+////////////////////////////////////////
+// $.Callbacks(flags)
+
+function fn1(value) { console.log("fn1:" + value); }
+function fn2(value) { fn1("fn2:" + value); return false; }
+
+$("button#jQuery-Callbacks").bind("click", function () {
+	var callbacks = $.Callbacks();
+	callbacks.add(fn1);
+	if (callbacks.has(fn1)) log("fn1 added");
+	if (! callbacks.fired()) log("callbacks not yet fired");
+	callbacks.fire("foo");
+	if (callbacks.fired()) log("callbacks fired");
+	callbacks.add(fn2);
+	if (callbacks.has(fn2)) log("fn2 added");
+	callbacks.fire("bar");
+	callbacks.remove(fn2);
+	if (! callbacks.has(fn2)) log("fn2 removed");
+	callbacks.fire("foobar");
+});
+
+////////////////////////////////////////
+// flag: once
+
+$("button#callbacks-once").bind("click", function () {
+	var callbacks = $.Callbacks("once");
+	callbacks.add(fn1);
+	callbacks.fire("foo"); // fired once
+	callbacks.add(fn2);
+	callbacks.fire("bar"); // not fired
+	callbacks.remove(fn2);
+	callbacks.fire("foobar"); // not fired
+});
+
+////////////////////////////////////////
+// flag: memory
+
+$("button#callbacks-memory").bind("click", function () {
+	var callbacks = $.Callbacks("memory");
+	callbacks.add(fn1);
+	callbacks.fire("foo");
+	callbacks.add(fn2); // "foo" is not fired for fn2
+	callbacks.fire("bar"); // fn2 with "foo" go first
+	callbacks.remove(fn2);
+	callbacks.fire("foobar");
+});
+
+////////////////////////////////////////
+// flag: unique
+
+$("button#callbacks-unique").bind("click", function () {
+	var callbacks = $.Callbacks("unique");
+	callbacks.add(fn1);
+	callbacks.fire("foo");
+	callbacks.add(fn1); // repeat addition
+	callbacks.add(fn2);
+	callbacks.fire("bar");
+	callbacks.remove(fn2);
+	callbacks.fire("foobar");
+});
+
+////////////////////////////////////////
+// flag: stopOnFalse
+
+$("button#callbacks-stopOnFalse").bind("click", function () {
+	function fn1(value) { console.log("fn1:" + value); return false; }
+	
+	var callbacks = $.Callbacks("stopOnFalse");
+	callbacks.add(fn1);
+	callbacks.fire("foo");
+	callbacks.add(fn2);
+	callbacks.fire("bar"); // interrupted in fn1; fn2 not called
+	callbacks.remove(fn2);
+	callbacks.fire("foobar");
+});
+
+////////////////////////////////////////
+// flag: unique memory
+
+$("button#callbacks-unique-memory").bind("click", function () {
+	var callbacks = $.Callbacks("unique memory");
+	callbacks.add(fn1);
+	callbacks.fire("foo");
+	callbacks.add(fn1); // repeat addition
+	callbacks.add(fn2); // "foo" is not fired for fn2
+	callbacks.fire("bar"); // fn2 with "foo" go first
+	callbacks.add(fn2);
+	callbacks.fire("baz");
+	callbacks.remove(fn2);
+	callbacks.fire("foobar");
+});
+
+////////////////////////////////////////
+// pub/sub
+
+var topics = {};
+jQuery.Topic = function(id) {
+	var topic = id && topics[id];
+	if (!topic) {
+		var callbacks = jQuery.Callbacks();
+		topic = {
+			publish: callbacks.fire,
+			subscribe: callbacks.add,
+			unsubscribe: callbacks.remove
+		};
+		if (id) {
+			topics[id] = topic;
+		}
+	}
+	return topic;
+};
+
+$("button#pub-sub").bind("click", function () {
+	topics = {};
+	
+	// Subscribers
+	$.Topic("mailArrived").subscribe(fn1);
+	$.Topic("mailArrived").subscribe(fn2);
+	$.Topic("mailSent").subscribe(fn1);
+	
+	// Publisher
+	$.Topic("mailArrived").publish("hello world!");
+	$.Topic("mailSent").publish("woo! mail!");
+});
+
+////////////////////////////////////////
+// $.Deferred and pub/sub
+
+$("button#deferred-pub-sub").bind("click", function () {
+	topics = {};
+	
+	$.Topic("mailArrived").subscribe(fn1);
+	
+	var defer = $.Deferred();
+	var topic = $.Topic("mailArrived");
+	defer.done(topic.publish);
+	
+	defer.resolve("its been published!");
+});
+
+</script>
+
+</body>
+</html>

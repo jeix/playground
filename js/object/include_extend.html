@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>include/extend</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+String.prototype.repeat = function (n) {
+	var sb = '';
+	var s = this.slice(0);
+	for (var i = 0; i< n; i++) sb += s;
+	return sb;
+};
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Object.$include = function (from, to) {
+	for (var k in from) {
+		if (from.hasOwnProperty(k)) {
+			to[k] = from[k];
+		}
+	}
+};
+
+Object.prototype.includes = function (o) {
+	Object.$include(o, this.prototype);
+}
+Object.prototype.extends = function (o) {
+	Object.$include(o, this);
+}
+
+xprint_code('Object.prototype.includes = ' + Object.prototype.includes);
+xprint_code('Object.prototype.extends = ' + Object.prototype.extends);
+
+xprintln("----------");
+
+function F(x) {
+	this.x = x;
+}
+F.prototype = {
+	twice: function() {
+		return this.x.repeat(2);
+	},
+	abbreviate: function() {
+		return this.x.charAt(0);
+	}
+};
+
+xprint_code(F);
+xprint_code('F.prototype.twice = ' + F.prototype.twice);
+xprint_code('F.prototype.abbreviate = ' + F.prototype.abbreviate);
+
+// var f = new F('x');
+// for (var p in f) {
+// 	if (f.hasOwnProperty(p)) {
+// 		confirm(p+'::'+f[p]);
+// 	}
+// }
+// for (var p in F.prototype) {
+// 	if (F.prototype.hasOwnProperty(p)) {
+// 		confirm('F.prototype.'+p+'::'+F.prototype[p]);
+// 	}
+// }
+// confirm('toString::'+f.toString);
+// confirm('valueOf::'+f.valueOf);
+
+function G(x) {
+	this.x = x + x;
+}
+xprint_code(G);
+
+exec_o_ret('G.includes(F.prototype);');
+//exec_o_ret('G.includes(new F());'); // not works CUZ hasOwnProperty
+//exec_o_ret('G.prototype.extends(F.prototype);');
+//exec_o_ret('G.prototype.extends(new F());'); // not works CUZ hasOwnProperty
+
+xprintln();
+
+exec('var g = new G("me");');
+exec_o_ret('g.twice();');
+exec_o_ret('g.abbreviate();');
+
+// for (var p in g) {
+// 	confirm(p+'::'+g[p]);
+// }
+// confirm('toString::'+g.toString);
+// confirm('valueOf::'+g.valueOf);
+
+xprintln("----------");
+
+function H(x, y) {
+	F.call(this, x + y);
+}
+xprint_code(H);
+
+//exec_o_ret('H.includes(F.prototype);');
+//exec_o_ret('H.includes(new F());'); // not works CUZ hasOwnProperty
+exec_o_ret('H.prototype.extends(F.prototype);');
+//exec_o_ret('H.prototype.extends(new F());'); // not works CUZ hasOwnProperty
+
+xprintln();
+
+exec('var h = new H("fu", "hu");');
+exec_o_ret('h.twice();');
+exec_o_ret('h.abbreviate();');
+
+// for (var p in h) {
+// 	confirm(p+'::'+h[p]);
+// }
+// confirm('toString::'+h.toString);
+// confirm('valueOf::'+h.valueOf);
+
+xprintln("--------------------");
+
+function X() {
+	this.x = 'xxx';
+}
+X.prototype.extends({
+	fx: function(){}
+});
+
+var x = new X();
+for (var p in x) {
+	if (x.hasOwnProperty(p)) {
+		xprintln('new X().'+p);
+	}
+}
+for (var p in X.prototype) {
+	if (X.prototype.hasOwnProperty(p)) {
+		xprintln('X.prototype.'+p);
+	}
+}
+
+xprintln("----------");
+
+function Y() {
+	this.y = 'yyy';
+}
+Y.includes(X.prototype);
+Y.prototype.extends({
+	fy: function(){}
+});
+
+var y = new Y();
+for (var p in y) {
+	if (y.hasOwnProperty(p)) {
+		xprintln('new Y().'+p);
+	}
+}
+for (var p in Y.prototype) {
+	if (Y.prototype.hasOwnProperty(p)) {
+		xprintln('Y.prototype.'+p);
+	}
+}
+
+xprintln("----------");
+
+function Z() {
+	this.z = 'zzz';
+}
+Z.includes(Y.prototype);
+Z.prototype.extends({
+	fz: function(){}
+});
+
+var z = new Z();
+for (var p in z) {
+	if (z.hasOwnProperty(p)) {
+		xprintln('new Z().'+p);
+	}
+}
+for (var p in Z.prototype) {
+	if (Z.prototype.hasOwnProperty(p)) {
+		xprintln('Z.prototype.'+p);
+	}
+}
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

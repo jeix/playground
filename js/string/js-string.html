@@ -1,0 +1,59 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><body><script language="javascript">
+exec('str = "0123456789"');
+exec_o_ret('str');
+exec('s = new String(str)');
+exec_o_ret('s');
+exec_o_ret('s.length');
+exec_o_ret('s.charAt(0)', '0-based');
+exec_o_ret('s.charCodeAt(0)', 'character code');
+exec_o_ret('s.concat("abcdef")');
+exec_o_ret('s');
+exec_o_ret('s.indexOf("345",1)', 'forward scan from index (default is 0)');
+exec_o_ret('s.lastIndexOf("123",4)', 'backward scan from index (default is length)');
+exec_o_ret('s.match(/123/)');
+exec_o_ret('s.replace(/123/, "abc")');
+exec_o_ret('s');
+exec_o_ret('s.search(/123/)');
+exec_o_ret('s.slice(4,-4)', 'beginAt, endAt // beginAt must left to endAt');
+exec_o_ret('s');
+exec('s = "This is a big"');
+exec_o_ret('s.split(" ",3)');
+exec_o_ret('s');
+exec('s = "0123456789"');
+exec_o_ret('s.substr(-2,2)', 'offset, length // negative offset is treated as 0 in IE');
+exec_o_ret('s.substring(5,2)', 'beginAt, endAt // negative beginAt is not allowed // negative endAt is treated as 0');
+exec('s = "abcDEF"');
+exec_o_ret('s.toLowerCase()');
+exec_o_ret('s');
+exec_o_ret('s.toUpperCase()');
+exec_o_ret('s');
+xprintln('');
+exec_o_ret('String.fromCharCode(104,101,108,108,111)');
+xprintln('');
+exec_o_ret('"hello".anchor("...")');
+exec_o_ret('"hello".big()');
+exec_o_ret('"hello".blink()');
+exec_o_ret('"hello".bold()');
+exec_o_ret('"hello".fixed()');
+exec_o_ret('"hello".fontcolor("#8080ff")');
+exec_o_ret('"hello".fontsize("+2")');
+exec_o_ret('"hello".italics()');
+exec_o_ret('"hello".link("...")');
+exec_o_ret('"hello".small()');
+exec_o_ret('"hello".strike()');
+exec_o_ret('"hello".sub()');
+exec_o_ret('"hello".sup()');
+xprintln('');
+exec('str = "hello";');
+exec_o_ret('str["0"];');
+exec_o_ret('for (var i in str) str[i];');
+xprintln('');
+exec_o_ret('"a" + 4');
+exec_o_ret('"12" + 3');
+exec_o_ret('"3" + .14');
+</script></body>

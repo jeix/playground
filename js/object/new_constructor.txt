@@ -1,0 +1,46 @@
+
+////////////////////
+// 파라미터가 없을 때
+
+> function Dog() {
+    this.kind = 'Dog';
+  }
+> (new Dog).kind; // ()가 필요없다
+  "Dog"
+
+// 정확한 건 아니지만 요 비슷한 일이 일어나는 것 같다
+> function new_Dog() {
+    var d = {};
+    Dog.call(d);
+    return d;
+  }
+> new_Dog().kind;
+  "Dog"
+
+////////////////////
+// 파라미터가 있을 때
+
+> function Dog(kind) {
+    this.kind = kind || 'Dog';
+  }
+> new Dog('Jindo').kind; // 물론 ()가 필요하다
+  "Jindo"
+
+> function new_Dog() {
+    var d = {};
+    Dog.apply(d, arguments);
+    return d;
+  }
+> new_Dog('Jindo').kind;
+  "Jindo"
+
+
+
+////////////////////////////////////////
+// new 가 실행될 때 실제 일어나는 일은 다음을 참고
+
+@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new
+
+1. A new object is created, inheriting from foo.prototype.
+2. The constructor function foo is called with the specified arguments and this bound to the newly created object. new foo is equivalent to new foo(), i.e. if no argument list is specified, foo is called without arguments.
+3. The object returned by the constructor function becomes the result of the whole new expression. If the constructor function doesn't explicitly return an object, the object created in step 1 is used instead. (Normally constructors don't return a value, but they can choose to do so if they want to override the normal object creation process.)

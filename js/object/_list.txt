@@ -1,0 +1,40 @@
+
+1.1 protect from calling constructor w/o new
+
+@see omit_new.html
+
+2. inheritance
+
+2.1 begetObject by Douglas Crockford
+
+@see begetObject.html
+
+2.2 Object.create()
+
+@see create.html
+
+3. functionality extension
+
+3.1 subtyping
+
+@see subtyping.html
+
+3.2 include/extend module (like Ruby)
+
+@see include_extend.html
+
+3.2.1 include/extend single function
+
+@see single_func.html
+
+3.3 context substitution || borrow function -- using f.apply(), f.bind()
+
+@see run.html
+
+3.3.1 Array and String generics (1.6) -- a.f.call(s, ...)
+
+@see bind.html
+
+4.1 function.bind()
+
+@see bind.html

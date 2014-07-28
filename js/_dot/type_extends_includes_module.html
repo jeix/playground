@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Type, Casting, Equality</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+
+table { empty-cells: show; }
+table, td { border: 1px solid gray; }
+td {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+	vertical-align: top;
+}
+tr.blue td { border-color: #9999ff; }
+td.center { text-align: center;}
+
+table { margin: 2px; }
+td { min-width: 2em; }
+
+hr {
+	height: 1px;
+	border-width: 0;
+	color: gray;
+	background-color: gray;
+	clear: both;
+}
+hr.half {
+	width: 50%;
+	margin-left: 0;
+	text-align: left;
+}
+</style>
+<script type="text/javascript" src="../sfx/base.js"></script>
+<script type="text/javascript" src="../sfx/exec.js"></script>
+<script type="text/javascript" src="../string/string.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var _ = {
+	copy_properties: function (from, to) {
+		var only_if_not_exist = arguments[2];
+		for (var k in from) {
+			if (from.hasOwnProperty(k) && (!only_if_not_exist || !to[k])) {
+				to[k] = from[k];
+			}
+		}
+	},
+	inherits: function (T, S) {
+		if (T instanceof Function && S instanceof Function) {
+			T.prototype = Object.create(S.prototype);
+			T.prototype.constructor = T;
+		} else {
+			function IllegalArgumentException(msg) {
+				if (msg) this.msg = msg;
+				else this.msg = "illegal argument";
+			}
+			IllegalArgumentException.prototype.toString = function() { return "Exception: " + this.msg; };
+			throw new IllegalArgumentException();
+		}
+	},
+	mixin: function (T, S) {
+		if (T & S) {
+			_.copy_properties(S, T);
+			if (arguments.length > 2) {
+				for (var i = 2; i < arguments.length; i++) {
+					_.copy_properties(arguments[i], T);
+				}
+			}
+		}
+	}
+};
+
+/*
+- type inherits type
+  T.inherits(S); // T.prototype = new S()
+  new T().m()
+- type include module
+  T.includes(M)
+  new T().m()
+- objetc extends modules
+  o.extends(M)
+  o.m()
+//*/
+
+if (! Function.prototype.inherits)
+Function.prototype.inherits = function (T) {
+	if (T instanceof Function) {
+		this.prototype = new T(); // now X.prototype.constructor is T
+			// above all if T() has parameter
+	} else {
+		function IllegalArgumentException(msg) {
+			if (msg) this.msg = msg;
+			else this.msg = "illegal argument";
+		}
+		IllegalArgumentException.prototype.toString = function() { return "Exception: " + this.msg; };
+		throw new IllegalArgumentException();
+	}
+};
+Function.prototype.inherits2 = function (T) {
+	if (T instanceof Function) {
+		this.prototype = Object.create(T.prototype);
+		this.prototype.constructor = this;
+	} else {
+		function IllegalArgumentException(msg) {
+			if (msg) this.msg = msg;
+			else this.msg = "illegal argument";
+		}
+		IllegalArgumentException.prototype.toString = function() { return "Exception: " + this.msg; };
+		throw new IllegalArgumentException();
+	}
+};
+if (! Function.prototype.includes)
+Function.prototype.includes = function (M) {
+	_.copy_properties(M, this.prototype);
+};
+if (! Object.prototype.extends)
+Object.prototype.extends = function (M) {
+	_.copy_properties(M, this);
+};
+
+</script>
+
+<hr />
+
+<script type="text/javascript">
+
+exec_def('function E(x) {\n' +
+'	this.x = x;\n' +
+'}\n' +
+'E.prototype = {\n' +
+'	twice: function() {\n' +
+'		return this.x.repeat(2);\n' +
+'	},\n' +
+'	abbreviate: function() {\n' +
+'		return this.x.charAt(0);\n' +
+'	}\n' +
+'};');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def('function F1(x) {\n' +
+'	this.x = x + x;\n' +
+'}');
+
+exec_def('F1.inherits(E);');
+
+exec('var f1 = new F1("me");');
+exec_o_ret('f1.twice();');
+exec_o_ret('f1.abbreviate();');
+
+exec_def('function F2(x) {\n' +
+'	this.x = x + x;\n' +
+'}');
+
+exec_def('F2.inherits2(E);');
+
+exec('var f2 = new F2("me");');
+exec_o_ret('f2.twice();');
+exec_o_ret('f2.abbreviate();');
+
+exec_def('function F3(x) {\n' +
+'	this.x = x + x;\n' +
+'}');
+
+exec_def('F3.includes(E.prototype);');
+
+exec('var f3 = new F3("me");');
+exec_o_ret('f3.twice();');
+exec_o_ret('f3.abbreviate();');
+
+exec_def('function F4(x) {\n' +
+'	this.x = x + x;\n' +
+'}');
+
+exec_def('F4.prototype.extends(E.prototype);');
+
+exec('var f4 = new F4("me");');
+exec_o_ret('f4.twice();');
+exec_o_ret('f4.abbreviate();');
+
+exec_def('function F5(x) {\n' +
+'	this.x = x + x;\n' +
+'}');
+
+exec('var f5 = new F5("me");');
+exec('f5.extends(E.prototype);');
+exec_o_ret('f5.twice();');
+exec_o_ret('f5.abbreviate();');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def('function G1(x, y) {\n' +
+'	E.call(this, x + y);\n' +
+'}');
+
+exec_def('G1.inherits(E);');
+
+exec('var g1 = new G1("fu", "hu");');
+exec_o_ret('g1.twice();');
+exec_o_ret('g1.abbreviate();');
+
+exec_def('function G2(x, y) {\n' +
+'	E.call(this, x + y);\n' +
+'}');
+
+exec_def('G2.inherits2(E);');
+
+exec('var g2 = new G2("fu", "hu");');
+exec_o_ret('g2.twice();');
+exec_o_ret('g2.abbreviate();');
+
+exec_def('function G3(x, y) {\n' +
+'	E.call(this, x + y);\n' +
+'}');
+
+exec_def('G3.includes(E.prototype);');
+
+exec('var g3 = new G3("fu", "hu");');
+exec_o_ret('g3.twice();');
+exec_o_ret('g3.abbreviate();');
+
+exec_def('function G4(x, y) {\n' +
+'	E.call(this, x + y);\n' +
+'}');
+
+exec_def('G4.prototype.extends(E.prototype);');
+
+exec('var g4 = new G4("fu", "hu");');
+exec_o_ret('g4.twice();');
+exec_o_ret('g4.abbreviate();');
+
+exec_def('function G5(x, y) {\n' +
+'	E.call(this, x + y);\n' +
+'}');
+
+exec('var g5 = new G5("fu", "hu");');
+exec('g5.extends(E.prototype);');
+exec_o_ret('g5.twice();');
+exec_o_ret('g5.abbreviate();');
+
+</script>
+
+<hr />
+
+<script type="text/javascript">
+
+exec_def("function xprint_properties(x) {\n" +
+"	for (var p in x) {\n" +
+"		if (x.hasOwnProperty(p)) {\n" +
+"			xprint_result('new '+x.constructor.name+'().'+p);\n" +
+"		} else {\n" +
+"			xprint_result('new '+x.constructor.name+'().'+p+' (inherited)');\n" +
+"		}\n" +
+"	}\n" +
+"}\n" +
+"function xprint_prototype_properties(X) {\n" +
+"	for (var p in X.prototype) {\n" +
+"		if (X.prototype.hasOwnProperty(p)) {\n" +
+"			xprint_result(X.name+'.prototype.'+p);\n" +
+"		} else {\n" +
+"			xprint_result(X.name+'.prototype.'+p+' (inherited)');\n" +
+"		}\n" +
+"	}\n" +
+"}");
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def("function X1() {\n" +
+"	this.x = 'xxx';\n" +
+"}\n" +
+"X1.includes({\n" +
+"	fx: function(){}\n" +
+"});\n" +
+"var x1 = new X1();");
+exec_after_print('xprint_properties(x1);');
+xprintln();
+exec_after_print('xprint_prototype_properties(X1);');
+
+exec_def("function Y1() {\n" +
+"	this.y = 'yyy';\n" +
+"}\n" +
+"Y1.includes(X1.prototype);\n" +
+"Y1.includes({\n" +
+"	fy: function(){}\n" +
+"});\n" +
+"var y1 = new Y1();");
+exec_after_print('xprint_properties(y1);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Y1);');
+
+exec_def("function Z1() {\n" +
+"	this.z = 'zzz';\n" +
+"}\n" +
+"Z1.includes(Y1.prototype);\n" +
+"Z1.includes({\n" +
+"	fz: function(){}\n" +
+"});\n" +
+"var z1 = new Z1();");
+exec_after_print('xprint_properties(z1);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Z1);');
+
+xprintln();
+exec_p_o_ret('x1 instanceof X1');
+exec_p_o_ret('y1 instanceof Y1');
+exec_p_o_ret('z1 instanceof Z1');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def("function X2() {\n" +
+"	this.x = 'xxx';\n" +
+"}\n" +
+"X2.includes({\n" +
+"	fx: function(){}\n" +
+"});\n" +
+"var x2 = new X2();");
+exec_after_print('xprint_properties(x2);');
+xprintln();
+exec_after_print('xprint_prototype_properties(X2);');
+
+exec_def("function Y2() {\n" +
+"	this.y = 'yyy';\n" +
+"}\n" +
+"Y2.inherits(X2);\n" +
+"Y2.includes({\n" +
+"	fy: function(){}\n" +
+"});\n" +
+"var y2 = new Y2();");
+exec_after_print('xprint_properties(y2);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Y2);');
+
+exec_def("function Z2() {\n" +
+"	this.z = 'zzz';\n" +
+"}\n" +
+"Z2.inherits(Y2);\n" +
+"Z2.includes({\n" +
+"	fz: function(){}\n" +
+"});\n" +
+"var z2 = new Z2();");
+exec_after_print('xprint_properties(z2);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Z2);');
+
+xprintln();
+exec_p_o_ret('x2 instanceof X2');
+exec_p_o_ret('y2 instanceof Y2');
+exec_p_o_ret('y2 instanceof X2');
+exec_p_o_ret('z2 instanceof Z2');
+exec_p_o_ret('z2 instanceof Y2');
+exec_p_o_ret('z2 instanceof X2');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def("function X3() {\n" +
+"	this.x = 'xxx';\n" +
+"}\n" +
+"X3.includes({\n" +
+"	fx: function(){}\n" +
+"});\n" +
+"var x3 = new X3();");
+exec_after_print('xprint_properties(x3);');
+xprintln();
+exec_after_print('xprint_prototype_properties(X3);');
+
+exec_def("function Y3() {\n" +
+"	X3.call(this);\n" +
+"	this.y = 'yyy';\n" +
+"}\n" +
+"Y3.inherits2(X3);\n" +
+//"_.inherits(Y3, X3);\n" +
+"Y3.includes({\n" +
+"	fy: function(){}\n" +
+"});\n" +
+"var y3 = new Y3();");
+exec_after_print('xprint_properties(y3);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Y3);');
+
+exec_def("function Z3() {\n" +
+"	Y3.call(this);\n" +
+"	this.z = 'zzz';\n" +
+"}\n" +
+"Z3.inherits2(Y3);\n" +
+//"_.inherits(Z3, Y3);\n" +
+"Z3.includes({\n" +
+"	fz: function(){}\n" +
+"});\n" +
+"var z3 = new Z3();");
+exec_after_print('xprint_properties(z3);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Z3);');
+
+xprintln();
+exec_p_o_ret('x3 instanceof X3');
+exec_p_o_ret('y3 instanceof Y3');
+exec_p_o_ret('y3 instanceof X3');
+exec_p_o_ret('z3 instanceof Z3');
+exec_p_o_ret('z3 instanceof Y3');
+exec_p_o_ret('z3 instanceof X3');
+
+xprintln();
+
+exec_o_ret('Object.getPrototypeOf(z3).constructor.name;');
+exec_o_ret('Object.getPrototypeOf(z3).__proto__.constructor.name;');
+exec_o_ret('Object.getPrototypeOf(z3).__proto__.__proto__.constructor.name;');
+exec_o_ret('Object.getPrototypeOf(z3).__proto__.__proto__.__proto__.constructor.name;');
+exec_o_ret('Object.getOwnPropertyNames(z3);');
+exec_o_ret('Object.getOwnPropertyNames(Object.getPrototypeOf(z3));');
+exec_o_ret('Object.getOwnPropertyNames(Object.getPrototypeOf(z3).__proto__);');
+exec_o_ret('Object.getOwnPropertyNames(Object.getPrototypeOf(z3).__proto__.__proto__);');
+exec_o_ret('Object.getPrototypeOf(z3).hasOwnProperty("fz");');
+exec_o_ret('Object.getPrototypeOf(z3).hasOwnProperty("fy");');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def("function X4() {\n" +
+"	this.x = 'xxx';\n" +
+"}\n" +
+"X4.includes({\n" +
+"	fx: function(){}\n" +
+"});\n" +
+"var x4 = new X4();");
+exec_after_print('xprint_properties(x4);');
+xprintln();
+exec_after_print('xprint_prototype_properties(X4);');
+
+exec_def("function Y4() {\n" +
+"	this.y = 'yyy';\n" +
+"}\n" +
+"Y4.includes(x4);\n" +
+"Y4.includes({\n" +
+"	fy: function(){}\n" +
+"});\n" +
+"var y4 = new Y4();");
+exec_after_print('xprint_properties(y4);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Y4);');
+
+exec_def("function Z4() {\n" +
+"	this.z = 'zzz';\n" +
+"}\n" +
+"Z4.includes(y4);\n" +
+"Z4.includes({\n" +
+"	fz: function(){}\n" +
+"});\n" +
+"var z4 = new Z4();");
+exec_after_print('xprint_properties(z4);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Z4);');
+
+xprintln();
+exec_p_o_ret('x4 instanceof X4');
+exec_p_o_ret('y4 instanceof Y4');
+exec_p_o_ret('z4 instanceof Z4');
+
+</script>
+
+<hr class="half" />
+
+<script type="text/javascript">
+
+exec_def("function X5() {\n" +
+"	this.x = 'xxx';\n" +
+"}\n" +
+"var x5 = new X5();\n" +
+"x5.extends({\n" +
+"	fx: function(){}\n" +
+"});");
+exec_after_print('xprint_properties(x5);');
+xprintln();
+exec_after_print('xprint_prototype_properties(X5);');
+
+exec_def("function Y5() {\n" +
+"	this.y = 'yyy';\n" +
+"}\n" +
+"var y5 = new Y5();\n" +
+"y5.extends(x5);\n" +
+"y5.extends({\n" +
+"	fy: function(){}\n" +
+"});");
+exec_after_print('xprint_properties(y5);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Y5);');
+
+exec_def("function Z5() {\n" +
+"	this.z = 'zzz';\n" +
+"}\n" +
+"var z5 = new Z5();\n" +
+"z5.extends(y5);\n" +
+"z5.extends({\n" +
+"	fz: function(){}\n" +
+"});");
+exec_after_print('xprint_properties(z5);');
+xprintln();
+exec_after_print('xprint_prototype_properties(Z5);');
+
+xprintln();
+exec_p_o_ret('x5 instanceof X5');
+exec_p_o_ret('y5 instanceof Y5');
+exec_p_o_ret('z5 instanceof Z5');
+
+</script>
+
+<hr />
+
+<script type="text/javascript">
+
+var a = ['a','b','c'];
+for (var k in a) {
+	if (a.hasOwnProperty(k)) {
+		console.log(k+"="+a[k]);
+	}
+}
+
+</script>
+
+<hr />
+
+</body>
+</html>

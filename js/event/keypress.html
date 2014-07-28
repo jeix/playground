@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+/**
+----	-----------	-----------
+char	IE			FF
+----	-----------	-----------
+a		keydown=65	keydown=65
+		keypress=97	keypress=97
+		keyup=65	keyup=65
+space	keydown=32	keydown=32
+		keypress=32	keypress=32
+		keyup=32	keyup=32
+enter	keydown=13	keydown=13
+		keypress=13	keypress=13
+		keyup=13	keyup=13
+up		keydown=38	keydown=38
+					keypress=38
+		keyup=38	keyup=38
+down	keydown=40	keydown=40
+					keypress=40
+		keyup=40	keyup=40
+left	keydown=39	keydown=39
+					keypress=39
+		keyup=39	keyup=39
+down	keydown=37	keydown=37
+					keypress=37
+		keyup=37	keyup=37
+bs		keydown=8	keydown=8
+					keypress=8
+		keyup=8		keyup=8
+onblur	keyup=229	keyup=229
+----	-----------	-----------
+한영	keydown=229	keydown=229
+					keypress=229
+		keyup=21	keyup=21
+ㅎ		keydown=229	keydown=229
+					keypress=229
+		keyup=71	
+ㅏ		keydown=229	
+		keyup=75	
+ㄴ		keydown=229	
+		keyup=83	
+ㄱ		keydown=229	
+		keyup=82	
+ㅡ		keydown=229	
+		keyup=77	
+ㄹ		keydown=229	
+		keyup=70	
+한영	keydown=229	
+		keyup=21	keyup=21
+onblur	keyup=229	keyup=229
+----	-----------	-----------
+ㅎ		keydown=229	keydown=229
+					keypress=229
+		keyup=71	
+ㅏ		keydown=229	
+		keyup=75	
+ㄴ		keydown=229	
+		keyup=83	
+한자	keydown=229	
+		keyup=25	
+1		keydown=229	
+		keyup=49	keyup=49
+한영	keydown=229	keydown=229
+					keypress=229
+		keyup=21	keyup=21
+onblur	keyup=229	keyup=229
+----	-----------	-----------
+//**/
+
+KeyEvent = {
+	key: function (evt) {
+		evt = evt || window.event;
+		return evt.which || evt.keyCode;
+	},
+	target: function (evt) {
+		evt = evt || window.event;
+		return evt.target || evt.srcElement;
+	}
+};
+
+function process_keydown(evt) {
+	xprintln('keydown=' + KeyEvent.key(evt));
+}
+
+function process_keypress(evt) {
+	xprintln('keypress=' + KeyEvent.key(evt));
+}
+
+function process_keyup(evt) {
+	xprintln('keyup=' + KeyEvent.key(evt));
+	xprintln(KeyEvent.target(evt).value);
+}
+
+var db = '';
+function process_keypress_trickily(evt) {
+	var elem = $('key_tester');
+	if (db != elem.value) {
+		db = elem.value;
+		xprintln(db);
+	}
+	window.setTimeout("process_keypress_trickily()", 10);
+}
+
+onload = function() {
+	var elem = $('key_tester');
+	/**
+	elem.onkeydown = process_keydown;
+	elem.onkeyup = process_keyup;
+	elem.onkeypress = process_keypress;
+	//**/
+	elem.onkeypress = process_keypress_trickily;
+};
+</script>
+</head>
+<body>
+
+<input type="text" id="key_tester">
+
+</body>
+</html>

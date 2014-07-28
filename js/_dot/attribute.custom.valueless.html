@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+<!-- STYLE_HERE -->
+</style>
+<script type="text/javascript" src="simple.util.js"></script>
+<script type="text/javascript">
+// SCRIPT_HERE
+var $ = function(id) { return document.getElementById(id); };
+
+function test_valueless_attribute() {
+	var e = $('main');
+	var a = e.getAttributeNode('custom_attribute');
+	xprintln((a.nodeType == 2 ? '' : 'Non-') + 'Attribute ' + a.nodeName + ' is "' + a.nodeValue + '"');
+	xprintln((a.nodeType == 2 ? '' : 'Non-') + 'Attribute ' + a.nodeName + ' is "' + e.getAttribute('custom_attribute') + '"');
+}
+
+onload = function() {
+	test_valueless_attribute();
+};
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:400px;" custom_attribute>
+DIV
+</div>
+</body>
+</html>

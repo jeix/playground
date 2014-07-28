@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Coloring</title>
+<style type="text/css">
+
+body { background-color: #000; }
+
+</style><script type="text/javascript">
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+var Hex = {
+	charmap: ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'],
+	hex: function (decimal) {
+		var remainder = decimal % 16;
+		var quotient = (decimal - remainder) / 16;
+		return '0x' + this.charmap[quotient] + this.charmap[remainder];
+	}
+};
+
+var Color = {
+	r: 0,
+	g: 0,
+	b: 0,
+	color: function () {
+		return '#' + Hex.hex(this.r).substr(2) + Hex.hex(this.g).substr(2) + Hex.hex(this.b).substr(2);
+	},
+	delta: parseInt(0x05), // 0x11, 0x05, 0x01
+	max: 255,
+	min: 0,
+	change: function (which, how) {
+		if (how == '+') {
+			this[which] += this.delta;
+			if (this[which] > this.max) this[which] = this.max;
+		} else if (how == '-') {
+			this[which] -= this.delta;
+			if (this[which] < this.min) this[which] = this.min;
+		}
+	},
+	mode: undefined,
+	set_mode: function (name) {
+		this.mode = this[name];
+	},
+	init: function () {
+		this.set_mode('rigibi');
+	},
+	// cycling
+	// r__ r_b __b _gb _g_ rg_
+	// b++ r-- g++ b-- r++ g--
+	rd: function () {
+		this.change('r','-');
+		if (this.r == 0) this.set_mode('gi');
+	},
+	gd: function () {
+		this.change('g','-');
+		if (this.g == 0) this.set_mode('bi');
+	},
+	bd: function () {
+		this.change('b','-');
+		if (this.b == 0) this.set_mode('ri');
+	},
+	ri: function () {
+		this.change('r','+');
+		if (this.r == 255) this.set_mode('gd');
+	},
+	gi: function () {
+		this.change('g','+');
+		if (this.g == 255) this.set_mode('bd');
+	},
+	bi: function () {
+		this.change('b','+');
+		if (this.b == 255) this.set_mode('rd');
+	},
+	// rgb -> r__
+	gdbd: function () {
+		this.change('g','-');
+		this.change('b','-');
+		if (this.g == 0 && this.b == 0) this.set_mode('bi');
+	},
+	// ___ -> rgb
+	rigibi: function () {
+		this.change('r','+');
+		this.change('g','+');
+		this.change('b','+');
+		if (this.r == 255 && this.g == 255 && this.b == 255) this.set_mode('gdbd');
+	},
+	// change
+};
+Color.init();
+
+var interval = 50;
+
+function coloring() {
+	Color.mode();
+	bgc(Color.color());
+	window.setTimeout(coloring, interval);
+}
+
+function bgc(c) {
+	$('cnv').style.backgroundColor = c;
+	//document.body.style.backgroundColor = c;
+}
+
+onload = function () {
+	window.setTimeout(coloring, interval);
+};
+
+</script>
+</head>
+<body>
+<div id="cnv" style="width: 50px; height: 50px;"></div>
+</body>
+</html>

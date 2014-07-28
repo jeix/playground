@@ -1,0 +1,120 @@
+<body><style type="text/css">
+body {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript">
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script><script type="text/javascript" src="../../sfx/exec.js">
+</script><script type="text/javascript">
+
+/*
+if (! Function.prototype.bind) { // pre 1.8.5
+	Function.prototype.bind = function (obj) {
+		var slice = [].slice;
+		var args = slice.call(arguments, 1);
+		var self = this;
+		var nop = function () {};
+		var bound = function () {
+			return self.apply(this instanceof nop ? this : (obj || {}),
+							args.concat(slice.call(arguments))
+					);
+		};
+		nop.prototype = self.prototype;
+		bound.prototype = new nop();
+		return bound;
+	};
+}
+//*/
+
+if (!Function.prototype.bind) { // pre 1.8.5
+	Function.prototype.bind = function (oThis) {
+		if (typeof this !== "function") { // closest thing possible to the ECMAScript 5 internal IsCallable function
+			throw new TypeError("Function.prototype.bind - what is trying to be fBound is not callable");
+		}
+		var aArgs = Array.prototype.slice.call(arguments, 1);
+		var fToBind = this;
+		var fNOP = function () {};
+		var fBound = function () {
+			console.log(this instanceof fNOP);
+			return fToBind.apply(this instanceof fNOP ? this : oThis || window, 
+								aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
+		return fBound;
+	};
+}
+
+xprintln("--------------------");
+
+def = [
+	'function isUpper(c) {',
+	'	return (c >= "A" && c <= "Z");',
+	'}'
+];
+exec_def(def.join('\n'));
+
+exec_o_ret('Array.prototype.every.call("TIGER", isUpper)');
+exec_o_ret('[].every.bind("TiGeR")(isUpper)');
+
+xprintln("--------------------");
+
+exec_o_ret('Array.prototype.filter.call("TiGeR", isUpper)');
+exec_o_ret('[].filter.bind("TiGeR")(isUpper)');
+
+xprintln("--------------------");
+
+def = [
+	'var writer = {',
+	'	sb: [],',
+	'	write: function (s) {',
+	'		if (isUpper(s)) this.sb.push(s);',
+	'	},',
+	'	writeln: function (s) {',
+	'		this.write(s + "\\n");',
+	'	},',
+	'	clear: function () {',
+	'		this.sb = [];',
+	'	},',
+	'	toString: function () {',
+	'		return this.sb.join("");',
+	'	}',
+	'};'
+];
+exec_def(def.join('\n'));
+exec('Array.prototype.forEach.call("TiGeR", writer.writeln, writer)');
+exec_o_ret('writer.toString()');
+exec('writer.clear()');
+exec('[].forEach.bind("TiGeR")(writer.writeln, writer)');
+exec_o_ret('writer.toString()');
+
+xprintln("--------------------");
+
+def = [
+	'function toLower(c) {',
+	'	if (c >= "A" && c <= "Z") {',
+	'		return String.fromCharCode(c.charCodeAt(0) + 32);',
+	'	}',
+	'	return c;',
+	'}'
+];
+exec_def(def.join('\n'));
+exec_o_ret('Array.prototype.map.call("TiGeR", toLower)');
+exec_o_ret('[].map.bind("TiGeR")(toLower)');
+
+xprintln("--------------------");
+
+exec_o_ret('Array.prototype.some.call("TiGeR", isUpper)', 'has lower?');
+exec_o_ret('[].some.bind("tiger")(isUpper)', 'has lower?');
+
+xprintln("--------------------");
+
+</script></body>

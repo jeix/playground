@@ -1,0 +1,152 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+</script>
+</head>
+<body>
+<!-- BODY_HERE -->
+<div id="main" style="width:480px;" custom_attribute>
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+var g = "global.var.g";
+var h = "global.var.h";
+
+function foo(p, q) {
+	var a = "foo.var.a";
+	var b = "foo.var.b";
+	xprintln("foo : " + g); // -> foo : undefined // local variable is not yet defined
+	var g = window.g;
+	xprintln("foo : " + g); // -> foo : global.var.g
+	var h = "foo.var.h";
+	xprintln("foo : " + h); // -> foo : foo.var.h
+	var param = (function () {
+		var a = "foo.inner.var.a"; // overwrite
+		return {p:p, q:q, a:a, b:b, g:g, g2:window.g, h:h, h2:window.h};
+	})();
+	bar(param);
+}
+
+function bar(param) {
+	for (var k in param) {
+		//if (param.hasOwnProperty(k)) {
+			xprintln("bar : " + param[k]);
+				// -> bar : foo.param.p
+				// -> bar : foo.param.q
+				// -> bar : foo.inner.var.a
+				// -> bar : foo.var.b
+				// -> bar : global.var.g
+				// -> bar : global.var.g
+				// -> bar : foo.var.h
+				// -> bar : global.var.h
+		//}
+	}
+}
+
+foo("foo.param.p", "foo.param.q");
+
+xprintln("----------");
+
+var obj = {
+	g: "obj.g",
+	h: "obj.h",
+	f: function () {
+		var g = "obj.f.var.g";
+		var self = this;
+		setTimeout(function () {
+			xprintln("(1)");
+			xprintln(g);
+			xprintln(self.g);
+			xprintln(this.g);
+		}, 10);
+			// g      -> obj.f.var.g
+			// self.g -> obj.g
+			// this.g -> global.var.g
+		setTimeout(this.x, 20);
+			// h      -> obj.x.var.h
+			// self.h -> global.var.h
+			// this.h -> global.var.h
+		setTimeout(function() {
+			obj.y.apply(obj);
+		}, 30);
+			// h      -> obj.y.var.h
+			// self.h -> global.var.h
+			// this.h -> obj.h
+	},
+	x: function () {
+		var h = "obj.x.var.h";
+		xprintln("(2)");
+		xprintln(h);
+		xprintln(self.h);
+		xprintln(this.h);
+	},
+	y: function () {
+		var h = "obj.y.var.h";
+		xprintln("(3)");
+		xprintln(h);
+		xprintln(self.h);
+		xprintln(this.h);
+	}
+};
+
+obj.f();
+
+/*
+ * (1) setTimeout(f, ms) 에 의해 호출되는 함수 f는 global 문맥에서 실행된다.
+ * (2) var _this = this; 대신 var self = this; 를 쓰는 경우에는 원래의 self 가 window 와 같음을 기억해야 한다.
+ */
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

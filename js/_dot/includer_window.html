@@ -1,0 +1,19 @@
+<script>
+function trala(a, from) {
+    console.log("trala from "+from+" frame");
+    console.log(Object.getPrototypeOf(a) === Array.prototype);
+    console.log(a instanceof Array);
+}
+function tralo(o) {
+    console.log("tralo from "+o.n+" frame");
+    console.log(Object.getPrototypeOf(o) === Object.prototype);
+    console.log(o instanceof Object);
+}
+</script>
+<iframe src="includee_window.html"></iframe>
+<script>
+window.setTimeout(function () {
+    trala([], "same");
+    tralo({n:"same"});
+}, 500);
+</script>

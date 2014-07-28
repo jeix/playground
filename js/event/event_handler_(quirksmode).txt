@@ -1,0 +1,28 @@
+====
+Early event handlers
+@ http://www.quirksmode.org/js/events_early.html
+
+# the event handler script is executed first
+# the default action takes place afterwards
+
+preventing the default action
+	return false;
+	e.preventDefault(); // W3C
+	e.returnValue = false; // IE
+
+you cannot prevent all default actions. An unload, for example, cannot be prevented.
+
+<a href="#" onmouseover="window.status='status changed';return true">
+====
+Separating behavior and structure
+@ http://www.digital-web.com/articles/separating_behavior_and_structure_2/
+====
+the this keyword
+@ http://www.quirksmode.org/js/this.html
+====
+Traditional event registration model
+@ http://www.quirksmode.org/js/events_tradmod.html
+====
+Advanced event registration models
+@ http://www.quirksmode.org/js/events_advanced.html
+====

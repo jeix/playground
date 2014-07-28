@@ -1,0 +1,128 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+table { empty-cells: show; }
+/*
+table, td { border: 1px solid gray; }
+*/
+td { text-align: center; }
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript" src="string.js">
+</script><body><script type="text/javascript">
+
+exec('s = "0123456789"');
+xprintln('');
+var table = document.createElement('table');
+//table.border = "1";
+document.body.appendChild(table);
+var row, cell;
+row = table.insertRow(table.rows.length);
+for (var i = 0; i < s.length; i++) {
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = i;
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = '';
+}
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = s.length;
+row = table.insertRow(table.rows.length);
+for (var i = 0; i < s.length; i++) {
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = '|';
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = '&nbsp;'+i+'&nbsp;';
+}
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = '|';
+row = table.insertRow(table.rows.length);
+for (var i = s.length; i > 0; i--) {
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = '-'+i;
+	cell = row.insertCell(row.cells.length);
+	cell.innerHTML = '';
+}
+cell = row.insertCell(row.cells.length);
+cell.innerHTML = '-0';
+xprintln('');
+exec_o_ret('s.substr(1,3)', 'offset, length');
+exec_o_ret('s.substr(7,5)', 'offset + length > s.length // treated as s.length');
+exec_o_ret('s.substr(11,3)', 'offset > s.length');
+exec_o_ret('s.substr(-3,3)', 'negative offset // treated as 0 in IE');
+exec_o_ret('s.substr(-3,5)', 'negative offset // treated as 0 in IE');
+exec_o_ret('s.substr(3,-3)', 'negative length // treated as 0');
+exec_o_ret('s.substr(7)', 'omitted length // treated as s.length');
+xprintln('');
+exec_o_ret('s.substring(1,4)', 'include smaller, exclude bigger');
+exec_o_ret('s.substring(4,1)', 'include > exclude');
+exec_o_ret('s.substring(3,3)', 'first = second');
+exec_o_ret('s.substring(3,-3)', 'negative second // treated as 0');
+exec_o_ret('s.substring(-3,3)', 'negative first // treated as 0');
+exec_o_ret('s.substring(-6,-3)', 'negative both // treated as 0');
+exec_o_ret('s.substring(7,11)', 'second > s.length // treated as s.length');
+exec_o_ret('s.substring(11,7)', 'first > s.length // treated as s.length');
+exec_o_ret('s.substring(7)', 'omitted second // treated as s.length');
+xprintln('');
+exec_o_ret('s.slice(1,4)', 'include < exclude');
+exec_o_ret('s.slice(3,3)', 'include = exclude');
+exec_o_ret('s.slice(4,1)', 'include > exclude');
+exec_o_ret('s.slice(4,-3)', 'negative exclude');
+exec_o_ret('s.slice(7,-3)');
+exec_o_ret('s.slice(-6,7)', 'negative include');
+exec_o_ret('s.slice(-3,3)');
+exec_o_ret('s.slice(-6,-3)', 'negative both');
+exec_o_ret('s.slice(7,11)', 'exclude > s.length // treated as s.length // 7 < 10');
+exec_o_ret('s.slice(11,7)');
+exec_o_ret('s.slice(7)', 'omitted exclude // treated as s.length');
+exec_o_ret('s.slice(-3)');
+xprintln('');
+exec_o_ret('s.concat("::", s)');
+exec_o_ret('s');
+
+xprintln("--------------------");
+
+exec_o_ret('s.substr(3,3)', 'offset, length');
+exec_o_ret('s.substr(6,6)', 'offset + length > s.length // cut to s.length');
+exec_o_ret('s.substr(15,3)', 'offset > s.length // out of range');
+exec_o_ret('s.substr(-7,3)', '');
+exec_o_ret('s.substr(3,-6)', '3,0');
+exec_o_ret('s.substr(-7,-7)', '-7,0');
+exec_o_ret('s.substr(-15,3)', '0,3');
+xprintln('');
+exec_o_ret('s.substring(3,6)', 'include < exclude');
+exec_o_ret('s.substring(6,3)', 'include > exclude // 3,6');
+exec_o_ret('s.substring(3,3)', 'include = exclude');
+exec_o_ret('s.substring(-7,3)', '0,3');
+exec_o_ret('s.substring(3,-6)', '3,0 // 0,3');
+exec_o_ret('s.substring(-7,-7)', '0,0');
+exec_o_ret('s.substring(6,15)', 'exclude > s.length // treated as s.length // 6,10');
+exec_o_ret('s.substring(15,6)', 'include > s.length // treated as s.length // 10,6 // 6,10');
+exec_o_ret('s.substring(-15,3)', '0,3');
+xprintln('');
+exec_o_ret('s.slice(3,6)', 'include < exclude');
+exec_o_ret('s.slice(6,3)', 'include > exclude');
+exec_o_ret('s.slice(3,3)', 'include = exclude');
+exec_o_ret('s.slice(-7,6)', '');
+exec_o_ret('s.slice(3,-4)', '');
+exec_o_ret('s.slice(-7,-4)', '');
+exec_o_ret('s.slice(6,15)', 'exclude > s.length // treated as s.length // 6,10');
+exec_o_ret('s.slice(15,6)', 'include > s.length // treated as s.length // 10,6 // include > exclude');
+exec_o_ret('s.slice(-15,3)', '-10,3');
+
+/*
+substr
+	0 if length < 0
+	0 if offset is negative and abs(offsset) > s.length
+		(in IE, 0 if offset is negative)
+	negative offset works
+substring()
+	0 if negative
+	s.length if greater than s.length
+	swap if include > exclide
+slice
+	-s.length if less than -s.length
+	s.length if greater than s.length
+	negative index works
+	must include < exclude
+//*/
+
+</script></body>

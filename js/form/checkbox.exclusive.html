@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title></title><style type="text/css">
+
+</style><script type="text/javascript" src="sfx/base.js">
+</script><body><script type="text/javascript">
+
+function chk_clicked(chk) {
+	//alert(chk.checked);
+	if (chk.checked) {
+		var chks = $N("chk");
+		for (var i = 0; i < chks.length; i++) {
+			var chk_other = chks[i];
+			//alert(chk_other.id);
+			if (chk_other != chk && chk_other.checked) {
+				chk_other.checked = false;
+			}
+		}
+	}
+}
+
+</script></head><body>
+<input type="checkbox" id="chk1" name="chk" onclick="chk_clicked(this)">
+<input type="checkbox" id="chk2" name="chk" onclick="chk_clicked(this)">
+<input type="checkbox" id="chk3" name="chk" onclick="chk_clicked(this)">
+<script type="text/javascript">
+
+</script></body><html>

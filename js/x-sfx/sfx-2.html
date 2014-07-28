@@ -1,0 +1,609 @@
+<!DOCTYPE HTML>
+<meta charset="UTF-8">
+
+<style>
+span { border: 2px dotted #888; }
+.apple { color: #f00; }
+.banana { background-color: #ff0; }
+.orange { border: 2px solid #ffa500; }
+</style>
+
+<script>
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+if (typeof(String.prototype.trim) !== 'function') { // IE 8
+	String.prototype.trim = function () {
+		return this.replace(/^\s+/, "").replace(/\s+$/, "");
+	};
+}
+
+(function (win) {
+	
+	function mix(dst, src) {
+		if (dst && src && typeof(src) === "object") {
+			for (var k in src) {
+				if (src.hasOwnProperty(k)) {
+					dst[k] = src[k];
+				}
+			}
+		}
+	}
+	
+	var SFX = {
+		mix: mix
+	};
+	
+	// String
+	SFX.str = (function () {
+		
+		function _String(s) {
+			if (typeof(s) === 'string') {
+				this.s = s;
+			}
+		}
+		mix(_String.prototype, {
+			// 모든 seek을 찾아 repl로 바꿔
+			replace: function (seek, repl) {
+				if (typeof(seek) === 'string') {
+					if (typeof(repl) !== 'string') {
+						if (repl === undefined) {
+							repl = 'undefined';
+						} else if (repl === null) {
+							repl = 'null';
+						} else {
+							var repl_type = typeof(repl);
+							if (repl_type === 'number' || repl_type === 'boolean') {
+								repl = String(repl);
+							} else if (typeof(repl.valueOf) === 'function') {
+								repl = String(repl.valueOf());
+							} else if (typeof(repl.toString) === 'function') {
+								repl = repl.toString();
+							}
+						}
+					}
+					// WARN
+					// repl must not contain seek
+					// cuz fail if repl.indexOf(seek) >= 0
+					while (this.s.indexOf(seek) >= 0) {
+						this.s = this.s.replace(seek, repl);
+					}
+				}
+				return this.s;
+			},
+			ltrim: function () {
+				// NOTE use s.trimLeft() instead
+				return this.s.replace(/^\s+/, "");
+			},
+			rtrim: function () {
+				// NOTE use s.trimRight() instead
+				return this.s.replace(/\s+$/, "");
+			},
+			// val에 정의된 값들로 치환
+			format: function (val) {
+				// replace variables
+				if (arguments.length == 1) {
+					if (val === undefined) {
+						val = 'undefined';
+					} else if (val === null) {
+						val = 'null';
+					}
+					if (val.constructor === Object) {
+						for (var k in val) {
+							if (val.hasOwnProperty(k)) {
+								this.replace('${'+k+'}', val[k]);
+							}
+						}
+					} else {
+						this.replace('${value}', val);
+					}
+				}
+				return this.s;
+			}
+		});
+		
+		return function (s) {
+			return new _String(s);
+		};
+	})();
+	
+	// Template
+	SFX.tmpl = (function () {
+		
+		function _Template(tmpl_id) {
+			if (tmpl_id) {
+				this.tmpl_id = tmpl_id;
+				this.tmpl_val = $(tmpl_id).innerHTML.trim();
+			}
+		}
+		mix(_Template.prototype, {
+			tmpl: function () {
+				return this.tmpl_val;
+			},
+			format: function (val) {
+				if (val) {
+					this.html_val = SFX.str(this.tmpl_val).format(val);
+				} else {
+					this.html_val = SFX.str(this.tmpl_val).format();
+				}
+				return this;
+			},
+			html: function () {
+				return this.html_val;
+			},
+			render: function (pane_id) {
+				$(pane_id).innerHTML = this.html_val;
+			}
+		});
+		
+		return function (tmpl_id) {
+			return new _Template(tmpl_id);
+		};
+	})();
+	SFX.template = function (tmpl_id, val, pane_id) {
+		var tmpl = SFX.tmpl(tmpl_id);
+		if (arguments.length == 1) {
+			return tmpl.tmpl()
+		} else if (arguments.length > 1) {
+			tmpl.format(val);
+			if (arguments.length == 2) {
+				return tmpl.html();
+			} else if (arguments.length > 2) {
+				// NOTE use $(pane_id).innerHTML = ... instead
+				tmpl.render(pane_id);
+			}
+		}
+	};
+	
+	// Array
+	SFX.array = (function () {
+		
+		function _Array(a) {
+			this.a = a;
+		}
+		mix(_Array.prototype, {
+			index_of: function (entry) {
+				if (this.a.indexOf) {
+					return this.a.indexOf(entry);
+				}
+				var size = this.a.length;
+				for (var i = 0; i < size; i++) {
+					if (this.a[i] === entry) {
+						return i;
+					}
+				}
+				return -1;
+			},
+			contain: function (entry) {
+				return this.index_of(entry) >= 0;
+			},
+			first: function () {
+				return this.a[0];
+			},
+			last: function () {
+				return this.a[this.a.length - 1];
+			},
+			sub_array: function (inc, exc) {
+				if (arguments.length == 1) {
+					return this.a.slice(i);
+				} else if (arguments.length > 1) {
+					return this.a.slice(inc, exc);
+				}
+			},
+			// mutate
+			append: function (entry) {
+				if (arguments.length == 1) {
+					this.a.push(entry);
+				} else if (arguments.length > 1) {
+					Array.prototype.push.apply(this.a, arguments);
+				}
+				return this;
+			},
+			prepend: function (entry) {
+				if (arguments.length == 1) {
+					this.a.unshift(entry);
+				} else if (arguments.length > 1) {
+					Array.prototype.unshift.apply(this.a, arguments);
+				}
+				return this;
+			},
+			insert: function (i, entry) {
+				//var i = arguments[0];
+				//arguments = Array.prototype.slice.call(arguments, 1); // entry, ...
+				//Array.prototype.unshift.call(arguments, i, 0); // i, 0, entry, ..
+				Array.prototype.splice.call(arguments, 1, 0, 0); // i, 0, entry, ..
+				Array.prototype.splice.apply(this.a, arguments);
+				return this;
+			},
+			displace: function (seek, repl) {
+				var ix = this.index_of(seek);
+				if (ix >= 0) {
+					if (arguments.length == 1) {
+						this.remove(ix);
+					} else if (arguments.length == 2) {
+						this.a[ix] = repl;
+					}
+				}
+				return this;
+			},
+			remove_first: function () {
+				this.a.shift();
+				return this;
+			},
+			remove_last: function () {
+				this.a.pop();
+				return this;
+			},
+			remove: function (i, size) {
+				if (size === undefined) size = 1;
+				this.a.splice(i, size);
+				return this;
+			},
+			remove_all: function () {
+				this.a.length = 0;
+				return this;
+			}
+		});
+		
+		return function (a) {
+			return new _Array(a);
+		};
+	})();
+	
+	// Date
+	SFX.date = {
+		SEP: "-",
+		format: function (dt) {
+			// NOTE use d.toISOString() instead
+			//return dt.toISOString().substr(0, 10);
+			var buf = String(dt.getFullYear());
+			buf = buf + this.SEP;
+			var mm = dt.getMonth() + 1;
+			if (mm < 10) buf = buf + "0";
+			buf = buf + mm;
+			buf = buf + this.SEP;
+			var dd = dt.getDate();
+			if (dd < 10) buf = buf + "0";
+			buf = buf + dd;
+			return buf;
+		},
+		today: function () {
+			// NOTE use d.toISOString() instead
+			//return new Date().toISOString().substr(0, 10);
+			return this.format(new Date());
+		}
+	};
+	
+	// XML
+	SFX.xml = {
+		node_attr: function (node, name) {
+			if (node && name) {
+				var attr = node.getAttribute(name);
+				return (attr ? attr.trim() : "");
+			} else {
+				var obj = {};
+				if (node) {
+					var attrs = node.attributes;
+					for (var i = 0; i < attrs.length; i++) {
+						var attr = attrs.item(i);
+						var n = attr.nodeName;
+						var v = (attr.nodeValue || "").trim();
+						obj[n] = v;
+					}
+				}
+				return obj;
+			}
+		},
+		node_text: function (node) {
+			return (node.text || "").trim();
+		}
+	};
+	
+	function elementize(e) {
+		if (typeof(e) === 'string') { // id
+			e = $(e);
+		}
+		return e;
+	}
+	
+	// DOM
+	function DOM(e) {
+		this.e = elementize(e);
+	}
+	mix(DOM.prototype, {
+		// Attribute
+		attr: function (name, value) {
+			if (arguments.length > 1) {
+				this.e.setAttribute(name, value);
+			} else {
+				return this.e.getAttribute(name);
+			}
+		},
+		remove_attr: function (name) {
+			this.e.removeAttribute(name);
+		},
+		// className
+		klass: function (klass) {
+			// if (this.e.className.indexOf(klass) < 0) {
+			// 	this.e.className = this.e.className + ' ' + klass;
+			// }
+			if (this.e.classList) {
+				this.e.classList.add(klass);
+			} else {
+				var kls = this.e.className.split(' ');
+				var ix = SFX.array(kls).index_of(klass);
+				if (ix < 0) {
+					SFX.array(kls).append(klass);
+					this.e.className = kls.join(' ').trim();
+				}
+			}
+		},
+		has_klass: function (klass) {
+			// return this.e.className.indexOf(klass) >= 0;
+			if (this.e.classList) {
+				return this.e.classList.contains(klass);
+			} else {
+				var kls = this.e.className.split(' ');
+				return SFX.array(kls).contain(klass);
+			}
+		},
+		remove_klass: function (klass) {
+			// var kls = this.e.className.split(' ');
+			// var size = kls.length;
+			// for (var i = size - 1; i >= 0; i--) {
+			// 	if (kls[i] === klass) {
+			// 		kls.splice(i, 1);
+			// 	}
+			// }
+			// this.e.className = kls.join(' ').trim();
+			if (this.e.classList) {
+				this.e.classList.remove(klass);
+			} else {
+				var kls = this.e.className.split(' ');
+				var ix = SFX.array(kls).index_of(klass);
+				if (ix >= 0) {
+					SFX.array(kls).remove(ix);
+					this.e.className = kls.join(' ').trim();
+				}
+			}
+		},
+		// innerHTML
+		html: function (src) {
+			if (arguments.length > 0) {
+				this.e.innerHTML = src;
+			} else {
+				return this.e.innerHTML;
+			}
+		}
+	});
+	SFX.html = function (src) {
+		var div = document.createElement('div');
+		div.innerHTML = src;
+		if (div.childElementCount == 1) {
+			return div.firstElementChild;
+		} else if (div.childElementCount > 1) {
+			return div.children;
+		} else {
+			return null;
+		}
+	};
+	
+	// Select
+	SFX.select = (function () {
+		
+		function _Select(e) {
+			this.sel = elementize(e);
+		}
+		mix(_Select.prototype, {
+			options: function (opts) {
+				//* not works with IE
+				var sel = this.sel;
+				var buf = '';
+				var size = opts.length;
+				for (var i = 0; i < opts.length; i++) {
+					var opt = opts[i];
+					buf = buf + '<option value="' + opt.v + '"' + (opt.sel ? ' selected' : '') + '>' + opt.n + '</option>';
+				}
+				sel.innerHTML = buf;
+				//*/
+				/* works with IE
+				var sel = this.sel;
+				sel.options.length = 0;
+				var size = opts.length;
+				for (var i = 0; i < opts.length; i++) {
+					var opt = opts[i];
+					sel.options[sel.option.length] = new Option(opt.n, opt.v);
+					if (opt.sel) {
+						sel.selectedIndex = sel.option.length - 1;
+					}
+				}
+				//*/
+			},
+			text: function () {
+				var sel = this.sel;
+				return sel.options[this.sel.selectedIndex].text;
+			}
+		});
+		
+		return function (e) {
+			return new _Select(e);
+		};
+	})();
+	
+	function _(e) {
+		return new DOM(e);
+	}
+	mix(_, SFX);
+	
+	win._ = _;
+})(window);
+
+</script>
+
+<select id="sel" data-xxx="oops"></select>
+<div id="div-pane"></div>
+<script type="text/template" id="tmpl-pane">
+${n}=${v}
+</script>
+
+<span id="marker">Hello</span>
+<input type="checkbox" class="class_trigger" value="apple">Apple
+<input type="checkbox" class="class_trigger" value="banana">Banana
+<input type="checkbox" class="class_trigger" value="orange">Orange
+
+<div id="div-pane-2"></div>
+
+<script>
+
+(function () {
+	
+	var a, i, s;
+	
+	a = [5];
+	console.log(a); // --> [5]
+	_.array(a).append(6,7).prepend(3,4);
+	console.log(a); // --> [3, 4, 5, 6, 7]
+	var ix = _.array(a).index_of(5);
+	console.log('a[' + ix + '] is ' + a[ix]); // --> a[2] is 5
+	_.array(a).insert(ix+1, '5_5', '5_6', '5_7');
+	console.log(a); // --> [3, 4, 5, "5_5", "5_6", "5_7", 6, 7]
+	if (_.array(a).contain('5_5')) console.log('5_5' + ' in a'); // --> 5_5 in a
+	_.array(a).displace('5_7');
+	console.log(a); // --> [3, 4, 5, "5_5", "5_6", 6, 7]
+	i = _.array(a).first();
+	console.log('a[first] is ' + i); // --> a[first] is 3
+	_.array(a).remove_first();
+	console.log(a); // --> [4, 5, "5_5", "5_6", 6, 7]
+	i = _.array(a).last();
+	console.log('a[last] is ' + i); // --> a[last] is 7
+	_.array(a).remove_last();
+	console.log(a); // --> [4, 5, "5_5", "5_6", 6]
+	i = _.array(a).sub_array(2, 2 + 2);
+	console.log('a[2..4] are ' + i); // --> a[2..4] are 5_5,5_6
+	_.array(a).remove(2, 2);
+	console.log(a); // --> [4, 5, 6]
+	_.array(a).remove(0, 2).insert(0, 1, 2, 3);
+	console.log(a); // --> [1, 2, 3, 6]
+	_.array(a).displace(6, 4);
+	console.log(a); // --> [1, 2, 3, 4]
+	_.array(a).remove_all();
+	console.log(a); // --> []
+	
+	var opts = [{v:'a',n:'xxx'},{v:'b',n:'yyy',sel:true},{v:'c',n:'zzz'}];
+	_.select('sel').options(opts);
+	s = _.select('sel').text();
+	console.log(s); // --> yyy
+	
+	s = _('sel').attr('data-xxx');
+	console.log(s); // --> oops
+	_('sel').attr('data-xxx', 'spoo');
+	s = _('sel').attr('data-xxx');
+	console.log(s); // --> spoo
+	
+	s = _.str('foo boo').replace('oo', '00');
+	console.log(s); // --> f00 b00
+	
+	s = _.template('tmpl-pane');
+	console.log(s); // --> ${n}=${v}
+	s = _.template('tmpl-pane', {n:'고구마',v:'고구마아재비'});
+	console.log(s); // --> 고구마=고구마아재비
+	_.template('tmpl-pane', {n:'고구마',v:'고구마아재비'}, 'div-pane');
+	console.log($('div-pane').innerHTML); // --> 고구마=고구마아재비
+	
+	var tmpl = _.tmpl('tmpl-pane');
+	var tmpl1 = tmpl.format({n:'고구마',v:'나도고구마'});
+	tmpl1.render('div-pane');
+	console.log($('div-pane').innerHTML); // --> 고구마=나도고구마
+	var tmpl2 = tmpl.format({n:'고구마',v:'너도고구마'});
+	tmpl2.render('div-pane');
+	console.log($('div-pane').innerHTML); // --> 고구마=너도고구마
+	
+	_('div-pane-2').html('<span id="breeze">Breeze?</span> ');
+	var span = _.html('<span id="gogogo">Go Go Go</span>');
+	$('div-pane-2').appendChild(span);
+	var html = _('div-pane-2').html();
+	console.log(html);
+	
+})();
+
+(function () {
+	
+	function handle_click(evt) {
+		if (this.checked) {
+			_('marker').klass(this.value);
+		} else {
+			_('marker').remove_klass(this.value);
+		}
+	}
+	
+	var triggers = document.querySelectorAll('.class_trigger');
+	for (var i = 0; i < triggers.length; i++) {
+		triggers[i].addEventListener('click', handle_click, false);
+	};
+	
+})();
+
+</script>
+
+<script type="text/memo">
+
+[v]	_.mix(dst, src)
+
+// String
+[v]	_.replace_all(str, seel, to)
+[v]	_.format(sre, vals)
+// Template
+[v]	_.template(src)					$(src).trim()
+[v]	_.template(src, vals)			_.format($(src).trim(), vals)
+[ ]	_.template(src, vals, dst)		_.html(dst, _.format($(src).trim(), vals))
+
+// Array
+[ ] _.contain(array, item)			array.indexOf(item) >= 0
+[ ] _.insert(array, index, item)	array.splice(index, 0, item)
+[ ] _.last(array)					array[array.length - 1]
+[ ] _.remove(array, index)			array.split(indx, 1)
+[ ] _.remove_all(array)				array.length = 0
+[ ] _.displace(array, item, to)		array[array.indexOf(item)] = to
+[ ] _.displace(arrrt, item)			array.splice(array.indexOf(item), 1)
+
+// Date
+[v]	_.today()						new Date().toISOString().substr(0, 10); // Ch 33
+
+// DOM
+[ ] _(src).attr(name)				$(src).getAttribute(name)
+[ ] _(dst).attr(name, value)		$(dst).setAttribute(name, value)
+[ ] _(dst).remove_attr(name)		$(dst).removeAttribute(name)
+[v] _(dst).klass(klass)
+[v] _(dst).remove_klass(klass)
+[ ] _(dst).html(html)				$(dst).innerHTML = html
+[ ] _(src).html()					$(src).innerHTML
+
+// Select
+[v]	_.options(select, options)
+[v]	_.text(select)
+
+// XML
+[ ]	_.node_attr(node)
+[ ]	_.node_attr(node, name)			node.getAttribute(name)
+[ ]	_.node_text(node)				node.text
+
+//----------------------------------------------------------
+
+_.util.replace('foo boo', 'oo', '00');
+_.str.replace('foo boo', 'oo', '00');
+
+_.str('foo boo').replace('oo', '00');
+_.str('foo boo').replace('oo').to('00');
+
+_.array(['foo','bar','baz']).remove(2);
+
+_.array(['foo','bar','baz']).remove(2, 2).insert(2, 'har');
+_.array(['foo','bar','baz']).displace('bar', 'har');
+
+_.tmpl('tmpl-pane').tmpl();
+_.tmpl('tmpl-pane').format({pt:'참고구마',pf:'개고구마'}).html();
+_.tmpl('tmpl-pane').format({pt:'참고구마',pf:'개고구마'}).render('div-pane');
+
+</script>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style type="text/css">
+
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" >
+
+// conflict with jQuery
+//var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	if (console) console.log(s);
+	return;
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script>
+</head>
+<body>
+<ul>
+	<li>zzz</li>
+	<li>xxx</li>
+	<li>ccc</li>
+</ul>
+<script type="text/javascript">
+
+/*
+$('ul li').bind('click', function (event) {
+	xprintln($(this).html());
+	xprintln(event.srcElement.innerHTML);
+});
+//*/
+
+/*
+$('ul').delegate('li', 'click', function (event) {
+	xprintln($(this).html());
+	xprintln(event.srcElement.innerHTML);
+});
+//*/
+
+//*
+$('ul').on('click', 'li', function (event) {
+	xprintln($(this).html());
+	xprintln(event.srcElement.innerHTML);
+});
+//*/
+
+$('ul').append('<li>vvv</li>');
+
+</script>
+</body>
+</html>

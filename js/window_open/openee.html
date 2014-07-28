@@ -1,0 +1,42 @@
+<script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+
+function xprint(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+}
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+/** (1)
+var opener;
+var popup_id;
+function paper_work() {
+	opener.handle_popup(popup_id, $('pencil').value);
+	window.close();
+}
+//*/
+/** (2)
+var opener;
+var popup_id;
+function paper_work() {
+	window.opener.handle_popup(window.popup_id, $('pencil').value);
+	window.close();
+}
+//*/
+//** (3)
+function paper_work() {
+	window.opener.handle_popup(window.popup_id, $('pencil').value);
+	window.close();
+}
+//*/
+</script>
+<form onsubmit="return false">
+<input type="text" id="pencil" name="penceil">
+</form>
+<a href="javascript:void(0)" onclick="paper_work()">copy</a>
+

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TITLE_HERE</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript" >
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function debug(s) {
+	var win = open('','x_debug','width=360,height=720,resizable=yes,scrollbars=yes');
+	var doc = win.document;
+	var pane = doc.getElementById('debug');
+	if (undefined == pane) {
+		var body = doc.getElementsByTagName('body')[0];
+		pane = doc.createElement('div');
+		pane.id = 'debug';
+		pane.onclick = function() { this.innerHTML = ''; }
+		body.appendChild(pane);
+	}
+	pane.innerHTML += s + '<br>\n';
+}
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;" custom_attribute>
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+Object.prototype.mixin = function(f) {
+	if (f && f instanceof Function) {
+		var if_only_not_exist = arguments[1];
+		if (if_only_not_exist) {
+			if (this[f.name]) {
+				return;
+			}
+		}
+		this[f.name] = function () {
+			return f.apply(this, arguments);
+		};
+	}
+};
+
+function plus(x, y) {
+	return x + y;
+}
+function minus(x, y) {
+	return x - y;
+}
+
+var foo = {};
+foo.mixin(plus);
+foo.mixin(minus);
+xprintln(foo.plus(3, 4)); // -> 7
+xprintln(foo.minus(5, 2)); // -> 3
+
+xprintln("--------------------");
+
+Object.$include = function(from, to) {
+	for (var k in from) {
+		if (from.hasOwnProperty(k)) {
+			to[k] = from[k];
+		}
+	}
+};
+
+Object.prototype.includes = function (o) {
+	Object.$include(o, this.prototype);
+}
+Object.prototype.extends = function (o) {
+	Object.$include(o, this);
+}
+
+function Foo() {}
+// add instance methods
+if (Foo.prototype.plus == undefined) Foo.includes({plus:plus});
+if (Foo.prototype.minus == undefined) Foo.includes({minus:minus});
+var foo = new Foo();
+xprintln(foo.plus(3, 4)); // -> 7
+xprintln(foo.minus(5, 2)); // -> 3
+// add class methods
+if (Foo.plus == undefined) Foo.extends({plus:plus});
+if (Foo.minus == undefined) Foo.extends({minus:minus});
+xprintln(Foo.plus(3, 4)); // -> 7
+xprintln(Foo.minus(5, 2)); // -> 3
+
+xprintln("----------");
+
+var foo = {};
+if (foo.plus == undefined) foo.extends({plus:plus});
+if (foo.minus == undefined) foo.extends({minus:minus});
+xprintln(foo.plus(3, 4)); // -> 7
+xprintln(foo.minus(5, 2)); // -> 3
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+
+
+xprintln("----------");
+
+
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

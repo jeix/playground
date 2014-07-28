@@ -1,0 +1,102 @@
+
+Awful Parts
+@ http://oreilly.com/javascript/excerpts/javascript-good-parts/awful-parts.html
+
+----------------------------------------
+Global Variables
+
+----------------------------------------
+Scope
+
+----------------------------------------
+Semicolon Insertion
+
+----------------------------------------
+Reserved Words
+
+var method;                // ok
+var class;                 // illegal -- "class is a reserved identifier" in Aurora, SyntaxError in Chrome
+object = {box: value};     // ok
+object = {case: value};    // illegal -- no error in Aurora and Chrome
+object = {'case': value};  // ok
+object.box = value;        // ok
+object.case = value;       // illegal -- no error in Aurora and Chrome
+object['case'] = value;    // ok
+----------------------------------------
+Unicode
+
+----------------------------------------
+typeof
+
+----------------------------------------
+parseInt()
+
+parseInt("16")      -> 16
+parseInt("16 tons") -> 16
+
+parseInt("08")      -> 0
+parseInt("09")      -> 0
+parseInt("08", 10)  -> 8
+parseInt("09", 10)  -> 9
+
+always provide the radix parameter
+----------------------------------------
++
+
+----------------------------------------
+Floating Point
+
+0.1 + 0.2 != 0.3
+----------------------------------------
+NaN
+
+typeof NaN === 'number' -> true
+
++ '0'         -> 0
++ 'oops'      -> NaN
+
+NaN === NaN   -> false
+NaN !== NaN   -> true
+
+isNaN(NaN)    -> true
+isNaN(0)      -> false
+isNaN('oops') -> true
+isNaN('0')    -> false
+
+var isNumber = function (value) {
+	return typeof value === 'number' && isFinite(value);
+};
+----------------------------------------
+Phony Arrays
+
+JavaScript does not have real arrays. That isn't all bad. JavaScript's arrays are really easy to use. There is no need to give them a dimension, and they never generate out-of-bounds errors. But their performance can be considerably worse than real arrays.
+
+if (a && typeof a === 'object' &&
+		a.constructor === Array) { // false for which created in another frame
+    // a is an array!
+}
+
+if (a && typeof a === 'object' &&
+		typeof a.length === 'number' &&
+		! a.propertyIsEnumerable('length')) { // true for which created in another frame OR arguments
+    // a is an array!
+}
+----------------------------------------
+Falsy Values
+
+undefined and NaN are not constants. They are global variables, and you can change their values. That should not be possible, and yet it is. Don't do it.
+----------------------------------------
+hasOwnProperty
+
+var n;
+for (n in o) {
+	if (o.hasOwnProperty(n)) {
+		...
+	}
+}
+
+Unfortunately, hasOwnProperty is a method, not an operator, so in any object it could be replaced with a different function or even a value that is not a function
+----------------------------------------
+Object
+
+----------------------------------------

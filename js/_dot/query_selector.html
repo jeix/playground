@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<meta charset="UTF-8">
+
+<script>
+
+function $$(str) {
+	// NOTE use document.querySelector() or document.querySelectorAll() instead
+	// TODO AttributeFinder
+	var founds = [];
+	function add_found(elem) {
+		if (is_not_in(elem, founds)) {
+			founds.push(elem);
+		}
+	}
+	function has_tag(elem, tag) {
+		return (tag == '' || elem.tagName == tag);
+	}
+	function is_descendant_of(elem, parent) {
+		if ((parent || document) === document) {
+			return true;
+		}
+		while ((elem = elem.parentNode) !== document) {
+			if (elem === parent) {
+				return true;
+			}
+		}
+		return false;
+	}
+	function is_not_in(elem, list) {
+		return list.indexOf(elem) < 0;
+	}
+	
+	var IdFinder = {
+		can_you: function (sel) {
+			return sel.indexOf('#') >= 0;
+		},
+		seek: function (sel, parent) {
+			var tag_o_id = sel.split('#');
+			var tag = tag_o_id[0].trim().toUpperCase();
+			var id = tag_o_id[1].trim();
+			var elem = document.getElementById(id);
+			if (elem && has_tag(elem, tag)) {
+				if (is_descendant_of(elem, parent)) {
+					return [elem];
+				}
+			}
+			return [];
+		}
+	};
+	var NameFiner = {
+		can_you: function (sel) {
+			return sel.search(/\[.*name.*=.+\]/) >= 0;
+		},
+		seek: function (sel, parent) {
+			var founds = [];
+			var tag_o_attr_o_value = sel.split(/[\[=\]]/);
+			if (tag_o_attr_o_value[1].trim() == 'name') {
+				var tag = tag_o_attr_o_value[0].trim().toUpperCase();
+				var name = tag_o_attr_o_value[2].trim();
+				var elems = document.getElementsByName(name);
+				for (var i = 0; i < elems.length; i++) {
+					if (elems[i] && has_tag(elems[i], tag) && is_not_in(elems[i], founds)) {
+						if (is_descendant_of(elems[i], parent)) {
+							founds.push(elems[i]);
+						}
+					}
+				}
+			}
+			return founds;
+		}
+	};
+	var ClassFiner = {
+		can_you: function (sel) {
+			return sel.indexOf('.') >= 0;
+		},
+		seek: function (sel, elem) {
+			var founds = [];
+			var tag_o_klass = sel.split('.');
+			var tag = tag_o_klass[0].trim().toUpperCase();
+			var klass = tag_o_klass[1].trim();
+			var elems = (elem || document).getElementsByClassName(klass);
+			for (var i = 0; i < elems.length; i++) {
+				if (elems[i] && has_tag(elems[i], tag) && is_not_in(elems[i], founds)) {
+					founds.push(elems[i]);
+				}
+			}
+			return founds;
+		}
+	};
+	var TagFiner = {
+		can_you: function (sel) {
+			return sel.indexOf('#') < 0 && sel.indexOf('.') < 0 && sel.indexOf('=') < 0;
+		},
+		seek: function (sel, elem) {
+			var founds = [];
+			var tag = sel.trim();
+			var elems = (elem || document).getElementsByTagName(tag);
+			for (var i = 0; i < elems.length; i++) {
+				if (elems[i] && is_not_in(elems[i], founds)) {
+					founds.push(elems[i]);
+				}
+			}
+			return founds;
+		}
+	};
+	
+	var finders = [
+		IdFinder,
+		NameFiner,
+		ClassFiner,
+		TagFiner
+	];
+	function seek(sel) {
+		for (var i = 0; i < finders.length; i++) {
+			if (finders[i].can_you(sel)) {
+				return finders[i].seek(sel);
+			}
+		}
+		return [];
+	}
+	function seek_all(sel, elems) {
+		var founds = [];
+		for (var i = 0; i < finders.length; i++) {
+			if (finders[i].can_you(sel)) {
+				for (var j = 0; j < elems.length; j++) {
+					founds = founds.concat(finders[i].seek(sel, elems[j]));
+				}
+			}
+		}
+		return founds;
+	}
+	
+	var sels = str.split(',');
+	for (var i = 0; i < sels.length; i++) {
+		var sel = sels[i].trim();
+		if (sel == '') continue;
+		if (sel.indexOf(' ') > 0) {
+			var hiers = sel.split(' ');
+			var elems = [document];
+			for (var j = 0; j < hiers.length; j++) {
+				if (hiers[j] == '') continue;
+				elems = seek_all(hiers[j], elems);
+				if (elems.length == 0) {
+					break;
+				}
+			}
+			for (var j = 0; j < elems.length; j++) {
+				add_found(elems[j]);
+			}
+		} else {
+			var elems = seek(sel);
+			for (var j = 0; j < elems.length; j++) {
+				add_found(elems[j]);
+			}
+		}
+	}
+	return founds;
+}
+
+</script>
+
+<div id="qqq">
+	<div id="www" name="zzz" class="aaa">
+		<span id="eee" class="sss"></span>
+	</div>
+	<div id="rrr">
+		<span id="ttt" name="xxx" class="ddd"></span>
+		<p id="yyy" class="ddd"></p>
+	</div>
+</div>
+
+<script>
+
+function test() {
+	console.log($$('#qqq')[0].id); // --> qqq
+	console.log($$('[name=zzz]')[0].id); // --> www
+	console.log($$('span[name=xxx]')[0].id); // --> ttt
+	console.log($$('.ddd')[0].id); // --> ttt
+	console.log($$('.ddd')[1].id); // --> yyy
+	console.log($$('p.ddd')[0].id); // --> yyy
+	console.log($$('.aaa span')[0].id); // --> eee
+	console.log($$('div .ddd')[0].id); // --> ttt
+	console.log($$('div .ddd')[1].id); // --> yyy
+	console.log($$('#qqq span.sss')[0].id); // --> eee
+	console.log($$('#rrr span.sss').length); // --> 0
+	console.log($$('.aaa .sss, div span, .ddd')[0].id); // --> eee
+	console.log($$('.aaa .sss, div span, .ddd')[1].id); // --> ttt
+	console.log($$('.aaa .sss, div span, .ddd')[2].id); // --> yyy
+	
+	document.querySelector('#qqq');
+	document.querySelector('[name=zzz]');
+	document.querySelector('span[name=xxx]');
+	document.querySelectorAll('.ddd');
+	document.querySelector('p.ddd');
+	document.querySelector('.aaa span');
+	document.querySelectorAll('div .ddd');
+	document.querySelector('#qqq span.sss');
+	document.querySelector('#rrr span.sss');
+	document.querySelectorAll('.aaa .sss, div span, .ddd');
+}
+onload = function () {
+	test();
+};
+
+</script>

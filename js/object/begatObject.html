@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>begetObject by Douglas Crockford</title>
+<style type="text/css">
+body, pre {
+	font-family: "Courier New", Monospace;
+	font-size: 9pt;
+}
+</style><script type="text/javascript" src="../sfx/base.js">
+</script><script type="text/javascript" src="../sfx/exec.js">
+</script><script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div id="main" style="width:480px;">
+
+</div>
+<script type="text/javascript">
+
+xprintln("--------------------");
+
+// by Douglas Crockford
+Object.prototype.begetObject = function () {
+  function F() {}
+  F.prototype = this;
+  return new F();
+};
+
+xprint_code('Object.prototype.begetObject = ' + Object.prototype.begetObject);
+
+xprintln("----------");
+
+var Fx = {
+	add: function(o) {
+		this.v += o.v;
+	},
+	sub: function(o) {
+		this.v -= o.v;
+	}
+};
+
+var def = [
+	'var Fx = {',
+	'	add: function(o) {',
+	'		this.v += o.v;',
+	'	},',
+	'	sub: function(o) {',
+	'		this.v -= o.v;',
+	'	}',
+	'};'
+];
+xprint_code(def.join('\n'));
+
+exec('var f = Fx.begetObject();');
+exec('f.v = 4;');
+exec('var g = Fx.begetObject();');
+exec('g.v = 8;');
+
+xprintln();
+
+exec_o_ret('g.add(f);');
+exec_o_ret('g.v') // -> 12
+exec_o_ret('g.sub(f);');
+exec_o_ret('g.v') // -> 8
+
+xprintln("----------");
+
+function Foo(v) {
+	var x = Fx.begetObject();
+	x.v = v;
+	return x;
+}
+
+xprint_code(Foo);
+
+exec('f = /*new*/ Foo(4);');
+exec('g = /*new*/ Foo(8);');
+
+xprintln();
+
+exec_o_ret('g.add(f);');
+exec_o_ret('g.v') // -> 12
+exec_o_ret('g.sub(f);');
+exec_o_ret('g.v') // -> 8
+
+xprintln("--------------------");
+
+//xprintln('g.includes // ==> ' + g.includes); // -> undefined
+xprintln('g.extends // ==> ' + g.extends); // -> undefined
+
+Object.$include = function(from, to) {
+	for (var k in from) {
+		if (from.hasOwnProperty(k)) {
+			to[k] = from[k];
+		}
+	}
+};
+
+Object.prototype.includes = function (o) {
+	Object.$include(o, this.prototype);
+}
+Object.prototype.extends = function (o) {
+	Object.$include(o, this);
+}
+
+//xprint_code('Object.prototype.includes = ' + Object.prototype.includes);
+xprint_code('Object.prototype.extends = ' + Object.prototype.extends);
+
+xprintln("----------");
+
+var Gx = {
+	mul: function(o) {
+		this.v *= o.v;
+	},
+	div: function(o) {
+		this.v /= o.v;
+	}
+};
+
+var def = [
+	'var Gx = {',
+	'	mul: function(o) {',
+	'		this.v *= o.v;',
+	'	},',
+	'	div: function(o) {',
+	'		this.v /= o.v;',
+	'	}',
+	'};'
+];
+xprint_code(def.join('\n'));
+
+exec('g.extends(Gx);');
+
+xprintln();
+
+exec_o_ret('g.mul(f);');
+exec_o_ret('g.v') // -> 32
+exec_o_ret('g.div(f);');
+exec_o_ret('g.v') // -> 8
+
+xprintln("----------");
+
+exec('Fx.extends(Gx);');
+
+xprintln();
+
+exec('f = /*new*/ Foo(4);');
+exec('g = /*new*/ Foo(8);');
+
+xprintln();
+
+exec_o_ret('g.mul(f);');
+exec_o_ret('g.v') // -> 32
+exec_o_ret('g.div(f);');
+exec_o_ret('g.v') // -> 8
+
+xprintln("--------------------");
+
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Disable Readonly</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style>
+/* STYLE_HERE */
+</style><!--
+<script type="text/javascript" src="simple.util.js"></script>-->
+<script type="text/javascript">
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+function activate_text_element(elem) {
+	elem.readOnly = false;
+	elem.onselectstart = function () { return true; } // IE
+	elem.onmousedown = function () { return true; } // FF
+	elem.oncopy = function () { return true; } // FF
+	elem.style.cursor = 'text';
+}
+function deactivate_text_element(elem) {
+	elem.readOnly = true;
+	elem.onselectstart = function () { return false; } // IE -- selection by drag
+	elem.onmousedown = function () { return false; } // FF -- blinking text cursor by click, selection by drag
+	elem.oncopy = function () { return false; } // FF -- selection by tab key
+	elem.style.cursor = 'default';
+}
+function enable_element(elem) {
+	if (elem != undefined) {
+		if (elem.tagName == 'SELECT') {
+			elem.disabled = false;
+		} else if (elem.length == undefined) {
+			elem.disabled = false;
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].disabled = false;
+			}
+		}
+	}
+}
+function disable_element(elem) {
+	if (elem != undefined) {
+		if (elem.tagName == 'SELECT') {
+			elem.disabled = true;
+		} else if (elem.length == undefined) {
+			elem.disabled = true;
+		} else {
+			for (var i = 0; i < elem.length; i++) {
+				elem[i].disabled = true;
+			}
+		}
+	}
+}
+
+function enable_disable_select(trigger) {
+	xprintln('enable_disable_select(' + trigger.checked + ')');
+	if (trigger.checked) {
+		enable_element(document.frm.select);
+	} else {
+		disable_element(document.frm.select);
+	}
+}
+function enable_disable_radio(trigger) {
+	xprintln('enable_disable_radio(' + trigger.checked + ')');
+	if (trigger.checked) {
+		enable_element(document.frm.radio);
+	} else {
+		disable_element(document.frm.radio);
+	}
+}
+function enable_disable_text(trigger) {
+	xprintln('enable_disable_text(' + trigger.checked + ')');
+	if (trigger.checked) {
+		enable_element(document.frm.text);
+		enable_element(document.frm.password);
+		enable_element(document.frm.textarea);
+	} else {
+		disable_element(document.frm.text);
+		disable_element(document.frm.password);
+		disable_element(document.frm.textarea);
+	}
+}
+function rw_ro_text(trigger) {
+	xprintln('rw_ro_text(' + trigger.checked + ')');
+	if (trigger.checked) {
+		activate_text_element(document.frm.text);
+		activate_text_element(document.frm.password);
+		activate_text_element(document.frm.textarea);
+	} else {
+		deactivate_text_element(document.frm.text);
+		deactivate_text_element(document.frm.password);
+		deactivate_text_element(document.frm.textarea);
+	}
+}
+
+onload = function() {
+	var x = '3';
+	switch (x) {
+		case '1':
+			xprintln('one');
+			break;
+		case '2':
+			xprintln('two');
+			break;
+		case '3':
+			xprintln('three');
+			break;
+		default:
+			xprintln('other');
+	}
+};
+</script>
+</head>
+<body>
+
+<form name="frm">
+<input type="checkbox" checked onclick="enable_disable_select(this)">
+<br>
+<select name="select">
+<option value="fx1">고구마</option>
+<option value="fx2">고도리</option>
+<option value="fx3">고사리</option>
+</select>
+<br>
+
+<input type="checkbox" checked onclick="enable_disable_radio(this)">
+<br>
+<input type="radio" name="radio" value="fx1">고드름
+<input type="radio" name="radio" value="fx2">고라니
+<input type="radio" name="radio" value="fx3">고마리
+<br>
+
+<input type="checkbox" checked onclick="enable_disable_text(this)">
+<input type="checkbox" checked onclick="rw_ro_text(this)">
+<br>
+<input type="text" name="text" value="고등어">
+<input type="password" name="password" value="고등어">
+<br>
+<textarea name="textarea">고등어</textarea>
+</form>
+
+</body>
+</html>
