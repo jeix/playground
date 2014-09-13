@@ -90,7 +90,7 @@ if (typeof(String.prototype.trim) !== 'function') { // IE 8
 					} else if (val === null) {
 						val = 'null';
 					}
-					if (val.constructor === Object) {
+					if (val.constructor === Object || (val.constructor.constructor === Function) {
 						for (var k in val) {
 							if (val.hasOwnProperty(k)) {
 								this.replace('${'+k+'}', val[k]);
@@ -187,7 +187,7 @@ if (typeof(String.prototype.trim) !== 'function') { // IE 8
 			},
 			sub_array: function (inc, exc) {
 				if (arguments.length == 1) {
-					return this.a.slice(i);
+					return this.a.slice(inc);
 				} else if (arguments.length > 1) {
 					return this.a.slice(inc, exc);
 				}
@@ -552,7 +552,7 @@ ${n}=${v}
 [v]	_.mix(dst, src)
 
 // String
-[v]	_.replace_all(str, seel, to)
+[v]	_.replace_all(str, seek, to)
 [v]	_.format(sre, vals)
 // Template
 [v]	_.template(src)					$(src).trim()

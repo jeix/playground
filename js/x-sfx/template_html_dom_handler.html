@@ -26,6 +26,7 @@
 		}
 		return html;
 	};
+	// regist event handlers
 	$.fn.regev = function(handlers) {
 		for (var k in handlers) {
 			if (handlers.hasOwnProperty(k)) {
@@ -103,7 +104,7 @@ $('#trigger').bind('click', function() {
 				console.log($(this).parent().attr('data-id'));
 			}
 		}
-	}
+	};
 	view_json.push(view);
 	// render
 	var template = $('#item-template').tmpl(view.data);
