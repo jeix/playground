@@ -12,6 +12,8 @@ public @interface BisInDie {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	public @interface Simple {
+		String prefix() default "twice ";
+		String suffix() default " in a meal";
 	}
 	
 	@Retention(RetentionPolicy.RUNTIME)

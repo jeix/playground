@@ -22,27 +22,36 @@ body, pre {
 
 xprintln("--------------------");
 
-console.log(foo); // -> function foo() {}
+console.log('function foo: ' + foo); // -> function foo() {}
 
 function foo() {}
 
 xprintln("----------");
 
-console.log(bar); // undefined
+console.log('variable bar: ' + bar); // undefined
 
 var bar = function () {};
 
-console.log(bar); // -> function () {}
+console.log('variable bar: ' + bar); // -> function () {}
 
 xprintln("----------");
 
-// console.log(qux); // Uncaught ReferenceError
+try {
+	console.log('function qux: ' + qux);
+} catch (ReferenceError) {
+	console.log('function qux: ' + typeof qux);
+}
 
 var baz = function qux() {};
 
-console.log(baz); // -> function qux() {}
+console.log('variable baz: ' + baz); // -> function qux() {}
 
-// console.log(qux); // Uncaught ReferenceError
+try {
+	console.log('function qux: ' + qux);
+} catch (ReferenceError) {
+	console.log('function qux: ' + typeof qux);
+}
+
 
 xprintln("--------------------");
 

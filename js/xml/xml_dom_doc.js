@@ -91,7 +91,7 @@ XmlDomUtil.childElementsByTagName = function (elem, tagName) {
 		var size = children.length;
 		for (var i = 0 ; i < size; i++) {
 			var child = children.item(i);
-			if (child.nodeType == 1 && child.tagName.toUpperCase() == tagName) {
+			if (child.nodeType == 1 && child.tagName.toUpperCase() == tagName.toUpperCase()) {
 				elems.push(child);
 			}
 		}
@@ -181,7 +181,7 @@ XmlDomUtil.cloneNodes = function (nodes) {
 /**
  * 노드를 복제한다.
  */
-ProductXmlCoverageReorder.cloneNode = function (node, childLeafTags, childTags) {
+XmlDomUtil.cloneNode = function (node, childLeafTags, childTags) {
 	if (node) {
 		var cloned = node.cloneNode(false);	
 		if (childLeafTags && childLeafTags.length) {

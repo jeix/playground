@@ -2,15 +2,15 @@ var $ = function(id) { return document.getElementById(id); };
 var $N = function(name) { return document.getElementsByName(name); };
 var $T = function(tag) { return document.getElementsByTagName(tag); };
 
-function xprint(s) {
-	var body = document.getElementsByTagName('body')[0];
-	body.appendChild(document.createTextNode(s));
+function xprint(s, out) {
+	out = out || document.getElementsByTagName('body')[0];
+	out.appendChild(document.createTextNode(s));
 }
-function xprintln(s) {
-	var body = document.getElementsByTagName('body')[0];
-	if (s != undefined) body.appendChild(document.createTextNode(s));
-	body.appendChild(document.createElement('br'));
-	body.appendChild(document.createTextNode('\n'));
+function xprintln(s, out) {
+	out = out || document.getElementsByTagName('body')[0];
+	if (s != undefined) out.appendChild(document.createTextNode(s));
+	out.appendChild(document.createElement('br'));
+	out.appendChild(document.createTextNode('\n'));
 }
 
 function debug(s) {

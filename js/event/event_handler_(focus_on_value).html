@@ -1,0 +1,39 @@
+<script>
+var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s, out) {
+	out = out || document.getElementsByTagName('body')[0];
+	if (s != undefined) out.appendChild(document.createTextNode(s));
+	out.appendChild(document.createElement('br'));
+	out.appendChild(document.createTextNode('\n'));
+}
+</script>
+<div>
+<input type="radio" name="evt_trg_rad" id="x1" value="1" onclick="xprintln(this.value)">
+<label for="x1">radio 1</label>
+<input type="radio" name="evt_trg_rad" id="x2" value="2" onclick="xprintln(value)">
+<label for="x2">radio 2</label>
+<input type="radio" name="evt_trg_rad" id="x3" value="3">
+<label for="x3">radio 3</label>
+<input type="radio" name="evt_trg_rad" id="x4" value="4">
+<label for="x4">radio 4</label>
+</div>
+<script>
+(function () {
+	if (document.addEventListener) {
+		$('x3').addEventListener('click', function (evt) {
+			xprintln(evt.target.value);
+		}, false);
+		$('x4').addEventListener('click', function (evt) {
+			xprintln(this.value);
+		}, false);
+	} else if (document.attachEvent) {
+		$('x3').attachEvent('onclick', function (evt) {
+			xprintln(evt.srcElement.value);
+		});
+		$('x4').attachEvent('onclick', function (evt) {
+			xprintln(this.value === undefined ? 'undefined' : this.value);
+		});
+	}
+})();
+</script>

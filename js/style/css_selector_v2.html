@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>CSS Selectors</title>
+<!--
+<link rel="stylesheet" type="text/css" href="style.css" />
+-->
+<style type="text/css">
+
+body, html {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #000;
+	color: #808080;
+}
+
+a {
+	color: #808080;
+	text-decoration: none;
+}
+
+ul {
+	list-style: none;
+
+	-webkit-padding-start: 20px;
+}
+
+li {
+	cursor: pointer;
+}
+li.active {
+	color: #a9d866;
+}
+
+div#root {
+	padding: 10px;
+
+	width: 500px;
+	height: 600px;
+
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	/* -webkit-box-align: stretch; */
+	-webkit-box-pack: left;
+
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	/* -moz-box-align: stretch; */
+	-moz-box-pack: left;
+}
+
+.sidebar {
+	width: 150px;
+
+	/* It's got a fixed width, we don't want it to expand*/
+	-webkit-box-flex: 0;
+	-moz-box-flex: 0;
+	box-flex: 0;
+}
+
+.main {
+	/* We want .main to expand as far as possible */
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+}
+
+#target h2 {
+	padding-left: 10px;
+}
+#target p {
+	padding-left: 10px;
+}
+#target div {
+	padding-left: 10px;
+}
+
+</style><style type="text/css" id="dynamic-style">
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" >
+
+// conflict with jQuery
+//var $ = function(id) { return document.getElementById(id); };
+
+function xprintln(s) {
+	if (console) console.log(s);
+	return;
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(document.createTextNode(s));
+	body.appendChild(document.createElement('br'));
+	body.appendChild(document.createTextNode('\n'));
+}
+
+</script><script type="text/javascript">
+
+var style_tmpl = "#target $$ {color: #a9d866;}";
+var selectors = {
+	"descendant": "p",
+	"child": "> p",
+	"first-of-type": "p:first-of-type",
+	"last-of-type": "p:last-of-type",
+	"nth-of-type": "p:nth-of-type(odd)",
+	"first-child": "p:first-child",
+	"last-child": "p:last-child",
+	"nth-child": "p:nth-child(1)",
+	"adjacent sibling": "p + div",
+	"general sibling": "h2 ~ p",
+	"first-line": "p:first-line"
+};
+
+function chanhe_selector(e) {
+	var item = $(e.target);
+	var kind = item.attr('data-id');
+	var style_text = style_tmpl.replace('$$', selectors[kind]);
+	var style_text_to_show = style_text.replace('>', '&gt;');
+	//if (kind == 'adjacent sibling') { // visual effect
+	//	style_text = style_text.replace('p +', '');
+	//}
+	$('#dynamic-style').html(style_text);
+	$('#applied-style').html(style_text_to_show);
+	item.siblings().removeClass('active');
+	item.addClass('active');
+}
+
+</script>
+</head>
+<body>
+<div id="root">
+	<div class="sidebar">
+		<a href="http://twostepmedia.co.uk/cssselectors/">@ inspired by here</a>
+		<ul>
+			<li data-id="descendant">descendant</li>
+			<li data-id="child">child</li>
+			<li data-id="first-of-type">first-of-type</li>
+			<li data-id="last-of-type">last-of-type</li>
+			<li data-id="nth-of-type">nth-of-type</li>
+			<li data-id="first-child">first-child</li>
+			<li data-id="last-child">last-child</li>
+			<li data-id="nth-child">nth-child</li>
+			<li data-id="adjacent sibling">adjacent sibling</li>
+			<li data-id="general sibling">general sibling</li>
+			<li data-id="first-line">first-line</li>
+		</ul>
+	</div>
+	<div class="main">
+		<span id="applied-style">&nbsp;</span>
+		<div id="target">
+			<h1>&lt;h1&gt; header 0 &lt;/h1&gt;</h2>
+			<p>&lt;p&gt; paragraph 0 &lt;/p&gt;</p>
+			<div>&lt;div&gt;
+				<p>
+					&lt;p&gt; paragraph in div <br/>
+						contains separated line &lt;/p&gt;
+				</p>
+				&lt;/div&gt;</div>
+			<h2>&lt;h2&gt; header 1 &lt;/h2&gt;</h2>
+			<p>&lt;p&gt; paragraph 1 &lt;/p&gt;</p>
+			<h2>&lt;h2&gt; header 2 &lt;/h2&gt;</h2>
+			<p>&lt;p&gt; paragraph 2 &lt;/p&gt;</p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+$('ul').on('click', 'li', chanhe_selector);
+
+</script>
+</body>
+</html>

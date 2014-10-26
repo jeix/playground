@@ -16,8 +16,11 @@ public class Ann {
 			String suffix = null;
 			if (f.isAnnotationPresent(BisInDie.Simple.class)) {
 				annotated = true;
-				prefix = "twice ";
-				suffix = " in a day";
+				//prefix = "twice ";
+				//suffix = " in a day";
+				BisInDie.Simple bid_param = f.getAnnotation(BisInDie.Simple.class);
+				prefix = bid_param.prefix();
+				suffix = bid_param.suffix();
 			} else if (f.isAnnotationPresent(BisInDie.Parameter.class)) {
 				annotated = true;
 				BisInDie.Parameter bid_param = f.getAnnotation(BisInDie.Parameter.class);

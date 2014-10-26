@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CloneTester {
 	
-	private void test_Something() {
+	private void test_something() {
 		Foo foo = new Foo("푸 1");
 		Bar bar = new Bar("바 11");
 		foo.addBar(bar);
@@ -45,7 +45,7 @@ public class CloneTester {
 	}
 	
 	public void test() {
-		test_Something();
+		test_something();
 		test_nothing();
 	}
 	

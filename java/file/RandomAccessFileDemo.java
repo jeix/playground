@@ -10,8 +10,9 @@ public class RandomAccessFileDemo {
 	private void test_java_io_RandomAccessFile() {
 		File f = new File("raf_test.txt");
 		if (f.exists()) f.delete();
+		RandomAccessFile raf = null;
 		try {
-			RandomAccessFile raf = new RandomAccessFile(f, "rw");
+			raf = new RandomAccessFile(f, "rw");
 			raf.write("123\n456\n789".getBytes());
 			print_file_pointer_offset(raf); // -> 11
 			raf.seek(0L);
@@ -37,6 +38,16 @@ public class RandomAccessFileDemo {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (raf != null) {
+				try {
+					raf.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					raf = null;
+				}
+			}
 		}
 		f.delete();
 	}

@@ -7,19 +7,63 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 -->
 <style>
-/* STYLE_HERE */
+table { border: 1px solid #888; }
+td { border: 1px solid #888; }
 </style><script type="text/javascript" src="../sfx/base.js">
 </script><script type="text/javascript" src="../sfx/exec.js">
 </script>
 </head>
 <body>
-<div>
-<button type="button" id="button_1" onclick="do_something(event, this)">button 1</button>
-<button type="button" id="button_2">button 2</button>
-<button type="button" id="button_3">button 3</button>
-<button type="button" id="button_4">button 4</button>
+<div id="pane1" style="width:50%; float:left;">
+	<table>
+		<tr>
+			<td></td>
+			<td><button type="button" id="button_1" onclick="do_something(event, this)">button 1</button></td>
+			<td><button type="button" id="button_2">button 2</button></td>
+			<td><button type="button" id="button_3">button 3</button></td>
+			<td><button type="button" id="button_4">button 4</button></td>
+			<td><button type="button" id="button_5">button 5</button></td>
+		</tr>
+		<tr>
+			<td>event.type</td>
+			<td>click</td>
+			<td>click</td>
+			<td>click</td>
+			<td>click</td>
+			<td>click</td>
+		</tr>
+		<tr>
+			<td>event.target.id</td>
+			<td>button_1</td>
+			<td>button_2</td>
+			<td>button_3</td>
+			<td>button_4</td>
+			<td>button_5</td>
+		</tr>
+		<tr>
+			<td>target.id</td>
+			<td>button_1</td>
+			<td></td>
+			<td></td>
+			<td>button_4</td>
+			<td>button_5</td>
+		</tr>
+		<tr>
+			<td>this.id</td>
+			<td>[window]</td>
+			<td>button_2</td>
+			<td>button_3</td>
+			<td>[window]</td>
+			<td>button_5</td>
+		</tr>
+	</table>
 </div>
-<script form="f2" type="text/javascript">
+<div id="pane2" style="width:50%; float:left;">
+</div>
+<script>
+
+var pane1 = $('pane1');
+var pane2 = $('pane2');
 
 function do_something(evt, trg) {
 	var sb = [];
@@ -33,24 +77,29 @@ function do_something(evt, trg) {
 	if (this) {
 		sb.push("this.id=" + this.id);
 	}
-	xprintln(sb.join(";"));
+	xprintln(sb.join("; "), pane1);
 }
 
 $('button_2').onclick = do_something;
 $('button_3').addEventListener('click', do_something, false);
 $('button_4').onclick = function (evt) { do_something(evt, this); };
+$('button_5').onclick = function (evt) { do_something.call(this, evt, this); };
 
-xprint_code("$('button_1').onclick = " + $('button_1').onclick + ";");
-// -> event.type=click;event.target.id=button_1;target.id=button_1;this.id=undefined
+window.id = '[window]';
 
-xprint_code("$('button_2').onclick = " + $('button_2').onclick + ";");
-// -> event.type=click;event.target.id=button_2;this.id=button_2
+xprint_code(do_something, pane2);
 
-xprint_code("$('button_3').onclick = " + $('button_3').onclick + ";");
-// -> event.type=click;event.target.id=button_3;this.id=button_3
+xprint_code("$('button_1').onclick = " + $('button_1').onclick + ";", pane2);
 
-xprint_code("$('button_4').onclick = " + $('button_4').onclick + ";");
-// -> event.type=click;event.target.id=button_4;target.id=button_4;this.id=undefined
+xprint_code("$('button_2').onclick = " + $('button_2').onclick + ";", pane2);
+
+xprint_code("$('button_3').onclick = " + $('button_3').onclick + ";", pane2);
+
+xprint_code("$('button_4').onclick = " + $('button_4').onclick + ";", pane2);
+
+xprint_code("$('button_5').onclick = " + $('button_5').onclick + ";", pane2);
+
+xprintln('', pane1);
 
 </script>
 </body>

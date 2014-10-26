@@ -1,4 +1,4 @@
-function xprint_code(codelet) {
+function xprint_code(codelet, out) {
 	// if (codelet.toSource) {
 	// 	var buf = codelet.toSource().replace(/ {4}/g, "  ").replace(/\t/g, "  ");
 	// } else {
@@ -6,12 +6,12 @@ function xprint_code(codelet) {
 		if (codelet === undefined) codelet = 'undefined';
 		var buf = codelet.toString().replace(/ {4}/g, "  ").replace(/\t/g, "  ");
 	// }
-	var body = document.getElementsByTagName('body')[0];
+	out = out || document.getElementsByTagName('body')[0];
 	var code = document.createElement('code');
 	var pre = document.createElement('pre');
 	pre.appendChild(document.createTextNode(buf));
 	code.appendChild(pre);
-	body.appendChild(code);
+	out.appendChild(code);
 }
 function xprint_result(reault) {
 	xprintln(' // ==> ' + reault)
